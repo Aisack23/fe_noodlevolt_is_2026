@@ -1,0 +1,108 @@
+{
+  "fileKey": "kZjzufiffIa9eEULQrqfVB",
+  "fileUrl": "https://www.figma.com/design/kZjzufiffIa9eEULQrqfVB/NoodleVolt",
+  "updatedAt": "2026-10-31",
+  "status": "Detenido por el límite de llamadas MCP del plan Starter de Figma.",
+  "pages": {
+    "Design System": "0:1",
+    "Layouts": "16:210",
+    "Pantallas": "16:211"
+  },
+  "sections": {
+    "Design System": { "Colores": "10:2", "Tipografía": "10:96", "Componentes": "10:122", "Íconos (fila)": "10:131" },
+    "Pantallas": {
+      "E1 Menú": "16:212",
+      "E2 Pedidos": "16:213",
+      "E3 Cocina": "16:214",
+      "E4 Reservaciones": "16:215",
+      "E5 Inventario": "16:216",
+      "E6 Pagos": "16:217",
+      "E7 Lealtad": "16:218",
+      "E8 Reseñas": "16:219",
+      "E9 Notificaciones": "16:220",
+      "E10 Reportes": "16:221",
+      "A Acceso y salón": "16:222"
+    }
+  },
+  "logos": {
+    "Logo/Mascota": "3:5",
+    "Logo/Wordmark": "3:7 (marco corregido a 1188x537)",
+    "Logo/Horizontal": "3:8"
+  },
+  "variableCollections": {
+    "NoodleVolt / Color": "VariableCollectionId:9:4",
+    "NoodleVolt / Espaciado y radios": "VariableCollectionId:9:19"
+  },
+  "variables": {
+    "marca/crimson": "VariableID:9:5",
+    "marca/orange": "VariableID:9:6",
+    "marca/brown": "VariableID:9:7",
+    "marca/cream": "VariableID:9:8",
+    "marca/gold": "VariableID:9:9",
+    "marca/fondo": "VariableID:9:10",
+    "marca/borde": "VariableID:9:11",
+    "marca/texto-secundario": "VariableID:9:12",
+    "base/blanco": "VariableID:9:13",
+    "estado/success": "VariableID:9:14",
+    "estado/warning": "VariableID:9:15",
+    "estado/danger": "VariableID:9:16",
+    "estado/info": "VariableID:9:17",
+    "estado/neutral": "VariableID:9:18",
+    "marca/crimson-hover": "VariableID:16:223",
+    "marca/orange-hover": "VariableID:16:224",
+    "estado/danger-hover": "VariableID:16:225",
+    "space/4": "VariableID:9:20",
+    "space/8": "VariableID:9:21",
+    "space/12": "VariableID:9:22",
+    "space/16": "VariableID:9:23",
+    "space/24": "VariableID:9:24",
+    "space/32": "VariableID:9:25",
+    "space/40": "VariableID:9:26",
+    "radius/card": "VariableID:9:27",
+    "radius/control": "VariableID:9:28",
+    "radius/pill": "VariableID:9:29",
+    "size/touch": "VariableID:9:30"
+  },
+  "textStyles": {
+    "H1": "S:82ec9c5c8bd331ef180bad5799869dab52371323,",
+    "H2": "S:6eb3069dd5691686cb96b3b2d75a8d7faad95591,",
+    "H3": "S:19f1ae260c34e9a3aae9a953060fb65a6aa01833,",
+    "Cuerpo": "S:118d6f321a55aafd56c648beacebf129e9507609,",
+    "Secundario": "S:6c5d5c285215301f644ba112eb291fd5f7ad14d7,",
+    "Botón": "S:a59cda451ee7620620e8421db306e778bd4c233f,",
+    "Dato de tabla": "S:993d0d793172777eca88473382fa91281b8edcb5,"
+  },
+  "effectStyles": {
+    "Foco/Halo": "S:435cd3f34fa58be62370ec8d2b43b5b26a8ca06f,"
+  },
+  "components": {
+    "Botón": "11:34",
+    "Input": "11:59",
+    "BadgeEstado": "11:140",
+    "TarjetaPlatillo": "12:84",
+    "SelectorSucursal": "12:88",
+    "SaldoPuntos": "12:95",
+    "Campana": "12:99",
+    "Carrito": "12:105",
+    "Navbar cliente": "12:173",
+    "Personal/NavItem": "13:128",
+    "Personal/Sidebar": "13:129",
+    "Personal/Topbar": "13:180",
+    "Personal/Shell": "13:202",
+    "Footer cliente": "13:306"
+  },
+  "done": [
+    "Páginas Layouts y Pantallas, con 11 secciones vacías (una por épica)",
+    "Variables -hover (crimson, orange, danger) y estilo de efecto Foco/Halo",
+    "Botón con los estilos nuevos (Secundario contorno orange; Peligro contorno danger)",
+    "Input Foco: borde brown 2px + halo",
+    "Sidebar: VOLT en gold"
+  ],
+  "pending": [
+    "Botón: sincronizar el color de los paints ligados (Primario Default/Deshabilitado/Cargando, bordes del Secundario y texto de Peligro Hover se ven negros o grises)",
+    "Navbar escritorio: enlaces Menú, Reservar, Mis pedidos, Reseñas (activo crimson) y variantes Sesión=Invitado / Con sesión",
+    "Navbar móvil: dejar solo logo, campana y carrito",
+    "BottomTabBar 360 (Menú, Reservar, Mis pedidos, Mis puntos, Cuenta), agregando Icon/calendar e Icon/receipt",
+    "Capturas finales de verificación"
+  ]
+}
