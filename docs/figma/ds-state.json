@@ -1,8 +1,8 @@
 {
   "fileKey": "kZjzufiffIa9eEULQrqfVB",
   "fileUrl": "https://www.figma.com/design/kZjzufiffIa9eEULQrqfVB/NoodleVolt",
-  "updatedAt": "2026-10-31",
-  "status": "Detenido por el límite de llamadas MCP del plan Starter de Figma.",
+  "updatedAt": "2026-11-01",
+  "status": "Detenido por el límite de llamadas MCP del plan Starter de Figma. Último intento (2026-11-01): una llamada de comprobación, sigue bloqueado; no se hizo ningún cambio.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
@@ -101,8 +101,9 @@
   "pending": [
     "Botón: sincronizar el color de los paints ligados (Primario Default/Deshabilitado/Cargando, bordes del Secundario y texto de Peligro Hover se ven negros o grises)",
     "Navbar escritorio: enlaces Menú, Reservar, Mis pedidos, Reseñas (activo crimson) y variantes Sesión=Invitado / Con sesión",
-    "Navbar móvil: dejar solo logo, campana y carrito",
-    "BottomTabBar 360 (Menú, Reservar, Mis pedidos, Mis puntos, Cuenta), agregando Icon/calendar e Icon/receipt",
-    "Capturas finales de verificación"
+    "Navbar móvil: dejar solo Logo/Wordmark, campana y carrito",
+    "ChipSucursal: componente nuevo con el selector de sucursal, debajo del navbar móvil en las pantallas Menú y Reservar",
+    "BottomTabBar 360 (Menú, Reservar, Mis pedidos, Mis puntos, Cuenta; activo en crimson), agregando Icon/calendar e Icon/receipt",
+    "Una sola captura final de la sección Componentes (10:122)"
   ]
 }
