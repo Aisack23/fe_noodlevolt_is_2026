@@ -1,32 +1,37 @@
 {
-  "fileKey": "kZjzufiffIa9eEULQrqfVB",
-  "fileUrl": "https://www.figma.com/design/kZjzufiffIa9eEULQrqfVB/NoodleVolt",
+  "fileKey": "pcJk904tbSTwfNlSRz8aRw",
+  "fileUrl": "https://www.figma.com/design/pcJk904tbSTwfNlSRz8aRw/NoodleVolt",
+  "previousFileKey": "kZjzufiffIa9eEULQrqfVB",
+  "team": "Elektra (plan Student, asiento Full)",
   "updatedAt": "2026-11-01",
-  "status": "Detenido por el límite de llamadas MCP del plan Starter de Figma. Último intento (2026-11-01): una llamada de comprobación, sigue bloqueado; no se hizo ningún cambio.",
+  "status": "Pendientes del Design System completados.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
-    "Pantallas": "16:211"
+    "E1 Menú": "24:487",
+    "E2 Pedidos": "24:488",
+    "E3 Cocina": "24:489",
+    "E4 Reservaciones": "24:490",
+    "E5 Inventario": "24:491",
+    "E6 Pagos": "24:492",
+    "E7 Lealtad": "24:493",
+    "E8 Reseñas": "24:494",
+    "E9 Notificaciones": "24:495",
+    "E10 Reportes": "24:496",
+    "A Acceso y salón": "24:497"
   },
   "sections": {
-    "Design System": { "Colores": "10:2", "Tipografía": "10:96", "Componentes": "10:122", "Íconos (fila)": "10:131" },
-    "Pantallas": {
-      "E1 Menú": "16:212",
-      "E2 Pedidos": "16:213",
-      "E3 Cocina": "16:214",
-      "E4 Reservaciones": "16:215",
-      "E5 Inventario": "16:216",
-      "E6 Pagos": "16:217",
-      "E7 Lealtad": "16:218",
-      "E8 Reseñas": "16:219",
-      "E9 Notificaciones": "16:220",
-      "E10 Reportes": "16:221",
-      "A Acceso y salón": "16:222"
-    }
+    "Colores": "10:2",
+    "Tipografía": "10:96",
+    "Componentes": "10:122",
+    "Íconos (fila)": "10:131",
+    "Piezas de navegación (fila)": "12:85",
+    "Navbar del cliente (grupo)": "12:171",
+    "BottomTabBar (grupo)": "24:250"
   },
   "logos": {
     "Logo/Mascota": "3:5",
-    "Logo/Wordmark": "3:7 (marco corregido a 1188x537)",
+    "Logo/Wordmark": "3:7",
     "Logo/Horizontal": "3:8"
   },
   "variableCollections": {
@@ -64,16 +69,29 @@
     "size/touch": "VariableID:9:30"
   },
   "textStyles": {
-    "H1": "S:82ec9c5c8bd331ef180bad5799869dab52371323,",
-    "H2": "S:6eb3069dd5691686cb96b3b2d75a8d7faad95591,",
-    "H3": "S:19f1ae260c34e9a3aae9a953060fb65a6aa01833,",
-    "Cuerpo": "S:118d6f321a55aafd56c648beacebf129e9507609,",
-    "Secundario": "S:6c5d5c285215301f644ba112eb291fd5f7ad14d7,",
-    "Botón": "S:a59cda451ee7620620e8421db306e778bd4c233f,",
-    "Dato de tabla": "S:993d0d793172777eca88473382fa91281b8edcb5,"
+    "H1": "S:97d5d8944bc7f921a57f0d3403d54168b935ad16,",
+    "H2": "S:a321d6ce82b022ec62fc8ce4a827bee18213bcd4,",
+    "H3": "S:c39dc4ccc138e8612aeb2d4b75c2c0f072e91999,",
+    "Cuerpo": "S:32c81aae2f60d05f66843f3ceeabf93ba7c81834,",
+    "Secundario": "S:68bb02e105378c3108b92a28736d93df45a4057f,",
+    "Botón": "S:16efdfa206d79d4359c70fa91d093f25e2bdd025,",
+    "Dato de tabla": "S:ec5d3284fe3a45b68f10d1cf5d2a0d15aa071b67,",
+    "Etiqueta de pestaña": "S:0d87473a6b9758ce87f106f9b1e4d83ca13ee0ea,"
   },
   "effectStyles": {
-    "Foco/Halo": "S:435cd3f34fa58be62370ec8d2b43b5b26a8ca06f,"
+    "Foco/Halo": "S:87f92f169c9ed30737724d01221ba49446f4d32e,"
+  },
+  "icons": {
+    "Icon/check-circle": "10:135", "Icon/clock": "10:139", "Icon/x-circle": "10:144",
+    "Icon/alert-triangle": "10:149", "Icon/alert-circle": "10:154", "Icon/flame": "10:157",
+    "Icon/check-check": "10:161", "Icon/sparkles": "10:164", "Icon/users": "10:170",
+    "Icon/ban": "10:174", "Icon/banknote": "10:179", "Icon/credit-card": "10:183",
+    "Icon/calendar-check": "10:190", "Icon/calendar-x": "10:198", "Icon/bell": "10:202",
+    "Icon/shopping-cart": "10:207", "Icon/map-pin": "10:211", "Icon/chevron-down": "10:214",
+    "Icon/star": "10:217", "Icon/loader": "10:220", "Icon/plus": "10:224", "Icon/menu": "10:229",
+    "Icon/user": "10:233", "Icon/layout-grid": "10:239", "Icon/clipboard-list": "10:247",
+    "Icon/utensils": "10:252", "Icon/log-out": "10:257", "Icon/image": "10:262",
+    "Icon/calendar": "24:243", "Icon/receipt": "24:248"
   },
   "components": {
     "Botón": "11:34",
@@ -84,26 +102,39 @@
     "SaldoPuntos": "12:95",
     "Campana": "12:99",
     "Carrito": "12:105",
-    "Navbar cliente": "12:173",
+    "Cliente/NavLink": "23:214",
+    "ChipSucursal": "23:215",
+    "Cliente/Avatar": "23:222",
+    "Navbar cliente": "23:328",
+    "Cliente/Tab": "24:265",
+    "BottomTabBar": "24:486",
     "Personal/NavItem": "13:128",
     "Personal/Sidebar": "13:129",
     "Personal/Topbar": "13:180",
     "Personal/Shell": "13:202",
     "Footer cliente": "13:306"
   },
+  "variants": {
+    "Navbar cliente": {
+      "Tamaño=Escritorio 1440, Sesión=Invitado": "23:227",
+      "Tamaño=Escritorio 1440, Sesión=Con sesión": "23:257",
+      "Tamaño=Móvil 360, Sesión=Invitado": "23:300",
+      "Tamaño=Móvil 360, Sesión=Con sesión": "23:311"
+    },
+    "BottomTabBar": {
+      "Activo=Menú": "24:266",
+      "Activo=Reservar": "24:310",
+      "Activo=Mis pedidos": "24:354",
+      "Activo=Mis puntos": "24:398",
+      "Activo=Cuenta": "24:442"
+    }
+  },
   "done": [
-    "Páginas Layouts y Pantallas, con 11 secciones vacías (una por épica)",
-    "Variables -hover (crimson, orange, danger) y estilo de efecto Foco/Halo",
-    "Botón con los estilos nuevos (Secundario contorno orange; Peligro contorno danger)",
-    "Input Foco: borde brown 2px + halo",
-    "Sidebar: VOLT en gold"
+    "Botón: colores ligados resincronizados con sus variables (15 nodos)",
+    "Navbar escritorio con enlaces (Cliente/NavLink, activo crimson) y variantes Invitado / Con sesión",
+    "Navbar móvil: Logo/Wordmark, campana (solo con sesión) y carrito; componente ChipSucursal",
+    "BottomTabBar 360 con 5 variantes de pestaña activa; Icon/calendar e Icon/receipt nuevos",
+    "Una página por épica; la página Pantallas se eliminó (estaba vacía)"
   ],
-  "pending": [
-    "Botón: sincronizar el color de los paints ligados (Primario Default/Deshabilitado/Cargando, bordes del Secundario y texto de Peligro Hover se ven negros o grises)",
-    "Navbar escritorio: enlaces Menú, Reservar, Mis pedidos, Reseñas (activo crimson) y variantes Sesión=Invitado / Con sesión",
-    "Navbar móvil: dejar solo Logo/Wordmark, campana y carrito",
-    "ChipSucursal: componente nuevo con el selector de sucursal, debajo del navbar móvil en las pantallas Menú y Reservar",
-    "BottomTabBar 360 (Menú, Reservar, Mis pedidos, Mis puntos, Cuenta; activo en crimson), agregando Icon/calendar e Icon/receipt",
-    "Una sola captura final de la sección Componentes (10:122)"
-  ]
+  "pending": []
 }

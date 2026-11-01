@@ -141,11 +141,12 @@ Vocabulario fijo de estados (igual que en las HU):
 - `TarjetaPlatillo`, `BadgeEstado`, `SelectorSucursal`, `Campana` (FE-9.4.1), `SaldoPuntos` (FE-7.1.1),
   `EstadoVacio`, `Modal`, `Tabla` con paginación y filtros.
 ## Figma
-- Archivo: https://www.figma.com/design/kZjzufiffIa9eEULQrqfVB/NoodleVolt
-- Páginas (el plan Starter de Figma permite solo 3): `Design System` · `Layouts` · `Pantallas`.
-- En `Pantallas` hay una sección por épica: `E1 Menú` · `E2 Pedidos` · `E3 Cocina` ·
+- Archivo: https://www.figma.com/design/pcJk904tbSTwfNlSRz8aRw/NoodleVolt?t=JeYJetuKxZ7tCo5v-1
+- Páginas: `Design System` · `Layouts` · `E1 Menú` · `E2 Pedidos` · `E3 Cocina` ·
   `E4 Reservaciones` · `E5 Inventario` · `E6 Pagos` · `E7 Lealtad` · `E8 Reseñas` ·
-  `E9 Notificaciones` · `E10 Reportes` · `A Acceso y salón`. Cada frame va dentro de la sección de su épica.
+  `E9 Notificaciones` · `E10 Reportes` · `A Acceso y salón`. Cada frame va en la página de su épica.
+- El archivo pertenece al equipo Elektra (plan Student). Los IDs de páginas, variables, estilos y
+  componentes están en `docs/figma/ds-state.json`.
 - Cada frame se nombra `Rol / Pantalla / Tamaño / Estado`, por ejemplo
   `Mesero / Comanda / Tablet / Error 422`. Indicar la task FE en la descripción del frame.
 - Las pantallas solo usan variables, estilos y componentes del Design System. Auto-layout en todo.
