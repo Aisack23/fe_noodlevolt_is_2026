@@ -4,7 +4,7 @@
   "previousFileKey": "kZjzufiffIa9eEULQrqfVB",
   "team": "Elektra (plan Student, asiento Full)",
   "updatedAt": "2026-11-02",
-  "status": "Lote 0 terminado: variantes de BadgeEstado, componentes de formulario y superposición, plantillas de estados (2.6) y E1/E2 ajustados al documento final (HU_FINAL). Pendiente de aprobación del equipo.",
+  "status": "Lote 1 terminado: salón (FE-5.1), tablero de cocina (FE-6.1), controles de estado y listos (FE-7.1) y panel de insumos faltantes (FE-11.1). Pendiente de aprobación del equipo.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
@@ -30,7 +30,8 @@
     "BottomTabBar (grupo)": "24:250",
     "Componentes de pantalla (grupo)": "buscar por nombre en 10:122",
     "Formularios y superposiciones (Lote 0)": "96:480",
-    "Plantillas de estados (2.6)": "98:642"
+    "Plantillas de estados (2.6)": "98:642",
+    "Sala y cocina (Lote 1)": "109:4306"
   },
   "logos": {
     "Logo/Mascota": "3:5",
@@ -79,7 +80,9 @@
     "Secundario": "S:68bb02e105378c3108b92a28736d93df45a4057f,",
     "Botón": "S:16efdfa206d79d4359c70fa91d093f25e2bdd025,",
     "Dato de tabla": "S:ec5d3284fe3a45b68f10d1cf5d2a0d15aa071b67,",
-    "Etiqueta de pestaña": "S:0d87473a6b9758ce87f106f9b1e4d83ca13ee0ea,"
+    "Etiqueta de pestaña": "S:0d87473a6b9758ce87f106f9b1e4d83ca13ee0ea,",
+    "Cocina/Platillo": "S:20f82cdd7874ca7e4593929b20d9e527ba8123de,",
+    "Cocina/Nota": "S:ba8dcfefa079645ab9e7d5d2e49de4f7e470a45e,"
   },
   "effectStyles": {
     "Foco/Halo": "S:87f92f169c9ed30737724d01221ba49446f4d32e,"
@@ -170,7 +173,13 @@
     "Plantilla/Acceso denegado": "98:646",
     "Plantilla/Error del servidor": "98:673",
     "Plantilla/Vacío": "98:693",
-    "Plantilla/Cargando": "98:773"
+    "Plantilla/Cargando": "98:773",
+    "Cocina/EncabezadoPedido": "109:4357",
+    "Cocina/LíneaPedido": "109:4471",
+    "Mesero/FilaListo": "109:4502",
+    "Salón/Leyenda": "109:4503",
+    "SalonMesas": "109:4633",
+    "PanelInsumosFaltantes": "109:4732"
   },
   "variants": {
     "Navbar cliente": {
@@ -234,14 +243,21 @@
     "Lote 0: 10 variantes nuevas de BadgeEstado según la tabla 2.2 (25 en total)",
     "Lote 0: Select, SelectorFecha (+ celda Día), TextareaContador, Toggle, Estrellas, Modal/Confirmación, PanelLateral y BarraFiltros",
     "Lote 0: plantillas Acceso denegado, Error del servidor (Bloque/Alerta), Vacío (Página/Tabla) y Cargando (Tabla/Tarjetas/Formulario)",
-    "Lote 0: E1 y E2 renombrados a FE-1.1, FE-2.1, FE-3.1 y FE-4.1; ajustes de la HU final aplicados"
+    "Lote 0: E1 y E2 renombrados a FE-1.1, FE-2.1, FE-3.1 y FE-4.1; ajustes de la HU final aplicados",
+    "Lote 1: corregido el tinte de los BadgeEstado dentro de TarjetaPlatillo y de las instancias de cocina (63 instancias)",
+    "Lote 1: paginación de ejemplo a 1–10 de 24 (S21)",
+    "Lote 1: EncabezadoPedido, LíneaPedido, FilaListo, Leyenda, SalonMesas y PanelInsumosFaltantes; estilos de texto Cocina/Platillo (24 px) y Cocina/Nota",
+    "Lote 1: FE-5.1 Salón (tableta y escritorio) con lista, confirmación, cargando, éxito, error 409, vacío, error y sin permiso",
+    "Lote 1: FE-6.1 Tablero de cocina en escritorio (Cocina, enviando, error 409, Gerente solo lectura, cargando, vacío, error, sin permiso) y en tableta",
+    "Lote 1: FE-7.1 Listos para entregar (tableta): lista, entregando, vacío, error, cargando y sin permiso",
+    "Lote 1: FE-11.1 Panel de insumos faltantes en /menu para Cocina, Mesero y Gerente (con faltantes, cargando y error) y Cliente sin panel"
   ],
   "pending": [
-    "Confirmar con el equipo los textos inventados (lista invented)",
+    "Confirmar con el equipo los textos inventados (listas invented de cada lote)",
     "Agregar DESHABILITADO a BadgeEstado.tsx en el código",
-    "El frame Mesero / Menú usa la barra lateral de la comanda (activo «Comanda»); la HU no define una entrada «Menú» para el Mesero",
-    "La paginación de ejemplo dice «1–6 de 24»; al programar usar 10 por página (S21)",
-    "Aprobación del equipo antes de programar; siguiente: Lote 1 (sala y cocina)"
+    "La barra lateral del personal no tiene entrada «Menú»; el frame de FE-11.1 usa la de Salón",
+    "FE-6.1 en tableta: las tarjetas se desplazan horizontalmente; la tercera se corta al borde a propósito",
+    "Aprobación del equipo antes de programar; siguiente: Lote 2 (pagos)"
   ],
   "frames": {
     "Layouts": {
@@ -271,7 +287,13 @@
       "Gerente / Catálogo / Desktop / Sin permiso": "100:3041",
       "Gerente / Catálogo / Mobile / Lista": "100:3192",
       "Gerente / Catálogo / Mobile / Modal crear": "100:3308",
-      "Mesero / Menú / Tablet / Sucursal fija": "99:2635"
+      "Mesero / Menú / Tablet / Sucursal fija": "99:2635",
+      "Personal / Menú / Desktop / Cocina · Con faltantes": "112:4778",
+      "Personal / Menú / Desktop / Mesero · Con faltantes": "112:4947",
+      "Personal / Menú / Desktop / Gerente · Con faltantes": "112:5116",
+      "Personal / Menú / Desktop / Mesero · Cargando": "112:5285",
+      "Personal / Menú / Desktop / Mesero · Error": "112:5430",
+      "Personal / Menú / Desktop / Cliente · Sin panel": "112:5580"
     },
     "E2 Pedidos": {
       "Mesero / Comanda / Tablet / 1 · Mesa": "45:905",
@@ -291,7 +313,34 @@
       "Cliente / Carrito / Mobile / Resumen · En línea": "103:1753",
       "Cliente / Carrito / Mobile / Resumen · En caja": "103:1808",
       "Cliente / Carrito / Desktop / En línea": "103:1864",
-      "Cliente / Carrito / Desktop / Resumen · En línea": "103:1977"
+      "Cliente / Carrito / Desktop / Resumen · En línea": "103:1977",
+      "Mesero / Salón / Tablet / Lista": "110:2271",
+      "Mesero / Salón / Tablet / Confirmar limpia": "110:2408",
+      "Mesero / Salón / Tablet / Marcando": "110:2560",
+      "Mesero / Salón / Tablet / Éxito": "110:2714",
+      "Mesero / Salón / Tablet / Error 409": "110:2865",
+      "Mesero / Salón / Tablet / Cargando": "110:3010",
+      "Mesero / Salón / Tablet / Vacío": "110:3098",
+      "Mesero / Salón / Tablet / Error": "110:3189",
+      "Mesero / Salón / Tablet / Sin permiso": "110:3258",
+      "Mesero / Salón / Desktop / Lista": "110:3327"
+    },
+    "E3 Cocina": {
+      "Cocina / Tablero / Desktop / Con pedidos": "111:1210",
+      "Cocina / Tablero / Desktop / Enviando": "111:1431",
+      "Cocina / Tablero / Desktop / Error 409": "111:1654",
+      "Cocina / Tablero / Desktop / Gerente · Solo lectura": "111:1884",
+      "Cocina / Tablero / Desktop / Cargando": "111:2100",
+      "Cocina / Tablero / Desktop / Vacío": "111:2166",
+      "Cocina / Tablero / Desktop / Error": "111:2198",
+      "Cocina / Tablero / Desktop / Sin permiso": "111:2229",
+      "Cocina / Tablero / Tablet / Con pedidos": "111:2261",
+      "Mesero / Listos / Tablet / Lista": "112:1839",
+      "Mesero / Listos / Tablet / Entregando": "112:1956",
+      "Mesero / Listos / Tablet / Vacío": "112:2061",
+      "Mesero / Listos / Tablet / Error": "112:2145",
+      "Mesero / Listos / Tablet / Cargando": "112:2228",
+      "Mesero / Listos / Tablet / Sin permiso": "112:2333"
     }
   },
   "notes": [
@@ -308,12 +357,19 @@
       "FE-2.1 · Cliente / Menú / Desktop": "42:1939",
       "FE-2.1 · Mesero / Menú / Tablet": "99:2634",
       "FE-1.1 · Gerente / Catálogo / Desktop": "42:2461",
-      "FE-1.1 · Gerente / Catálogo / Mobile": "100:3191"
+      "FE-1.1 · Gerente / Catálogo / Mobile": "100:3191",
+      "FE-11.1 · Personal / Menú / Desktop": "112:4777"
     },
     "E2 Pedidos": {
       "FE-3.1 · Mesero / Comanda / Tablet": "45:904",
       "FE-4.1 · Cliente / Carrito / Mobile": "45:1825",
-      "FE-4.1 · Cliente / Carrito / Desktop": "103:1863"
+      "FE-4.1 · Cliente / Carrito / Desktop": "103:1863",
+      "FE-5.1 · Mesero / Salón": "110:2175"
+    },
+    "E3 Cocina": {
+      "FE-6.1 · Cocina / Tablero / Desktop": "111:1209",
+      "FE-6.1 · Cocina / Tablero / Tablet": "111:2260",
+      "FE-7.1 · Mesero / Listos / Tablet": "112:1838"
     }
   },
   "invented": [
@@ -329,7 +385,14 @@
     "Selector de fecha: «Elige una fecha a partir de hoy.»; Textarea: «Se envía a Cocina con el platillo.», «Máximo 200 caracteres.», «Llegaste al máximo de 200 caracteres.»; comanda: «Máximo 20 unidades por platillo.»",
     "Modal de confirmación: «¿Confirmar el pago?», «¿Cancelar la reservación?», «Volver», «Cancelar reservación», «Esta acción no se puede deshacer.»",
     "Resumen FE-4.1: «¡Pedido registrado!», «Pedido #A3F9-12C7», «Hora estimada de retiro», «Tu pedido pasa a Cocina cuando se apruebe el pago.», «Tu pedido ya está en Cocina. Paga $26.25 en caja al retirar.», «Pagar en línea $26.25», «Ver mis pedidos»",
-    "Mesero / Menú: «· Sucursal de tu sesión»"
+    "Mesero / Menú: «· Sucursal de tu sesión»",
+    "Salón: «Aún no hay mesas» / «Tu sucursal todavía no tiene mesas registradas.»; «¿Marcar la mesa 4 como limpia?» / «La mesa 4 pasará a «Libre» y se podrá asignar a nuevos clientes.»",
+    "Salón éxito: «Mesa 4 marcada como limpia» / «Ya está «Libre» para nuevos clientes.»; error 409: «No se pudo marcar la mesa como limpia» / «La mesa 4 tiene una cuenta «Abierta» y no puede pasar a «Libre».»",
+    "Tablero: «Pedidos activos», «4 pedidos · del más antiguo al más reciente», «Se actualiza cada 5 s · 12:33:05», «Solo lectura», «Los pedidos nuevos aparecen aquí en máximo 5 segundos.»",
+    "Tablero error 409: «No se pudo cambiar el estado» / «Transición no permitida: «Té verde helado» ya no está «Pendiente».»",
+    "Tablero: nombres de personal de muestra «Rosa Méndez · Cocina», «Ana Martínez · Gerente», «Carlos Rivas · Mesero»; pedidos #1039–#1042, «Mesa 2», «Para llevar», «12:18 · hace 15 min»",
+    "Listos: «Listos para entregar», «Platillos listos de tus mesas. Márcalos como «Entregado» al llevarlos.», «No hay platillos listos» / «Cuando cocina marque un platillo como listo, aparecerá aquí.», «Listo desde las 12:41»",
+    "Panel de insumos: «Insumos faltantes», «Insumos que faltan para preparar 1 porción. Se calcula al abrir este panel.», encabezados «Insumo», «Disponible», «Requerido», «Faltante»; insumos «Masa gyoza» y «Cerdo molido»"
   ],
   "componentProps": {
     "Botón": {
@@ -359,6 +422,23 @@
     },
     "CantidadStepper": {
       "Cantidad": "Cantidad#27:3"
+    },
+    "Cocina/EncabezadoPedido": {
+      "Número": "Número#109:0",
+      "Origen": "Origen#109:4",
+      "Hora": "Hora#109:8"
+    },
+    "Cocina/LíneaPedido": {
+      "Platillo": "Platillo#109:12",
+      "Nota": "Nota#109:21",
+      "Con nota": "Con nota#109:30",
+      "Sin observaciones": "Sin observaciones#109:39"
+    },
+    "Mesero/FilaListo": {
+      "Mesa": "Mesa#109:48",
+      "Pedido": "Pedido#109:51",
+      "Platillo": "Platillo#109:54",
+      "Hora": "Hora#109:57"
     }
   },
   "taskIdMap": {
