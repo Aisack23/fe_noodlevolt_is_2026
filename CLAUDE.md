@@ -6,16 +6,18 @@ Proyecto académico de Ingeniería de Software (UCA, ciclo 02/2026, Sección 02)
 Este repo es el **frontend**, un fork de `fe_boilerplate_is_2026`. El backend vive en un repo aparte
 (fork de `be_boilerplate_is_2026`).
  
-La fuente de verdad funcional es el documento de historias de usuario `HU_PLANTILLA_v3`
-(épicas 1–10 y Anexo A). Cada pantalla corresponde a una task FE-x.x.x; respeta sus estados, sus
-mensajes y sus criterios de aceptación tal como están redactados.
+La fuente de verdad funcional es el documento final de historias de usuario
+`docs/referencias/HU_FINAL.pdf` (29/10/2026; reemplaza a `HU_PLANTILLA_v3`): Parte 2 (decisiones
+y reglas comunes), épicas 1–10 con historias H1–H34 y Anexo A (H35–H36). Las tasks siguen el
+formato `TIPO-historia.número` (FE-1.1, FE-16.2…). Cada pantalla corresponde a una task FE; respeta
+sus rutas, roles, estados, mensajes y criterios de aceptación tal como están redactados.
  
-## Equipo y responsables
-- **Pamela Gómez:** Épica 1 (Menú digital y catálogo) y Épica 2 (Toma de pedidos).
-- **Gabriela Maldonado:** Épica 3 (Cocina / Comandas) y Épica 4 (Reservaciones de mesa).
-- **Diego Iraheta:** Épica 5 (Inventario de insumos) y Épica 6 (Pagos y facturación).
-- **Isaac Tovar:** Épica 7 (Lealtad / puntos), Épica 8 (Reseñas) y Anexo A (Acceso y datos base).
-- **Abraham Flores:** Épica 9 (Notificaciones) y Épica 10 (Reportes por sucursal).
+## Equipo y responsables (por historia; responsable de sus tasks FE)
+- **Pamela Gómez:** H1, H2, H3, H4 (FE-1.1, FE-2.1, FE-3.1, FE-4.1), H19 (FE-19.1, FE-19.2) y H26 (FE-26.1).
+- **Gabriela Maldonado:** H6–H10 (FE-6.1, FE-7.1, FE-8.1, FE-9.1, FE-10.1) y H15 (FE-15.1, FE-15.2).
+- **Diego Iraheta:** H11, H12, H14 (FE-11.1, FE-14.1) y H16–H18 (FE-16.1, FE-16.2, FE-17.1, FE-18.1).
+- **Isaac Tovar:** H20–H25 (FE-20.1 a FE-25.1) y Anexo A, H35–H36 (FE-35.1).
+- **Abraham Flores:** H5 (FE-5.1), H13 (FE-13.1), H27–H31 (FE-31.1) y H32–H34 (FE-32.1, FE-33.1, FE-34.1).
 ## Reglas de la cátedra (no negociables)
 - No crear repos nuevos; se trabaja sobre el fork. Ramas + Pull Requests internos con revisión cruzada.
 - No romper el contrato de autenticación (cómo se identifica al usuario, su rol y su sucursal).
@@ -24,10 +26,19 @@ mensajes y sus criterios de aceptación tal como están redactados.
 - El README lleva los nombres completos de los integrantes y el rol de cada uno.
 - La definición de terminado de cada task FE incluye **"Revisión visual contra el diseño acordado"**.
   El diseño acordado es el archivo de Figma (ver más abajo).
-## Roles (token: usuarioId, rol, sucursalId)
-`CLIENTE`, `MESERO`, `COCINA`, `CAJERO`, `ENCARGADO_INVENTARIO`, `GERENTE`, `GERENTE_GENERAL`.
-`CLIENTE` y `GERENTE_GENERAL` no tienen sucursal; el resto del personal solo ve su sucursal.
-Después del login, cada rol se redirige a su pantalla de inicio (FE-A.1.1).
+## Roles (token: usuarioId, rol, sucursalId) — sección 2.1
+`CLIENTE`, `MESERO`, `COCINA`, `GERENTE`, `GERENTE_GENERAL`. No hay cajero ni encargado de
+inventario: el **Mesero** cobra (H16, H17) y el **Gerente** lleva el inventario (H13–H15).
+- `CLIENTE` y `GERENTE_GENERAL` no tienen sucursal. El personal y el Gerente operan solo en su
+  sucursal; el Gerente general opera en todas, pero solo en las funciones donde está permitido.
+- Solo `CLIENTE` se registra solo (`/registro` → `POST /users`; el cuerpo no puede traer `rol`).
+  El resto del personal se crea por script.
+- La guarda de rutas usa la tabla de permisos de la sección 2.1: sin sesión redirige a `/login`;
+  con un rol no permitido muestra «Acceso denegado». Ocultar opciones del menú es solo ayuda visual
+  (el backend valida con 401/403). Ante un 401 se limpia la sesión y se redirige a `/login`.
+- Sesión de 8 horas (S17). Tras el login cada rol va a su pantalla de inicio (FE-35.1; la HU no fija
+  cuál, propuesta: CLIENTE `/menu`, MESERO `/mesero/salon`, COCINA `/cocina/tablero`,
+  GERENTE `/gerente`, GERENTE_GENERAL `/reportes/ventas`).
  
 ## Stack
  
@@ -39,15 +50,49 @@ Después del login, cada rol se redirige a su pantalla de inicio (FE-A.1.1).
   cookie httpOnly (`lib/session.ts`). `proxy.ts` protege las rutas privadas. Base de la API: `/api/v1`.
 ### Backend (otro repo)
 - NestJS + Prisma + PostgreSQL, levantado con el docker-compose obligatorio. URL en `.env` → `API_URL`.
-### Propuesta del equipo (pendiente de aprobar y documentar en /docs)
-- **Estado del cliente:** Zustand, solo para estado de UI: el carrito para llevar, la comanda en curso
-  del mesero, la sucursal seleccionada y la clave de operación (UUID) de reintentos.
-- **Datos del servidor:** Server Components + Server Actions con `fetch` a `API_URL`, reenviando el
-  token de la cookie. No se guardan datos del backend en Zustand.
-- **Polling:** tablero de cocina cada 5 s (FE-3.1.1) y campana de notificaciones cada 15 s (FE-9.4.1),
+### Decisiones del documento final y propuestas (documentar en /docs)
+- **Estado del frontend (sección 2.6, decisión de la HU):** contexto del propio framework, sin
+  librería adicional. El estado global guarda solo la sesión (usuario, rol, sucursal) y el contador de
+  notificaciones; todo lo demás vive en el estado local de cada pantalla.
+- **Pendiente de resolver con el equipo:** la sección 2.1 dice que el token se guarda en
+  `sessionStorage`, mientras que el boilerplate lo guarda en una cookie httpOnly; y la propuesta
+  anterior de Zustand choca con la decisión de la 2.6. Decidir y documentar en `/docs` antes de programar.
+- **Datos del servidor:** Server Components + Server Actions con `fetch` a `API_URL`, reenviando el token.
+- **Clave de operación:** UUID por intento, reutilizada en reintentos (FE-4.1).
+- **Polling:** tablero de cocina cada 5 s (S4, FE-6.1) y notificaciones cada 15 s (S5, FE-31.1),
   en componentes cliente.
-- **Gráficas (Épica 10):** Recharts.
+- **Gráficas (reportes H32–H34):** Recharts.
 - **Íconos:** `lucide-react`. **Fuentes:** `next/font/google` (reemplaza Geist).
+## Reglas comunes de pantalla (sección 2.6 y supuestos)
+- Toda pantalla maneja **6 estados**: vacío (con el texto exacto de la HU), cargando (skeleton y
+  botones de acción deshabilitados), error de validación (campo señalado), error del servidor,
+  éxito y sin permiso.
+- **Error del servidor:** «No se pudo completar la operación. Intenta de nuevo» (salvo que la task pida
+  un mensaje específico, p. ej. el platillo afectado ante 422).
+- **Sin permiso:** pantalla «Acceso denegado» con el botón «Volver al inicio».
+- **Acciones irreversibles** (cancelar una reservación, pagar) piden **confirmación** antes de ejecutarse.
+- **Montos:** USD con **dos decimales** (`$12.50`). Fechas con hora en ISO 8601; sin hora `AAAA-MM-DD`.
+- **Listados: 10 por página (S21)** si la task no indica otro. La API responde `datos`, `total`,
+  `pagina`, `tamanoPagina`; los errores traen `codigo` y `mensaje`.
+- Códigos: 400 datos inválidos, 401 sin sesión, 403 rol o sucursal, 404 no existe, 409 conflicto
+  (duplicado, cupo lleno o estado no permitido). Validar en el cliente no sustituye al servidor.
+- Supuestos que afectan la UI: cantidad por línea 1–20 (S1), nota ≤ 200 caracteres (S2), reservación
+  de 90 min (S3), retiro estimado 20 min después de confirmar (S6), propina sugerida 10 % (S7),
+  pago en mesa efectivo y tarjeta (S8), 1 punto por $1.00 (S10), código de canje vence a los 30 días
+  (S11), DUI `00000000-0`, NIT `0000-000000-000-0`, NRC `0000000-0` (S12), reseñas más recientes
+  primero (S13), top 10 platillos (S15), franjas de 1 h con 3 picos resaltados (S16), contraseña ≥ 8
+  (S19), teléfono de 8 dígitos (S20).
+## Pasarela de pago simulada (sección 2.3)
+La usan el cobro con tarjeta de la cuenta de mesa (H16, FE-16.2) y el pago en línea (H18, FE-18.1).
+- Tarjeta terminada en **4242**: siempre aprueba.
+- Tarjeta terminada en **0002**: rechaza con «Fondos insuficientes (simulado)».
+- Cualquier otra: rechaza con «Tarjeta no válida para la prueba».
+- La respuesta tarda **2 s**; mientras tanto se muestra **«Procesando pago»** y el botón se deshabilita.
+- Nunca se guardan el número completo ni el código de seguridad (ni en el navegador ni en logs);
+  solo los últimos 4 dígitos en la referencia del pago.
+- Un rechazo registra el pago como RECHAZADO (sin comprobante ni puntos), el pedido sigue en
+  PENDIENTE_PAGO (o la cuenta en ABIERTA) y se muestra el motivo con opción de reintentar.
+  Un pedido ya pagado responde 409 («el pedido ya fue pagado»).
 ## Línea de diseño (marca NoodleVolt)
  
 ### Concepto
@@ -72,16 +117,19 @@ sobrias y funcionales (densidad de datos, legibilidad, rapidez).
 - Fondo base: #FAFAF8. Bordes y divisores: #E8DED3. Texto secundario: #6B5E55.
 ### Colores de estado (semánticos; son distintos de los de marca)
 Todo estado se muestra con **badge = color + ícono + texto**, nunca solo con color.
-- `success` #2E7D4F: Disponible, Libre, PAGADO, CONFIRMADA, LISTO.
-- `warning` #B7791F: Por limpiar, Cobro en caja pendiente, EN_PREPARACION, insumo crítico.
-- `danger` #9B2C2C: Agotado, Ocupada, CANCELADA, Pago en línea pendiente (no preparar), errores.
-- `info` #2B6CB0: PENDIENTE, avisos informativos.
-- `neutral` #9A8F87: ENTREGADO, deshabilitado.
-Vocabulario fijo de estados (igual que en las HU):
-- Mesa: LIBRE, OCUPADA, POR_LIMPIAR.
-- Línea/pedido: PENDIENTE → EN_PREPARACION → LISTO → ENTREGADO.
-- Reservación: CONFIRMADA, CANCELADA.
-- Platillo: Disponible / Agotado.
+- `success` #2E7D4F: Disponible, Libre, Pagado, Aprobado, Confirmada, Listo, Suficiente, código Disponible.
+- `warning` #B7791F: Por limpiar, Cobro en caja pendiente, En preparación, Bajo mínimo.
+- `danger` #9B2C2C: Agotado, Ocupada, Cancelada/Cancelado, Pago en línea pendiente - no preparar
+  (Pendiente de pago), Rechazado, Sin stock, errores.
+- `info` #2B6CB0: Pendiente, Abierta, avisos informativos.
+- `neutral` #9A8F87: Entregado, Cerrada, Deshabilitado, código Usado o vencido.
+Vocabulario fijo de estados (sección 2.2; cualquier transición fuera de la tabla responde 409):
+- Pedido: PENDIENTE_PAGO → PENDIENTE → EN_PREPARACION → LISTO → ENTREGADO; CANCELADO (sin historia).
+- Línea de pedido: PENDIENTE → EN_PREPARACION → LISTO (Cocina) → ENTREGADO (Mesero).
+- Cuenta: ABIERTA → CERRADA. Mesa: LIBRE → OCUPADA → POR_LIMPIAR → LIBRE.
+- Reservación: CONFIRMADA → CANCELADA (Gerente). Platillo: DISPONIBLE, AGOTADO, DESHABILITADO.
+- Pago: APROBADO o RECHAZADO. Código de canje: DISPONIBLE → USADO (vencido se calcula).
+- Insumo (calculado): Sin stock, Bajo mínimo, Suficiente.
 ### Tipografía
 - **Títulos:** Antonio (condensada, mayúsculas, eco de "NOODLE"). H1 48px, H2 36px, H3 24px.
 - **Texto e interfaz:** Inter. Cuerpo 16px, secundario 14px, botones SemiBold 16px, datos de tabla 14px.
@@ -90,56 +138,59 @@ Vocabulario fijo de estados (igual que en las HU):
 - Radios: 16px tarjetas, 12px botones/inputs, pill para badges y chips.
 - Borde de 2px brown en tarjetas destacadas del cliente; en el personal, borde de 1px #E8DED3.
 - Espaciado en múltiplos de 8px. Íconos Lucide 24px, stroke 2.
-- Áreas táctiles de 44px o más (mesero, cajero y cocina usan tableta). Contraste AA mínimo.
-- Toda pantalla con datos diseña sus **4 estados**: inicial, cargando (skeleton y botón deshabilitado),
-  éxito y error (mensaje del servidor). También el **estado vacío** con el texto exacto de la HU.
+- Áreas táctiles de 44px o más (mesero y cocina usan tableta). Contraste AA mínimo.
 ### Layouts
-- **Cliente:** navbar superior con logo, selector de sucursal, saldo de puntos (FE-7.1.1),
-  campana (FE-9.4.1) y carrito. Móvil primero (360px) y escritorio (1440px).
+- **Cliente:** navbar superior con logo, selector de sucursal, saldo de puntos (FE-20.1),
+  campana (FE-31.1) y carrito. Móvil primero (360px) y escritorio (1440px).
 - **Personal:** barra lateral brown con las opciones de su rol + barra superior con sucursal, campana
-  y usuario. Tableta (1024×768) y escritorio (1440px).
+  (FE-31.1) y usuario. Tableta (1024×768) y escritorio (1440px).
 - **Cocina:** pantalla completa sin barra lateral, tablero horizontal.
-## Mapa de pantallas (rutas → task FE)
+## Mapa de pantallas (ruta · rol · task FE, según el documento final)
  
-### Público / Cliente — `app/(cliente)/`
-- `/login`, `/registro` — FE-A.1.1
-- `/menu` — Menú por sucursal con Disponible/Agotado — FE-1.2.1 (la reutiliza el mesero)
-- `/carrito` — Carrito, modalidad de pago, hora de retiro y pago simulado — FE-2.2.1
-- `/reservar` — Buscador de disponibilidad — FE-4.1.1 → formulario y confirmación — FE-4.2.1
-- `/mis-pedidos` — Pedidos con estado + "Calificar" — FE-8.1.1
-- `/resenas` — Promedio y reseñas por sucursal — FE-8.2.1
-- `/mis-puntos` — Saldo, historial y canje — FE-7.2.1, FE-7.3.1
-- `/notificaciones` — Centro de avisos — FE-9.4.1
-### Mesero — `app/(staff)/mesero/`
-- `/salon` — Cuadrícula de mesas por estado + "Marcar limpia" — FE-A.3.1 (componente compartido)
-- `/comanda` — Mesa → menú con cantidades y notas → resumen → número de pedido — FE-2.1.1
-- `/listos` — "Listos para entregar" + "Entregado" — FE-3.2.1
-### Cocina — `app/(staff)/cocina/`
-- `/` — Tablero de comandas, Iniciar/Listo por platillo, notas resaltadas — FE-3.1.1, FE-3.2.1
-- Panel de insumos faltantes al tocar un platillo agotado — FE-5.1.1
-### Cajero — `app/(staff)/caja/`
-- `/mesas` — Cuenta de la mesa — FE-6.1.1 → cobro dividido, ticket y datos fiscales — FE-6.1.2, FE-6.3.1
-- `/para-llevar` — Pedidos para llevar, vuelto y "Marcar retirado" — FE-6.2.1
-- `/documentos` — Consulta y reimpresión de documentos fiscales — FE-6.3.2
-### Encargado de inventario — `app/(staff)/inventario/`
-- `/compras/nueva` — Registro de compras — FE-5.3.1
-- `/compras` — Historial de entradas — FE-5.3.2
-- `/por-comprar` — Insumos por comprar — FE-5.2.1
-### Gerente (sucursal) — `app/(staff)/gerente/`
-- `/` — Panel con widget de insumos críticos — FE-5.2.1
-- `/catalogo` — Tabla de platillos + modal crear/editar + estado — FE-1.1.1
-- `/reservaciones` — Listado + cuadrícula de ocupación + cancelar — FE-4.3.1
-- `/lealtad` — Configuración del programa — FE-7.4.1
-- También accede a `/caja/documentos` y a `/inventario/por-comprar`.
-### Gerente general — `app/(staff)/reportes/`
-- `/ventas` — Ventas y comparación por sucursal — FE-10.1.1
-- `/mas-vendidos` — Platillos más vendidos — FE-10.2.1
-- `/horarios-pico` — Horarios pico — FE-10.3.1
+### Público y cliente
+- `/login`, `/registro` · público · FE-35.1 (formularios, redirección por rol y guarda de rutas)
+- `/menu` · público (Cliente, Mesero o sin sesión) · FE-2.1. Panel de insumos faltantes dentro de
+  `/menu` al tocar un platillo agotado · Cocina, Mesero y Gerente (nunca al cliente) · FE-11.1
+- `/pedidos/llevar` · Cliente · FE-4.1 (carrito, sucursal, modalidad de pago, hora de retiro, 409)
+- `/pedidos/:pedidoId/pago` · Cliente · FE-18.1 (pago en línea y comprobante) + datos fiscales FE-19.1
+- `/reservaciones/disponibilidad` · público · FE-8.1 → `/reservaciones/nueva` · Cliente · FE-9.1
+- `/mis-pedidos` · Cliente · FE-24.1 (lista con estado + «Calificar» con estrellas y comentario)
+- `/sucursales/resenas` · público · FE-25.1
+- `/mis-puntos` · Cliente · FE-21.1 · `/canje` · Cliente · FE-22.1
+- Barra superior del cliente: saldo de puntos · Cliente · FE-20.1
+- Barra superior de todas las pantallas: campana y centro de notificaciones · todos con sesión · FE-31.1
+- `/documentos-fiscales` · Cliente (los suyos), Mesero y Gerente (su sucursal) · FE-19.2
+### Mesero — `/mesero/…`
+- `/mesero/salon` · FE-5.1 (cuadrícula de mesas + «Marcar limpia»; componente compartido)
+- `/mesero/comandas` · FE-3.1 (mesa → menú con cantidades y notas → resumen → número de pedido)
+- `/mesero/listos` · FE-7.1 («Listos para entregar» + «Entregado»)
+- `/mesero/cuentas` · FE-16.1 (cuenta de una mesa ocupada)
+- `/mesero/cuentas/:cuentaId/cobro` · FE-16.2 (cobro dividido y ticket) + FE-19.1 (datos fiscales)
+- `/mesero/pedidos-llevar` · FE-17.1 (cobro en caja, vuelto y «Marcar retirado»)
+### Cocina
+- `/cocina/tablero` · Cocina y Gerente · FE-6.1 (tablero, polling 5 s) + FE-7.1 («Iniciar»/«Listo», solo Cocina)
+### Gerente (sucursal) — `/gerente/…`
+- `/gerente` · widget de insumos críticos · FE-14.1
+- `/gerente/catalogo` · FE-1.1 (tabla + modal crear/editar + estado)
+- `/gerente/reservaciones` · FE-10.1 (listado por fecha, ocupación por franja, cancelar)
+- `/gerente/inventario` · FE-13.1 · `/gerente/insumos-por-comprar` · FE-14.1
+- `/gerente/compras/nueva` · FE-15.1 · `/gerente/compras` · FE-15.2
+- `/gerente/calificaciones` · FE-26.1
+- `/gerente/lealtad` · Gerente y Gerente general · FE-23.1
+- También: `/cocina/tablero` (FE-6.1) y `/documentos-fiscales` (FE-19.2).
+### Gerente general — `/reportes/…`
+- `/reportes/ventas` · FE-32.1 · `/reportes/platillos` · FE-33.1 · `/reportes/horarios` · FE-34.1
+- También: `/gerente/lealtad` (FE-23.1).
+Historias sin task FE: H12 (descuento de insumos), H27–H30 (servicio y avisos de notificaciones) y H36
+(middleware BE-36.1; la guarda de rutas del frontend está en FE-35.1).
 ## Componentes compartidos (diseñar y construir una sola vez)
-- `SalonMesas` (FE-A.3.1): lo usan la comanda (FE-2.1.1) y la cuenta de mesa (FE-6.1.1).
-- `MenuSucursal` (FE-1.2.1): lo usan el cliente, el mesero y la alerta de insumos (FE-5.1.1).
-- `TarjetaPlatillo`, `BadgeEstado`, `SelectorSucursal`, `Campana` (FE-9.4.1), `SaldoPuntos` (FE-7.1.1),
-  `EstadoVacio`, `Modal`, `Tabla` con paginación y filtros.
+- `SalonMesas` (FE-5.1): lo usan la comanda (FE-3.1) y la cuenta de mesa (FE-16.1).
+- `MenuSucursal` (FE-2.1): lo usan el cliente, el mesero (FE-3.1) y la alerta de insumos (FE-11.1).
+- `PasarelaPago` (sección 2.3): cobro con tarjeta (FE-16.2) y pago en línea (FE-18.1).
+- `DatosFiscales` (FE-19.1): dentro del cobro del mesero y del pago en línea.
+- `AccesoDenegado`, `TarjetaPlatillo`, `BadgeEstado`, `SelectorSucursal`, `Campana` (FE-31.1),
+  `SaldoPuntos` (FE-20.1), `EstadoVacio`, `Modal` (incluida la confirmación), `Tabla` con paginación
+  de 10 y filtros.
 ## Figma
 - Archivo: https://www.figma.com/design/pcJk904tbSTwfNlSRz8aRw/NoodleVolt?t=JeYJetuKxZ7tCo5v-1
 - Páginas: `Design System` · `Layouts` · `E1 Menú` · `E2 Pedidos` · `E3 Cocina` ·
@@ -154,10 +205,9 @@ Vocabulario fijo de estados (igual que en las HU):
   sucursales de El Salvador (p. ej. "San Salvador – Centro", "Santa Tecla").
 - Primero se diseña y el equipo aprueba en Figma; después se programa a partir de los frames aprobados.
 ## Convenciones de código
-- Componentes en `components/` (UI genérica en `components/ui/`); stores de Zustand en `stores/`;
-  cliente HTTP y tipos de la API en `lib/api/`.
+- Componentes en `components/` (UI genérica en `components/ui/`); cliente HTTP y tipos de la API en
+  `lib/api/`.
 - Textos de la interfaz en español; código e identificadores en inglés. Los valores de enum de la API
   se respetan tal cual (`EN_PREPARACION`, `POR_LIMPIAR`…) y se traducen a etiquetas solo en la UI.
 - Cada pantalla trae sus pruebas de componente (éxito, error y carga), como pide la definición de terminado.
 - Antes de un PR, `npm run lint` y `npm run build` deben pasar y no puede haber errores en consola.
- 
