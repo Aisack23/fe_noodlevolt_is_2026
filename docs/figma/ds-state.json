@@ -4,7 +4,7 @@
   "previousFileKey": "kZjzufiffIa9eEULQrqfVB",
   "team": "Elektra (plan Student, asiento Full)",
   "updatedAt": "2026-11-02",
-  "status": "Lote 3a (FE-35.1, FE-20.1, FE-31.1) y Lote 3b (FE-8.1, FE-9.1, FE-21.1, FE-22.1, FE-24.1, FE-25.1) construidos y revisados. Pendiente: aprobación del equipo antes de programar.",
+  "status": "Lote 3a y 3b construidos y revisados; ajustes del Lote 3 aplicados (medias estrellas, paginación apilada en 360, SaldoPuntos en la navbar móvil). Lote 4a (Gerente) parcial: FE-10.1, FE-13.1, FE-14.1 (panel y insumos por comprar, sin tablet ni estados de carga/error) y FE-15.1 y FE-15.2 (escritorio). Pendiente: aprobación del equipo antes de programar.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
@@ -277,6 +277,14 @@
     "Lote 3a: FE-31.1 en página E9 Notificaciones: campana con contador y panel de 10 avisos, cliente en 1440 (con avisos, vacío, cargando, error) y 360 (con avisos, vacío); personal Mesero y Gerente en 1440 (con avisos, vacío)",
     "Lote 3a: coherencia de datos revisada (pedido #1044, $13.59, 13 puntos, San Salvador – Centro, #1030 sin conflicto con el tablero, Mesa 2 con cuenta A-102)",
     "Lote 3a: corrección de barras móviles de FE-20.1 (chip de error «Sin saldo», margen 12 px y logo 0.85) para que quepan en 360 px; panel de escritorio de FE-31.1 a 1100 px de alto",
+    "Lote 4a · Ajuste 1: Estrellas con medias (variantes Valor=0.5 a 4.5 en modo Lectura) y propiedades «Mostrar número» (booleano) y «Número» (texto); FE-25.1 muestra 4.6 como 4 llenas, 1 media y «4.6»",
+    "Lote 4a · Ajuste 2: componente Paginación con variante Tamaño=Móvil 360 (texto arriba, flechas abajo, centrado) aplicado en E8, E7 (FE-21.1) y E1 (FE-1.1, 100:3300)",
+    "Lote 4a · Ajuste 3: SaldoPuntos dentro del componente Navbar cliente móvil con sesión (23:311), logo a 68×31; barras «Barra superior · Móvil 360» hechas a mano reemplazadas por instancias en FE-2.1, FE-20.1 (normal), FE-21.1, FE-24.1 y FE-31.1. Quedan compuestas las de «Saldo de puntos · Cargando» y «Error» (132:1526 y 132:1548) porque muestran el chip de estado",
+    "Lote 4a · FE-10.1 /gerente/reservaciones (E4, sección 146:2074): escritorio 1440 con filtro de fecha 15/11/2026, tabla de 6 reservaciones (RSV-0051 a RSV-0056, Santa Tecla), ocupación por franja calculada con 90 min y 6 mesas, modal de cancelación de peligro, vacío, cargando, error y sin permiso; tablet 1024 con tabla. Frames: 146:2075, 146:2386, 146:2504, 146:2634, 146:2793, 146:2924, 146:3042",
+    "Lote 4a · FE-13.1 /gerente/inventario (E5, 147:1243 a 147:2262): 10 insumos ordenados alfabéticamente, filtro de estado, Sin stock / Bajo mínimo / Suficiente; escritorio (lista, vacío, cargando, error, sin permiso) y tablet (lista). Frames: 147:1243, 147:1546, 147:1848, 147:1976, 147:2133, 147:2262",
+    "Lote 4a · FE-14.1 (E5, 147:2392 a 147:2783): panel /gerente con widget de insumos críticos (6 en alerta, primeros 5) y /gerente/insumos-por-comprar con cantidad sugerida = mínimo × 2 − actual (19, 6, 7, 16, 60, 100) y estado vacío «Todos los insumos están sobre su mínimo». Frames: 147:2392, 147:2549, 147:2783",
+    "Lote 4a · FE-15.1 /gerente/compras/nueva (sección en E5, 149:2527 a 149:3516): cabecera, detalle dinámico con Quitar y Agregar, Guardar entrada deshabilitado con datos incompletos, factura duplicada 409 (FAC-004490), éxito, cargando, error y sin permiso. Frames: 149:2527, 149:2717, 149:2881, 149:3077, 149:3274, 149:3396, 149:3516",
+    "Lote 4a · FE-15.2 /gerente/compras (E5, 149:3634 a 149:4654): filtros de proveedor, fechas e insumo en el encabezado, 10 por página (S21, 24 registros) y vacío «No se encontraron registros de compras»; filtrada, cargando, error y sin permiso. Frames: 149:3634, 149:3958, 149:4177, 149:4326, 149:4504, 149:4654",
     "Lote 3b: FE-8.1 en página E4 Reservaciones: disponibilidad pública con navbar de invitado en 360 (con resultados, sin mesas, fecha pasada, cargando, error) y 1440 (con resultados y sin mesas); la fecha de muestra es 10/11/2026",
     "Lote 3b: FE-9.1 en página E4: formulario de reservación en 360 (default, validación por campo, cargando, 409, confirmada con RSV-0042) y 1440 (default y confirmada); sin sesión redirige a /login (anotación)",
     "Lote 3b: FE-21.1 en página E7: Mis puntos en 360 (con movimientos, vacío, cargando, error) y 1440 (con historial de 10 en 10, 24 movimientos)",
@@ -290,8 +298,11 @@
     "Agregar DESHABILITADO a BadgeEstado.tsx en el código",
     "Badges y Alerta dentro de instancias de componentes: el relleno de tinte está ligado a variable, pero algunas instancias anidadas conservan una sobrescritura; regenerar esos frames para quitarla",
     "Lote 3b: revisar con el equipo la paginación de E8 (texto «Mostrando 1–10 de 38 reseñas» apretado junto a las flechas en 360 px) y los avisos de muestra de FE-21.1 y FE-24.1",
-    "Lote 3b: las estrellas del promedio (4.6) se muestran con 5 llenas por redondeo; decidir si el componente debe mostrar medias estrellas",
-    "El componente Navbar cliente móvil (23:328) no incluye SaldoPuntos; los frames de FE-20.1 y FE-31.1 en 360 lo componen a mano. Agregarlo al componente cuando se apruebe el lote",
+    "Lote 4a · Pendiente: FE-14.1 sin tablet ni estados de carga y error; FE-15.1 y FE-15.2 sin tablet (el encabezado de filtros de FE-15.2 se compacta en escritorio)",
+    "Lote 4a · Pendiente: FE-13.1 en tablet 1024 muestra 10 filas y la paginación queda fuera del marco de 768 px; falta decidir scroll o paginación compacta",
+    "Lote 4a · Pendiente: la paginación del componente muestra 4 páginas numéricas aunque las listas de FE-10.1 y FE-14.1 tienen 6 registros; el componente de ejemplo no adapta el número de páginas",
+    "Lote 4a · Pendiente: la fecha del SelectorFecha y el valor del Select de filtros salen del texto de ejemplo del componente; revisar en el equipo",
+    "Lote 4a · Pendiente: el estado de saldo en carga y error de la navbar móvil (FE-20.1) sigue compuesto a mano",
     "Revisar con el equipo los textos de avisos de ejemplo de FE-31.1 y el texto «Sin saldo» del chip de error de FE-20.1",
     "Aprobación del equipo antes de programar"
   ],
@@ -465,6 +476,39 @@
       "Mesero / Cobro / Tablet / Cuenta ya cobrada 409": "123:2144",
       "Mesero / Cobro / Tablet / Factura activa": "123:2279",
       "Mesero / Cobro / Tablet / Sin permiso": "123:2427"
+    },
+    "E4 Reservaciones · Lote 4a": {
+      "FE-10.1 · Gerente / Reservaciones / Desktop 1440 / Con reservaciones": "146:2075",
+      "FE-10.1 · Gerente / Reservaciones / Desktop 1440 / Cancelar · Confirmación": "146:2386",
+      "FE-10.1 · Gerente / Reservaciones / Desktop 1440 / Vacío": "146:2504",
+      "FE-10.1 · Gerente / Reservaciones / Desktop 1440 / Cargando": "146:2634",
+      "FE-10.1 · Gerente / Reservaciones / Desktop 1440 / Error": "146:2793",
+      "FE-10.1 · Gerente / Reservaciones / Desktop 1440 / Sin permiso": "146:2924",
+      "FE-10.1 · Gerente / Reservaciones / Tablet 1024 / Con reservaciones": "146:3042"
+    },
+    "E5 Inventario · Lote 4a": {
+      "FE-13.1 · Gerente / Inventario / Desktop 1440 / Lista": "147:1243",
+      "FE-13.1 · Gerente / Inventario / Tablet 1024 / Lista": "147:1546",
+      "FE-13.1 · Gerente / Inventario / Desktop 1440 / Vacío": "147:1848",
+      "FE-13.1 · Gerente / Inventario / Desktop 1440 / Cargando": "147:1976",
+      "FE-13.1 · Gerente / Inventario / Desktop 1440 / Error": "147:2133",
+      "FE-13.1 · Gerente / Inventario / Desktop 1440 / Sin permiso": "147:2262",
+      "FE-14.1 · Gerente / Panel / Desktop 1440 / Con insumos críticos": "147:2392",
+      "FE-14.1 · Gerente / Insumos por comprar / Desktop 1440 / Lista": "147:2549",
+      "FE-14.1 · Gerente / Insumos por comprar / Desktop 1440 / Vacío": "147:2783",
+      "FE-15.1 · Gerente / Compras · Nueva / Desktop 1440 / Listo para guardar": "149:2527",
+      "FE-15.1 · Gerente / Compras · Nueva / Desktop 1440 / Incompleto": "149:2717",
+      "FE-15.1 · Gerente / Compras · Nueva / Desktop 1440 / Factura duplicada 409": "149:2881",
+      "FE-15.1 · Gerente / Compras · Nueva / Desktop 1440 / Éxito": "149:3077",
+      "FE-15.1 · Gerente / Compras · Nueva / Desktop 1440 / Cargando": "149:3274",
+      "FE-15.1 · Gerente / Compras · Nueva / Desktop 1440 / Error": "149:3396",
+      "FE-15.1 · Gerente / Compras · Nueva / Desktop 1440 / Sin permiso": "149:3516",
+      "FE-15.2 · Gerente / Compras / Desktop 1440 / Lista": "149:3634",
+      "FE-15.2 · Gerente / Compras / Desktop 1440 / Filtrada · Molinos": "149:3958",
+      "FE-15.2 · Gerente / Compras / Desktop 1440 / Vacío": "149:4177",
+      "FE-15.2 · Gerente / Compras / Desktop 1440 / Cargando": "149:4326",
+      "FE-15.2 · Gerente / Compras / Desktop 1440 / Error": "149:4504",
+      "FE-15.2 · Gerente / Compras / Desktop 1440 / Sin permiso": "149:4654"
     }
   },
   "notes": [
@@ -558,7 +602,12 @@
     "Lote 3b · Reservaciones: «Reservar mesa», «Elige sucursal, fecha, hora y personas. Cada reservación dura 90 minutos.», «Mesas disponibles», «Mesa 3 · capacidad 4», «Reservar», «Buscar mesas», «No hay mesas disponibles para ese horario» / «Prueba otra hora o cambia la cantidad de personas.», «Nueva reservación», «Nombre de contacto *», «Teléfono * (8 dígitos)», «Personas (1 a 20)», «Confirmar reservación», «La mesa 3 ya se ocupó en ese horario.» / «Busca otro horario para reservar.», «Reservación confirmada», identificador RSV-0042 y «Volver al menú»",
     "Lote 3b · Puntos y canje: «Mis puntos», «Saldo disponible», «Historial», «Aún no tienes movimientos» / «Cuando compres o canjees puntos, aparecerán aquí.»; beneficios «Bebida de regalo» (200 pts), «Descuento de $5.00» (500 pts), «Combo familiar» (1,500 pts, «Te faltan 250 pts»); «¿Canjear 200 pts?» / «Se descuentan 200 pts de tu saldo. Tu código será válido por 30 días.», «Canje realizado», «Tu código», código NV-7K2M-9QXP, «Vence el 02/12/2026 · saldo restante 1,050 pts», «No tienes puntos suficientes para este beneficio.»; movimientos de muestra (Pedido #1036, Cuenta A-98 · Mesa 4, Bebida de regalo, Descuento de $5.00)",
     "Lote 3b · Mis pedidos: «Mis pedidos», «Calificar pedido #1030», «Elige de 1 a 5 estrellas y cuéntanos tu experiencia.», «¡Gracias! Tu reseña se publicó.», «Tu reseña: 4 estrellas», pedidos de muestra #1046 (Pendiente de pago), #1044 (Listo), #1030 (Entregado), #1032 (Entregado con reseña), #1028 (Cancelado), «Enviar reseña», «Reintentar»",
-    "Lote 3b · Reseñas: «Reseñas de la sucursal», «Promedio · 38 reseñas», «Sin promedio todavía», «Aún no hay reseñas» / «Cuando un cliente califique su pedido, aparecerá aquí.»; reseñas de muestra con primer nombre (Ana, Carlos, Sofía, Luis, María, Diego, Andrea, Javier, Laura, Pablo) y comentarios cortos; sucursal Santa Tecla sin reseñas"
+    "Lote 3b · Reseñas: «Reseñas de la sucursal», «Promedio · 38 reseñas», «Sin promedio todavía», «Aún no hay reseñas» / «Cuando un cliente califique su pedido, aparecerá aquí.»; reseñas de muestra con primer nombre (Ana, Carlos, Sofía, Luis, María, Diego, Andrea, Javier, Laura, Pablo) y comentarios cortos; sucursal Santa Tecla sin reseñas",
+    "Lote 4a · Reservaciones: «Reservaciones», «Consulta y cancela las reservaciones de tu sucursal.», «Fecha», «Identificador», «Ocupación por franja», «Franjas de 1 h · reservaciones de 90 min · 6 mesas», «N ocupadas · N libres», «Mostrando 1–6 de 6 reservaciones», «No hay reservaciones para esta fecha» / «Cambia la fecha o vuelve más tarde.», modal «¿Cancelar la reservación?» / «La reservación RSV-0051 de Luis Herrera (12:00 · 4 personas) quedará «Cancelada», su mesa se liberará y el cliente será avisado. Esta acción no se puede deshacer.», botón «Cancelar» por fila y «Volver» / «Cancelar reservación»",
+    "Lote 4a · Inventario: «Inventario», «Nivel de inventario de los insumos clave de tu sucursal.», «Estado», «Todos los estados», «No hay insumos registrados en tu sucursal» / «Cuando registres insumos, aparecerán aquí.»; insumos de muestra (Alga nori, Arroz, Caldo tonkotsu, Camarón, Cerdo molido, Fideo ramen, Huevo, Masa gyoza, Salsa de soya, Tofu) y unidades (kg, L, pza, hoja)",
+    "Lote 4a · Panel e insumos por comprar: «Panel», «Resumen de tu sucursal Santa Tecla.», «Insumos críticos», «N insumos en alerta», «Ver insumos por comprar», «Insumos por comprar», «Insumos con stock igual o menor al mínimo. Cantidad sugerida = mínimo × 2 − stock actual.», «Todos los insumos están sobre su mínimo» / «No hay insumos por comprar en este momento.», «Cantidad sugerida»",
+    "Lote 4a · Compras: «Nueva entrada de compra», «Registra la compra de insumos. El stock de cada insumo aumenta al guardar.», «Proveedor *», «Número de factura *», «Detalle de insumos», «Agregar insumo», «Quitar», «Guardar entrada», «Caducidad (opcional)», «Esta factura ya está registrada para este proveedor.», «Entrada registrada» / «El stock de Fideo ramen y Caldo tonkotsu se actualizó.», «Compras» / «Historial de entradas de insumos de tu sucursal.», «Mostrando 1–10 de 24 registros», «No se encontraron registros de compras» / «Cambia los filtros o vuelve más tarde.»; proveedores de muestra (Molinos del Pacífico S.A., Carnes El Porvenir, Mariscos del Golfo, Distribuidora Oriental) y facturas FAC-0044xx a FAC-0045xx",
+    "Lote 4a · Ajuste de estrellas: «Mostrar número» (propiedad) y texto del promedio «4.6»; paginación móvil sin cambios de texto distintos a «Mostrando 1–10 de 38 reseñas»"
   ],
   "componentProps": {
     "Botón": {
