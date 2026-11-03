@@ -4,7 +4,7 @@
   "previousFileKey": "kZjzufiffIa9eEULQrqfVB",
   "team": "Elektra (plan Student, asiento Full)",
   "updatedAt": "2026-11-02",
-  "status": "Lote 1 terminado: salón (FE-5.1), tablero de cocina (FE-6.1), controles de estado y listos (FE-7.1) y panel de insumos faltantes (FE-11.1). Pendiente de aprobación del equipo.",
+  "status": "Lote 1 corregido (tintes, FE-11.1, barra con Menú) y Lote 2 (pagos) construido en Figma. Pendiente de aprobación del equipo.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
@@ -31,7 +31,8 @@
     "Componentes de pantalla (grupo)": "buscar por nombre en 10:122",
     "Formularios y superposiciones (Lote 0)": "96:480",
     "Plantillas de estados (2.6)": "98:642",
-    "Sala y cocina (Lote 1)": "109:4306"
+    "Sala y cocina (Lote 1)": "109:4306",
+    "Pagos (Lote 2)": "122:968"
   },
   "logos": {
     "Logo/Mascota": "3:5",
@@ -179,7 +180,14 @@
     "Mesero/FilaListo": "109:4502",
     "Salón/Leyenda": "109:4503",
     "SalonMesas": "109:4633",
-    "PanelInsumosFaltantes": "109:4732"
+    "PanelInsumosFaltantes": "109:4732",
+    "Comprobante": "122:970",
+    "Cuenta/Desglose": "122:978",
+    "Pago/FilaMetodo": "122:1018",
+    "Pedido/FilaLlevar": "122:1060",
+    "Fiscal/Bloque": "122:1141",
+    "PasarelaPago": "122:1216",
+    "Personal/NavItem Menú (en Personal/Sidebar)": "119:7992"
   },
   "variants": {
     "Navbar cliente": {
@@ -250,14 +258,24 @@
     "Lote 1: FE-5.1 Salón (tableta y escritorio) con lista, confirmación, cargando, éxito, error 409, vacío, error y sin permiso",
     "Lote 1: FE-6.1 Tablero de cocina en escritorio (Cocina, enviando, error 409, Gerente solo lectura, cargando, vacío, error, sin permiso) y en tableta",
     "Lote 1: FE-7.1 Listos para entregar (tableta): lista, entregando, vacío, error, cargando y sin permiso",
-    "Lote 1: FE-11.1 Panel de insumos faltantes en /menu para Cocina, Mesero y Gerente (con faltantes, cargando y error) y Cliente sin panel"
+    "Lote 1: FE-11.1 Panel de insumos faltantes en /menu para Cocina, Mesero y Gerente (con faltantes, cargando y error) y Cliente sin panel",
+    "Corrección: badges y alertas ligados a variables de tinte (estado/*-tinte) a 100 % de opacidad; instancias de Mesa reconstruidas en FE-5.1 y SalonMesas",
+    "Corrección: FE-11.1 — Cliente en layout de escritorio, datos consistentes (Gyozas de cerdo (6) agotada), error del panel con plantilla de error del servidor, Cocina sin barra lateral",
+    "Barra del personal: entrada «Menú» (/menu) para Mesero y Gerente; activa en FE-11.1",
+    "Encabezado del tablero de cocina: botón «Ver menú» (escritorio y tableta)",
+    "Lote 2: componentes Comprobante, Cuenta/Desglose, Pago/FilaMetodo, Pedido/FilaLlevar, Fiscal/Bloque y PasarelaPago (formulario, procesando, rechazado, aprobado)",
+    "Lote 2: FE-16.1 Cuenta de mesa (4 estados) y FE-16.2 Cobro (8 estados, tableta, incluye confirmación, procesando, 402, éxito, 409, factura y sin permiso)",
+    "Lote 2: FE-17.1 Pedidos para llevar (tableta, 6 estados) y FE-18.1 Pago en línea (cliente 360, 5 estados)",
+    "Lote 2: FE-19.2 Documentos fiscales (escritorio, 5 estados e impresión) con 10 por página (S21)"
   ],
   "pending": [
-    "Confirmar con el equipo los textos inventados (listas invented de cada lote)",
+    "Confirmar con el equipo los textos inventados (listas invented)",
     "Agregar DESHABILITADO a BadgeEstado.tsx en el código",
-    "La barra lateral del personal no tiene entrada «Menú»; el frame de FE-11.1 usa la de Salón",
-    "FE-6.1 en tableta: las tarjetas se desplazan horizontalmente; la tercera se corta al borde a propósito",
-    "Aprobación del equipo antes de programar; siguiente: Lote 2 (pagos)"
+    "Mesero: no hay entrada de menú para Cuentas (/mesero/cuentas), Pedidos para llevar (/mesero/pedidos-llevar) ni Documentos fiscales; hoy las pantallas usan Salón como activa",
+    "Gerente: la barra muestra las mismas entradas que el Mesero (Salón, Comanda, Listos); falta la navegación propia del Gerente",
+    "Badges y Mesa dentro de instancias: el relleno quedó ligado a la variable de tinte (100 %), pero las instancias anidadas conservan una sobrescritura de relleno. Para eliminarla hay que regenerar esos frames",
+    "FE-19.2: falta la vista del Cliente (sus propios documentos) y en la fila de Empresa Tres el DUI/NIT se corta (acortar el dato de muestra)",
+    "Aprobación del equipo antes de programar; siguiente: Lote 3 (lealtad, FE-20.1 a FE-23.1)"
   ],
   "frames": {
     "Layouts": {
@@ -341,6 +359,20 @@
       "Mesero / Listos / Tablet / Error": "112:2145",
       "Mesero / Listos / Tablet / Cargando": "112:2228",
       "Mesero / Listos / Tablet / Sin permiso": "112:2333"
+    },
+    "E6 Pagos": {
+      "Mesero / Cuentas / Tablet / Inicial": "123:1095",
+      "Mesero / Cuentas / Tablet / Cargando": "123:1194",
+      "Mesero / Cuentas / Tablet / Sin cuenta": "123:1280",
+      "Mesero / Cuentas / Tablet / Sin permiso": "123:1364",
+      "Mesero / Cobro / Tablet / Inicial": "123:1440",
+      "Mesero / Cobro / Tablet / Confirmar": "123:1572",
+      "Mesero / Cobro / Tablet / Tarjeta procesando": "123:1714",
+      "Mesero / Cobro / Tablet / Tarjeta rechazada 402": "123:1859",
+      "Mesero / Cobro / Tablet / Cobrado": "123:2010",
+      "Mesero / Cobro / Tablet / Cuenta ya cobrada 409": "123:2144",
+      "Mesero / Cobro / Tablet / Factura activa": "123:2279",
+      "Mesero / Cobro / Tablet / Sin permiso": "123:2427"
     }
   },
   "notes": [
@@ -370,6 +402,13 @@
       "FE-6.1 · Cocina / Tablero / Desktop": "111:1209",
       "FE-6.1 · Cocina / Tablero / Tablet": "111:2260",
       "FE-7.1 · Mesero / Listos / Tablet": "112:1838"
+    },
+    "E6 Pagos": {
+      "FE-16.1 · Mesero / Cuentas / Tablet": "123:1094",
+      "FE-16.2 · Mesero / Cobro / Tablet": "123:1439",
+      "FE-17.1 · Mesero / Pedidos para llevar / Tablet": "124:2313",
+      "FE-18.1 · Cliente / Pago en línea / Mobile": "124:2314",
+      "FE-19.2 · Mesero / Documentos fiscales / Desktop": "125:2936"
     }
   },
   "invented": [
@@ -392,7 +431,18 @@
     "Tablero error 409: «No se pudo cambiar el estado» / «Transición no permitida: «Té verde helado» ya no está «Pendiente».»",
     "Tablero: nombres de personal de muestra «Rosa Méndez · Cocina», «Ana Martínez · Gerente», «Carlos Rivas · Mesero»; pedidos #1039–#1042, «Mesa 2», «Para llevar», «12:18 · hace 15 min»",
     "Listos: «Listos para entregar», «Platillos listos de tus mesas. Márcalos como «Entregado» al llevarlos.», «No hay platillos listos» / «Cuando cocina marque un platillo como listo, aparecerá aquí.», «Listo desde las 12:41»",
-    "Panel de insumos: «Insumos faltantes», «Insumos que faltan para preparar 1 porción. Se calcula al abrir este panel.», encabezados «Insumo», «Disponible», «Requerido», «Faltante»; insumos «Masa gyoza» y «Cerdo molido»"
+    "Panel de insumos: «Insumos faltantes», «Insumos que faltan para preparar 1 porción. Se calcula al abrir este panel.», encabezados «Insumo», «Disponible», «Requerido», «Faltante»; insumos «Masa gyoza» y «Cerdo molido»",
+    "Pagos: «Cuenta de mesa», «Elige una mesa ocupada para revisar su cuenta.», «Cuenta A-102», «3 pedidos · 5 platillos · abierta desde las 12:05»",
+    "Cuenta sin cuenta abierta: «Esta mesa no tiene una cuenta abierta.» / «Elige otra mesa ocupada para cobrar.» y botón «Elegir otra mesa»",
+    "Cobro: «Cobrar cuenta · Mesa 2», «Propina (sugerida 10 %)», «Código de canje (opcional)», «Correo del cliente (opcional)», «Saldo restante», «Confirmar cobro», «¿Confirmar el cobro?» / «Se cobrarán $13.59 en efectivo y tarjeta. Esta acción no se puede deshacer.»",
+    "409 de cobro: «Esta cuenta ya fue cobrada.» / «No se duplicó el pago ni los puntos.»",
+    "Comprobante: «Comprobante #T-00021», «Efectivo $20.00 · Vuelto $6.41», «Subtotal $12.35 · Propina $1.24»",
+    "Pedidos para llevar: «Pedido #1044 · Para llevar», «Vuelto $6.41», «3 platillos · Total $13.59»; vacío «No hay pedidos para llevar» / «Los pedidos para llevar aparecen aquí cuando se confirman.»",
+    "Pago en línea: «Pagar pedido», «Pago aprobado», «Pago rechazado» / «Fondos insuficientes (simulado)», «Reintentar pago», «Ver mis pedidos», «Este pedido ya fue pagado.» / «No se hizo un segundo cobro.»",
+    "Datos fiscales: «Datos fiscales», «Factura con datos fiscales / Crédito Fiscal», «Nombre del contribuyente *», «DUI o NIT *», «NRC * (solo Crédito Fiscal)», «Dirección *», «Revisa los datos marcados.» / «El NRC debe tener el formato 0000000-0.»",
+    "Documentos fiscales: «Documentos fiscales», «Consulta y reimprime documentos de tu sucursal.», «Mostrando 1–10 de 24 documentos», filas de muestra CF-000012 a CF-000021 con nombres ficticios y DUI/NIT de ejemplo",
+    "Impresión: «Crédito fiscal CF-000021», «Contribuyente: María López · DUI 00000000-0», «Sucursal: San Salvador – Centro · 14/11/2026»",
+    "Badges de pago: se conservan Pagado, Cobro en caja pendiente y Pago en línea pendiente porque FE-17.1 los pide por nombre"
   ],
   "componentProps": {
     "Botón": {
@@ -447,5 +497,13 @@
     "FE-2.1.1": "FE-3.1",
     "FE-2.2.1": "FE-4.1",
     "FE-A.3.1": "FE-5.1"
+  },
+  "tintVariables": {
+    "estado/success-tinte": "#E6EFEA",
+    "estado/warning-tinte": "#F6EFE4",
+    "estado/danger-tinte": "#F3E6E6",
+    "estado/info-tinte": "#E6EDF6",
+    "estado/neutral-tinte": "#F3F2F1",
+    "nota": "Color de estado mezclado con blanco al 12 % (hex sólido, opacidad 100 %). BadgeEstado y Alerta usan estas variables; el render ya no pinta sólido."
   }
 }
