@@ -4,7 +4,7 @@
   "previousFileKey": "kZjzufiffIa9eEULQrqfVB",
   "team": "Elektra (plan Student, asiento Full)",
   "updatedAt": "2026-11-02",
-  "status": "Lote 2 corregido (barra por rol, overlays, CVV, montos y comprobantes por flujo, FE-19.2 completo con vista del cliente). Lote 3 (cliente) pendiente.",
+  "status": "Lote 3a (base del cliente: FE-35.1, FE-20.1, FE-31.1) construido y revisado. Lote 3b (FE-8.1, FE-9.1, FE-21.1, FE-22.1, FE-24.1, FE-25.1) pendiente.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
@@ -271,13 +271,20 @@
     "Lote 2: capa semitransparente en modales y comprobantes (FE-16.2, FE-17.1); «Procesando pago» en FE-16.2 y FE-18.1; CVV en lugar de «Código de seguridad»",
     "Lote 2: FE-16.2 con Efectivo $10.00 + Tarjeta $3.59 = $13.59 y estado intermedio «Saldo pendiente» ($3.59, confirmar deshabilitado)",
     "Lote 2: comprobantes por flujo (Pedido #1045 · Para llevar; Tarjeta •••• 4242 sin vuelto) y números de pedido distintos (#1044, #1045, #1046)",
-    "Lote 2: FE-19.2 con buscador DUI/NIT o número, filtro por tipo de documento, correlativos FCF y CF, vista imprimible completa y vista del cliente (solo sus documentos)"
+    "Lote 2: FE-19.2 con buscador DUI/NIT o número, filtro por tipo de documento, correlativos FCF y CF, vista imprimible completa y vista del cliente (solo sus documentos)",
+    "Lote 3a: FE-35.1 en página A Acceso y salón: /login y /registro en 360 (8 estados: default, error de credenciales, validación por campo, cargando, correo ya registrado 409) y en 1440 (con nota de redirección por rol)",
+    "Lote 3a: FE-20.1 en página E7 Lealtad: saldo en la barra del cliente en 360 (normal, cargando, error informativo) y 1440 (normal con la navbar real; cargando y error compuestos)",
+    "Lote 3a: FE-31.1 en página E9 Notificaciones: campana con contador y panel de 10 avisos, cliente en 1440 (con avisos, vacío, cargando, error) y 360 (con avisos, vacío); personal Mesero y Gerente en 1440 (con avisos, vacío)",
+    "Lote 3a: coherencia de datos revisada (pedido #1044, $13.59, 13 puntos, San Salvador – Centro, #1030 sin conflicto con el tablero, Mesa 2 con cuenta A-102)",
+    "Lote 3a: corrección de barras móviles de FE-20.1 (chip de error «Sin saldo», margen 12 px y logo 0.85) para que quepan en 360 px; panel de escritorio de FE-31.1 a 1100 px de alto"
   ],
   "pending": [
     "Confirmar con el equipo los textos inventados (listas invented)",
     "Agregar DESHABILITADO a BadgeEstado.tsx en el código",
     "Badges y Alerta dentro de instancias de componentes: el relleno de tinte está ligado a variable, pero algunas instancias anidadas conservan una sobrescritura; regenerar esos frames para quitarla",
-    "Lote 3 (cliente: FE-35.1, FE-8.1, FE-9.1, FE-20.1, FE-21.1, FE-22.1, FE-24.1, FE-25.1, FE-31.1) pendiente",
+    "Lote 3b (cliente: FE-8.1, FE-9.1, FE-21.1, FE-22.1, FE-24.1, FE-25.1) pendiente",
+    "El componente Navbar cliente móvil (23:328) no incluye SaldoPuntos; los frames de FE-20.1 y FE-31.1 en 360 lo componen a mano. Agregarlo al componente cuando se apruebe el lote",
+    "Revisar con el equipo los textos de avisos de ejemplo de FE-31.1 y el texto «Sin saldo» del chip de error de FE-20.1",
     "Aprobación del equipo antes de programar"
   ],
   "frames": {
@@ -363,6 +370,36 @@
       "Mesero / Listos / Tablet / Cargando": "112:2228",
       "Mesero / Listos / Tablet / Sin permiso": "112:2333"
     },
+    "A Acceso y salón": {
+      "Público / Login / Mobile 360 / Default": "132:1208",
+      "Público / Login / Mobile 360 / Error credenciales": "132:1225",
+      "Público / Login / Mobile 360 / Validación": "132:1250",
+      "Público / Login / Mobile 360 / Cargando": "132:1279",
+      "Público / Registro / Mobile 360 / Default": "132:1298",
+      "Público / Registro / Mobile 360 / Validación": "132:1323",
+      "Público / Registro / Mobile 360 / Correo ya registrado": "132:1372",
+      "Público / Registro / Mobile 360 / Cargando": "132:1411",
+      "Público / Login / Desktop 1440 / Default": "132:1438",
+      "Público / Registro / Desktop 1440 / Default": "132:1464"
+    },
+    "E7 Lealtad": {
+      "Cliente / Saldo de puntos / Mobile 360 / Normal": "132:1501",
+      "Cliente / Saldo de puntos / Mobile 360 / Cargando": "132:1526",
+      "Cliente / Saldo de puntos / Mobile 360 / Error": "132:1548",
+      "Cliente / Saldo de puntos / Desktop 1440 / Normal": "132:1575",
+      "Cliente / Saldo de puntos / Desktop 1440 / Cargando": "132:1622",
+      "Cliente / Saldo de puntos / Desktop 1440 / Error": "132:1653"
+    },
+    "E9 Notificaciones": {
+      "Cliente / Notificaciones / Desktop 1440 / Con avisos": "133:1208",
+      "Cliente / Notificaciones / Desktop 1440 / Vacío": "133:1316",
+      "Cliente / Notificaciones / Desktop 1440 / Cargando": "133:1373",
+      "Cliente / Notificaciones / Desktop 1440 / Error": "133:1447",
+      "Personal / Notificaciones / Desktop 1440 / Mesero · Con avisos": "133:1500",
+      "Personal / Notificaciones / Desktop 1440 / Gerente · Vacío": "133:1610",
+      "Cliente / Notificaciones / Mobile 360 / Con avisos": "133:1710",
+      "Cliente / Notificaciones / Mobile 360 / Vacío": "133:1755"
+    },
     "E6 Pagos": {
       "Mesero / Cuentas / Tablet / Inicial": "123:1095",
       "Mesero / Cuentas / Tablet / Cargando": "123:1194",
@@ -406,6 +443,21 @@
       "FE-6.1 · Cocina / Tablero / Tablet": "111:2260",
       "FE-7.1 · Mesero / Listos / Tablet": "112:1838"
     },
+    "A Acceso y salón (Lote 3a)": {
+      "FE-35.1 · Público / Login / Mobile 360": "132:1208",
+      "FE-35.1 · Público / Registro / Mobile 360": "132:1298",
+      "FE-35.1 · Público / Login / Desktop 1440": "132:1438",
+      "FE-35.1 · Público / Registro / Desktop 1440": "132:1464"
+    },
+    "E7 Lealtad (Lote 3a)": {
+      "FE-20.1 · Cliente / Saldo de puntos / Mobile 360": "132:1501",
+      "FE-20.1 · Cliente / Saldo de puntos / Desktop 1440": "132:1575"
+    },
+    "E9 Notificaciones (Lote 3a)": {
+      "FE-31.1 · Cliente / Notificaciones / Desktop 1440": "133:1208",
+      "FE-31.1 · Cliente / Notificaciones / Mobile 360": "133:1710",
+      "FE-31.1 · Personal / Notificaciones / Desktop 1440": "133:1500"
+    },
     "E6 Pagos": {
       "FE-16.1 · Mesero / Cuentas / Tablet": "123:1094",
       "FE-16.2 · Mesero / Cobro / Tablet": "123:1439",
@@ -445,7 +497,12 @@
     "Datos fiscales: «Datos fiscales», «Factura con datos fiscales / Crédito Fiscal», «Nombre del contribuyente *», «DUI o NIT *», «NRC * (solo Crédito Fiscal)», «Dirección *», «Revisa los datos marcados.» / «El NRC debe tener el formato 0000000-0.»",
     "Documentos fiscales: «Documentos fiscales», «Consulta y reimprime documentos de tu sucursal.», «Mostrando 1–10 de 24 documentos», filas de muestra CF-000012 a CF-000021 con nombres ficticios y DUI/NIT de ejemplo",
     "Impresión: «Crédito fiscal CF-000021», «Contribuyente: María López · DUI 00000000-0», «Sucursal: San Salvador – Centro · 14/11/2026»",
-    "Badges de pago: se conservan Pagado, Cobro en caja pendiente y Pago en línea pendiente porque FE-17.1 los pide por nombre"
+    "Badges de pago: se conservan Pagado, Cobro en caja pendiente y Pago en línea pendiente porque FE-17.1 los pide por nombre",
+    "Login: «Iniciar sesión», «Entra para ver tu menú, tus pedidos y tus puntos.», «Correo o contraseña incorrectos.» (genérico, sin revelar si el correo existe), «Ingresa un correo válido.», «Ingresa tu contraseña.», «¿No tienes cuenta? Regístrate»",
+    "Redirección por rol (propuesta, no fijada por la HU): CLIENTE → /menu, MESERO → /mesero/salon, COCINA → /cocina/tablero, GERENTE → /gerente, GERENTE_GENERAL → /reportes/ventas; nota «Si el rol no tiene acceso… «Acceso denegado»»",
+    "Registro: «Crear cuenta», «Regístrate como cliente para acumular puntos y reservar mesa.», campos «Nombre completo *», «Correo electrónico *», «Teléfono (opcional)», «Contraseña * (mínimo 8 caracteres)»; errores «Escribe tu nombre (máximo 100 caracteres).», «El teléfono debe tener 8 dígitos.», «La contraseña debe tener al menos 8 caracteres.», «Ya existe una cuenta con este correo.» / «Este correo ya está registrado.»",
+    "Saldo de puntos: chip de error «Puntos no disponibles» en escritorio y «Sin saldo» en móvil (por ancho de 360 px); texto de apoyo «Tu saldo se muestra en todas las pantallas del cliente.», «Si falla la consulta, el aviso informa sin bloquear la pantalla.»",
+    "Campana: «Notificaciones», «N sin leer», «No tienes notificaciones» / «Cuando haya novedades sobre tus pedidos o puntos, aparecerán aquí.», «No se pudo completar la operación. Intenta de nuevo», «Reintentar»; avisos de ejemplo (Pedido #1044 listo, Pago aprobado con 13 puntos, Reservación confirmada, Pedido #1030 entregado, Reseña publicada, Canje disponible, Pago rechazado, Pedido #1028 cancelado, Reservación cancelada, Puntos actualizados; personal: Pedido #1045, Mesa 2 pidió la cuenta, Platillo listo, Mesa 3 por limpiar)"
   ],
   "componentProps": {
     "Botón": {
