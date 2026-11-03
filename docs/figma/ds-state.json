@@ -4,7 +4,7 @@
   "previousFileKey": "kZjzufiffIa9eEULQrqfVB",
   "team": "Elektra (plan Student, asiento Full)",
   "updatedAt": "2026-11-02",
-  "status": "Lote 3a (base del cliente: FE-35.1, FE-20.1, FE-31.1) construido y revisado. Lote 3b (FE-8.1, FE-9.1, FE-21.1, FE-22.1, FE-24.1, FE-25.1) pendiente.",
+  "status": "Lote 3a (FE-35.1, FE-20.1, FE-31.1) y Lote 3b (FE-8.1, FE-9.1, FE-21.1, FE-22.1, FE-24.1, FE-25.1) construidos y revisados. Pendiente: aprobación del equipo antes de programar.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
@@ -276,13 +276,21 @@
     "Lote 3a: FE-20.1 en página E7 Lealtad: saldo en la barra del cliente en 360 (normal, cargando, error informativo) y 1440 (normal con la navbar real; cargando y error compuestos)",
     "Lote 3a: FE-31.1 en página E9 Notificaciones: campana con contador y panel de 10 avisos, cliente en 1440 (con avisos, vacío, cargando, error) y 360 (con avisos, vacío); personal Mesero y Gerente en 1440 (con avisos, vacío)",
     "Lote 3a: coherencia de datos revisada (pedido #1044, $13.59, 13 puntos, San Salvador – Centro, #1030 sin conflicto con el tablero, Mesa 2 con cuenta A-102)",
-    "Lote 3a: corrección de barras móviles de FE-20.1 (chip de error «Sin saldo», margen 12 px y logo 0.85) para que quepan en 360 px; panel de escritorio de FE-31.1 a 1100 px de alto"
+    "Lote 3a: corrección de barras móviles de FE-20.1 (chip de error «Sin saldo», margen 12 px y logo 0.85) para que quepan en 360 px; panel de escritorio de FE-31.1 a 1100 px de alto",
+    "Lote 3b: FE-8.1 en página E4 Reservaciones: disponibilidad pública con navbar de invitado en 360 (con resultados, sin mesas, fecha pasada, cargando, error) y 1440 (con resultados y sin mesas); la fecha de muestra es 10/11/2026",
+    "Lote 3b: FE-9.1 en página E4: formulario de reservación en 360 (default, validación por campo, cargando, 409, confirmada con RSV-0042) y 1440 (default y confirmada); sin sesión redirige a /login (anotación)",
+    "Lote 3b: FE-21.1 en página E7: Mis puntos en 360 (con movimientos, vacío, cargando, error) y 1440 (con historial de 10 en 10, 24 movimientos)",
+    "Lote 3b: FE-22.1 en página E7: canje en 360 (lista con Combo familiar deshabilitado, confirmación, éxito con código NV-7K2M-9QXP vence 02/12/2026, rechazo 422, cargando) y 1440",
+    "Lote 3b: FE-24.1 en página E2 Pedidos: mis pedidos en 360 (lista, calificar, éxito, error, cargando) y 1440; «Calificar» solo en ENTREGADO sin reseña",
+    "Lote 3b: FE-25.1 en página E8 Reseñas: promedio 4.6 con 38 reseñas, 10 por página, estrellas coherentes con cada calificación, sucursal sin reseñas sin promedio falso, en 360 y 1440",
+    "Lote 3b: coherencia revisada (cliente María López, saldo 1,250 pts, pedidos #1030, #1032, #1044 y #1046, San Salvador – Centro); se corrigieron huérfanos de canvas, fecha 10/11/2026 y el texto de paginación de E8 y E7"
   ],
   "pending": [
     "Confirmar con el equipo los textos inventados (listas invented)",
     "Agregar DESHABILITADO a BadgeEstado.tsx en el código",
     "Badges y Alerta dentro de instancias de componentes: el relleno de tinte está ligado a variable, pero algunas instancias anidadas conservan una sobrescritura; regenerar esos frames para quitarla",
-    "Lote 3b (cliente: FE-8.1, FE-9.1, FE-21.1, FE-22.1, FE-24.1, FE-25.1) pendiente",
+    "Lote 3b: revisar con el equipo la paginación de E8 (texto «Mostrando 1–10 de 38 reseñas» apretado junto a las flechas en 360 px) y los avisos de muestra de FE-21.1 y FE-24.1",
+    "Lote 3b: las estrellas del promedio (4.6) se muestran con 5 llenas por redondeo; decidir si el componente debe mostrar medias estrellas",
     "El componente Navbar cliente móvil (23:328) no incluye SaldoPuntos; los frames de FE-20.1 y FE-31.1 en 360 lo componen a mano. Agregarlo al componente cuando se apruebe el lote",
     "Revisar con el equipo los textos de avisos de ejemplo de FE-31.1 y el texto «Sin saldo» del chip de error de FE-20.1",
     "Aprobación del equipo antes de programar"
@@ -369,6 +377,50 @@
       "Mesero / Listos / Tablet / Error": "112:2145",
       "Mesero / Listos / Tablet / Cargando": "112:2228",
       "Mesero / Listos / Tablet / Sin permiso": "112:2333"
+    },
+    "E4 Reservaciones": {
+      "Público / Disponibilidad / Mobile 360 / Con resultados": "135:1262",
+      "Público / Disponibilidad / Mobile 360 / Sin mesas": "135:1319",
+      "Público / Disponibilidad / Mobile 360 / Fecha pasada": "135:1376",
+      "Público / Disponibilidad / Mobile 360 / Cargando": "135:1439",
+      "Público / Disponibilidad / Mobile 360 / Error": "135:1491",
+      "Público / Disponibilidad / Desktop 1440 / Con resultados": "135:1538",
+      "Público / Disponibilidad / Desktop 1440 / Sin mesas": "135:1614",
+      "Cliente / Reservación nueva / Mobile 360 / Default": "135:1714",
+      "Cliente / Reservación nueva / Mobile 360 / Validación": "135:1826",
+      "Cliente / Reservación nueva / Mobile 360 / Cargando": "135:1927",
+      "Cliente / Reservación nueva / Mobile 360 / Mesa ocupada 409": "135:2034",
+      "Cliente / Reservación nueva / Mobile 360 / Confirmada": "135:2101",
+      "Cliente / Reservación nueva / Desktop 1440 / Default": "135:2179",
+      "Cliente / Reservación nueva / Desktop 1440 / Confirmada": "135:2239"
+    },
+    "E7 Lealtad · Lote 3b": {
+      "Cliente / Mis puntos / Mobile 360 / Con movimientos": "136:1399",
+      "Cliente / Mis puntos / Mobile 360 / Vacío": "136:1466",
+      "Cliente / Mis puntos / Mobile 360 / Cargando": "136:1538",
+      "Cliente / Mis puntos / Mobile 360 / Error": "136:1602",
+      "Cliente / Mis puntos / Desktop 1440 / Con movimientos": "136:1655",
+      "Cliente / Canje / Mobile 360 / Lista": "136:1788",
+      "Cliente / Canje / Mobile 360 / Confirmación": "136:1841",
+      "Cliente / Canje / Mobile 360 / Éxito": "136:1941",
+      "Cliente / Canje / Mobile 360 / Rechazado 422": "136:2021",
+      "Cliente / Canje / Mobile 360 / Cargando": "136:2087",
+      "Cliente / Canje / Desktop 1440 / Lista": "136:2140"
+    },
+    "E2 Pedidos · Lote 3b": {
+      "Cliente / Mis pedidos / Mobile 360 / Lista": "136:5317",
+      "Cliente / Mis pedidos / Mobile 360 / Calificar": "136:5446",
+      "Cliente / Mis pedidos / Mobile 360 / Éxito": "136:5553",
+      "Cliente / Mis pedidos / Mobile 360 / Error": "136:5665",
+      "Cliente / Mis pedidos / Mobile 360 / Cargando": "136:5739",
+      "Cliente / Mis pedidos / Desktop 1440 / Lista": "136:5792"
+    },
+    "E8 Reseñas": {
+      "Público / Reseñas / Mobile 360 / Con reseñas": "136:6147",
+      "Público / Reseñas / Mobile 360 / Sin reseñas": "136:6177",
+      "Público / Reseñas / Mobile 360 / Cargando": "136:6216",
+      "Público / Reseñas / Mobile 360 / Error": "136:6247",
+      "Público / Reseñas / Desktop 1440 / Con reseñas": "136:6261"
     },
     "A Acceso y salón": {
       "Público / Login / Mobile 360 / Default": "132:1208",
@@ -502,7 +554,11 @@
     "Redirección por rol (propuesta, no fijada por la HU): CLIENTE → /menu, MESERO → /mesero/salon, COCINA → /cocina/tablero, GERENTE → /gerente, GERENTE_GENERAL → /reportes/ventas; nota «Si el rol no tiene acceso… «Acceso denegado»»",
     "Registro: «Crear cuenta», «Regístrate como cliente para acumular puntos y reservar mesa.», campos «Nombre completo *», «Correo electrónico *», «Teléfono (opcional)», «Contraseña * (mínimo 8 caracteres)»; errores «Escribe tu nombre (máximo 100 caracteres).», «El teléfono debe tener 8 dígitos.», «La contraseña debe tener al menos 8 caracteres.», «Ya existe una cuenta con este correo.» / «Este correo ya está registrado.»",
     "Saldo de puntos: chip de error «Puntos no disponibles» en escritorio y «Sin saldo» en móvil (por ancho de 360 px); texto de apoyo «Tu saldo se muestra en todas las pantallas del cliente.», «Si falla la consulta, el aviso informa sin bloquear la pantalla.»",
-    "Campana: «Notificaciones», «N sin leer», «No tienes notificaciones» / «Cuando haya novedades sobre tus pedidos o puntos, aparecerán aquí.», «No se pudo completar la operación. Intenta de nuevo», «Reintentar»; avisos de ejemplo (Pedido #1044 listo, Pago aprobado con 13 puntos, Reservación confirmada, Pedido #1030 entregado, Reseña publicada, Canje disponible, Pago rechazado, Pedido #1028 cancelado, Reservación cancelada, Puntos actualizados; personal: Pedido #1045, Mesa 2 pidió la cuenta, Platillo listo, Mesa 3 por limpiar)"
+    "Campana: «Notificaciones», «N sin leer», «No tienes notificaciones» / «Cuando haya novedades sobre tus pedidos o puntos, aparecerán aquí.», «No se pudo completar la operación. Intenta de nuevo», «Reintentar»; avisos de ejemplo (Pedido #1044 listo, Pago aprobado con 13 puntos, Reservación confirmada, Pedido #1030 entregado, Reseña publicada, Canje disponible, Pago rechazado, Pedido #1028 cancelado, Reservación cancelada, Puntos actualizados; personal: Pedido #1045, Mesa 2 pidió la cuenta, Platillo listo, Mesa 3 por limpiar)",
+    "Lote 3b · Reservaciones: «Reservar mesa», «Elige sucursal, fecha, hora y personas. Cada reservación dura 90 minutos.», «Mesas disponibles», «Mesa 3 · capacidad 4», «Reservar», «Buscar mesas», «No hay mesas disponibles para ese horario» / «Prueba otra hora o cambia la cantidad de personas.», «Nueva reservación», «Nombre de contacto *», «Teléfono * (8 dígitos)», «Personas (1 a 20)», «Confirmar reservación», «La mesa 3 ya se ocupó en ese horario.» / «Busca otro horario para reservar.», «Reservación confirmada», identificador RSV-0042 y «Volver al menú»",
+    "Lote 3b · Puntos y canje: «Mis puntos», «Saldo disponible», «Historial», «Aún no tienes movimientos» / «Cuando compres o canjees puntos, aparecerán aquí.»; beneficios «Bebida de regalo» (200 pts), «Descuento de $5.00» (500 pts), «Combo familiar» (1,500 pts, «Te faltan 250 pts»); «¿Canjear 200 pts?» / «Se descuentan 200 pts de tu saldo. Tu código será válido por 30 días.», «Canje realizado», «Tu código», código NV-7K2M-9QXP, «Vence el 02/12/2026 · saldo restante 1,050 pts», «No tienes puntos suficientes para este beneficio.»; movimientos de muestra (Pedido #1036, Cuenta A-98 · Mesa 4, Bebida de regalo, Descuento de $5.00)",
+    "Lote 3b · Mis pedidos: «Mis pedidos», «Calificar pedido #1030», «Elige de 1 a 5 estrellas y cuéntanos tu experiencia.», «¡Gracias! Tu reseña se publicó.», «Tu reseña: 4 estrellas», pedidos de muestra #1046 (Pendiente de pago), #1044 (Listo), #1030 (Entregado), #1032 (Entregado con reseña), #1028 (Cancelado), «Enviar reseña», «Reintentar»",
+    "Lote 3b · Reseñas: «Reseñas de la sucursal», «Promedio · 38 reseñas», «Sin promedio todavía», «Aún no hay reseñas» / «Cuando un cliente califique su pedido, aparecerá aquí.»; reseñas de muestra con primer nombre (Ana, Carlos, Sofía, Luis, María, Diego, Andrea, Javier, Laura, Pablo) y comentarios cortos; sucursal Santa Tecla sin reseñas"
   ],
   "componentProps": {
     "Botón": {
