@@ -4,7 +4,7 @@
   "previousFileKey": "kZjzufiffIa9eEULQrqfVB",
   "team": "Elektra (plan Student, asiento Full)",
   "updatedAt": "2026-11-02",
-  "status": "Lote 1 corregido (tintes, FE-11.1, barra con Menú) y Lote 2 (pagos) construido en Figma. Pendiente de aprobación del equipo.",
+  "status": "Lote 2 corregido (barra por rol, overlays, CVV, montos y comprobantes por flujo, FE-19.2 completo con vista del cliente). Lote 3 (cliente) pendiente.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
@@ -187,7 +187,7 @@
     "Pedido/FilaLlevar": "122:1060",
     "Fiscal/Bloque": "122:1141",
     "PasarelaPago": "122:1216",
-    "Personal/NavItem Menú (en Personal/Sidebar)": "119:7992"
+    "Personal/Sidebar (variantes Rol=Mesero, Rol=Gerente, Rol=Gerente general)": "127:1319"
   },
   "variants": {
     "Navbar cliente": {
@@ -266,16 +266,19 @@
     "Lote 2: componentes Comprobante, Cuenta/Desglose, Pago/FilaMetodo, Pedido/FilaLlevar, Fiscal/Bloque y PasarelaPago (formulario, procesando, rechazado, aprobado)",
     "Lote 2: FE-16.1 Cuenta de mesa (4 estados) y FE-16.2 Cobro (8 estados, tableta, incluye confirmación, procesando, 402, éxito, 409, factura y sin permiso)",
     "Lote 2: FE-17.1 Pedidos para llevar (tableta, 6 estados) y FE-18.1 Pago en línea (cliente 360, 5 estados)",
-    "Lote 2: FE-19.2 Documentos fiscales (escritorio, 5 estados e impresión) con 10 por página (S21)"
+    "Lote 2: FE-19.2 Documentos fiscales (escritorio, 5 estados e impresión) con 10 por página (S21)",
+    "Barra del personal: componente Personal/Sidebar con variantes Mesero, Gerente y Gerente general a alto completo; reemplazada en todas las pantallas del personal con la entrada activa correcta",
+    "Lote 2: capa semitransparente en modales y comprobantes (FE-16.2, FE-17.1); «Procesando pago» en FE-16.2 y FE-18.1; CVV en lugar de «Código de seguridad»",
+    "Lote 2: FE-16.2 con Efectivo $10.00 + Tarjeta $3.59 = $13.59 y estado intermedio «Saldo pendiente» ($3.59, confirmar deshabilitado)",
+    "Lote 2: comprobantes por flujo (Pedido #1045 · Para llevar; Tarjeta •••• 4242 sin vuelto) y números de pedido distintos (#1044, #1045, #1046)",
+    "Lote 2: FE-19.2 con buscador DUI/NIT o número, filtro por tipo de documento, correlativos FCF y CF, vista imprimible completa y vista del cliente (solo sus documentos)"
   ],
   "pending": [
     "Confirmar con el equipo los textos inventados (listas invented)",
     "Agregar DESHABILITADO a BadgeEstado.tsx en el código",
-    "Mesero: no hay entrada de menú para Cuentas (/mesero/cuentas), Pedidos para llevar (/mesero/pedidos-llevar) ni Documentos fiscales; hoy las pantallas usan Salón como activa",
-    "Gerente: la barra muestra las mismas entradas que el Mesero (Salón, Comanda, Listos); falta la navegación propia del Gerente",
-    "Badges y Mesa dentro de instancias: el relleno quedó ligado a la variable de tinte (100 %), pero las instancias anidadas conservan una sobrescritura de relleno. Para eliminarla hay que regenerar esos frames",
-    "FE-19.2: falta la vista del Cliente (sus propios documentos) y en la fila de Empresa Tres el DUI/NIT se corta (acortar el dato de muestra)",
-    "Aprobación del equipo antes de programar; siguiente: Lote 3 (lealtad, FE-20.1 a FE-23.1)"
+    "Badges y Alerta dentro de instancias de componentes: el relleno de tinte está ligado a variable, pero algunas instancias anidadas conservan una sobrescritura; regenerar esos frames para quitarla",
+    "Lote 3 (cliente: FE-35.1, FE-8.1, FE-9.1, FE-20.1, FE-21.1, FE-22.1, FE-24.1, FE-25.1, FE-31.1) pendiente",
+    "Aprobación del equipo antes de programar"
   ],
   "frames": {
     "Layouts": {
