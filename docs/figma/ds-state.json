@@ -3,8 +3,8 @@
   "fileUrl": "https://www.figma.com/design/pcJk904tbSTwfNlSRz8aRw/NoodleVolt",
   "previousFileKey": "kZjzufiffIa9eEULQrqfVB",
   "team": "Elektra (plan Student, asiento Full)",
-  "updatedAt": "2026-11-01",
-  "status": "E1 y E2 ajustados a la HU con estados Cargando y Error; pendiente de aprobación del equipo.",
+  "updatedAt": "2026-11-02",
+  "status": "Lote 0 terminado: variantes de BadgeEstado, componentes de formulario y superposición, plantillas de estados (2.6) y E1/E2 ajustados al documento final (HU_FINAL). Pendiente de aprobación del equipo.",
   "pages": {
     "Design System": "0:1",
     "Layouts": "16:210",
@@ -28,7 +28,9 @@
     "Piezas de navegación (fila)": "12:85",
     "Navbar del cliente (grupo)": "12:171",
     "BottomTabBar (grupo)": "24:250",
-    "Componentes de pantalla (grupo)": "buscar por nombre en 10:122"
+    "Componentes de pantalla (grupo)": "buscar por nombre en 10:122",
+    "Formularios y superposiciones (Lote 0)": "96:480",
+    "Plantillas de estados (2.6)": "98:642"
   },
   "logos": {
     "Logo/Mascota": "3:5",
@@ -155,7 +157,20 @@
     "Modal/Encabezado": "27:512",
     "Skeleton/Bloque": "40:544",
     "Skeleton/Tarjeta": "40:545",
-    "Skeleton/Fila": "40:555"
+    "Skeleton/Fila": "40:555",
+    "Select": "96:525",
+    "SelectorFecha": "96:956",
+    "SelectorFecha/Día": "96:751",
+    "TextareaContador": "96:1086",
+    "Toggle": "96:1155",
+    "Estrellas": "96:1387",
+    "Modal/Confirmación": "96:1448",
+    "PanelLateral": "96:1473",
+    "BarraFiltros": "96:1542",
+    "Plantilla/Acceso denegado": "98:646",
+    "Plantilla/Error del servidor": "98:673",
+    "Plantilla/Vacío": "98:693",
+    "Plantilla/Cargando": "98:773"
   },
   "variants": {
     "Navbar cliente": {
@@ -172,7 +187,35 @@
       "Activo=Cuenta": "24:442"
     },
     "BadgeEstado": {
-      "Estado=Deshabilitado (nuevo)": "40:521"
+      "Existentes": [
+        "LIBRE",
+        "OCUPADA",
+        "POR_LIMPIAR",
+        "PENDIENTE",
+        "EN_PREPARACION",
+        "LISTO",
+        "ENTREGADO",
+        "CONFIRMADA",
+        "CANCELADA",
+        "Disponible",
+        "Agotado",
+        "PAGADO",
+        "Cobro en caja pendiente",
+        "Pago en línea pendiente",
+        "Deshabilitado"
+      ],
+      "Estado=Deshabilitado": "40:521",
+      "Estado=PENDIENTE_PAGO («Pendiente de pago», danger)": "96:407",
+      "Estado=CANCELADO («Cancelado», danger)": "96:416",
+      "Estado=ABIERTA («Abierta», info)": "96:426",
+      "Estado=CERRADA («Cerrada», neutral)": "96:434",
+      "Estado=APROBADO («Aprobado», success)": "96:439",
+      "Estado=RECHAZADO («Rechazado», danger)": "96:444",
+      "Estado=USADO («Usado», neutral)": "96:454",
+      "Estado=Sin stock (danger)": "96:459",
+      "Estado=Bajo mínimo (warning)": "96:468",
+      "Estado=Suficiente (success)": "96:475",
+      "Nota": "El código de canje «Disponible» reutiliza Estado=Disponible. Las variantes sin enum (insumo calculado) usan la etiqueta como valor."
     },
     "Mesa": {
       "Estado=LIBRE, Seleccionada=No": "27:445",
@@ -187,15 +230,18 @@
     "Navbar escritorio con enlaces (Cliente/NavLink, activo crimson) y variantes Invitado / Con sesión",
     "Navbar móvil: Logo/Wordmark, campana (solo con sesión) y carrito; componente ChipSucursal",
     "BottomTabBar 360 con 5 variantes de pestaña activa; Icon/calendar e Icon/receipt nuevos",
-    "Una página por épica; la página Pantallas se eliminó (estaba vacía)"
+    "Una página por épica; la página Pantallas se eliminó (estaba vacía)",
+    "Lote 0: 10 variantes nuevas de BadgeEstado según la tabla 2.2 (25 en total)",
+    "Lote 0: Select, SelectorFecha (+ celda Día), TextareaContador, Toggle, Estrellas, Modal/Confirmación, PanelLateral y BarraFiltros",
+    "Lote 0: plantillas Acceso denegado, Error del servidor (Bloque/Alerta), Vacío (Página/Tabla) y Cargando (Tabla/Tarjetas/Formulario)",
+    "Lote 0: E1 y E2 renombrados a FE-1.1, FE-2.1, FE-3.1 y FE-4.1; ajustes de la HU final aplicados"
   ],
   "pending": [
     "Confirmar con el equipo los textos inventados (lista invented)",
-    "Catálogo del gerente en 360 px (FE-1.1.1 pide verse en 360 px y escritorio)",
-    "Carrito en escritorio (FE-2.2.1) y paso de pago simulado tras confirmar con «Pagar en línea»",
-    "Pantalla de resumen del pedido para llevar (identificador, productos, precios y hora de retiro)",
     "Agregar DESHABILITADO a BadgeEstado.tsx en el código",
-    "Aprobación del equipo antes de programar"
+    "El frame Mesero / Menú usa la barra lateral de la comanda (activo «Comanda»); la HU no define una entrada «Menú» para el Mesero",
+    "La paginación de ejemplo dice «1–6 de 24»; al programar usar 10 por página (S21)",
+    "Aprobación del equipo antes de programar; siguiente: Lote 1 (sala y cocina)"
   ],
   "frames": {
     "Layouts": {
@@ -220,7 +266,12 @@
       "Gerente / Catálogo / Desktop / Modal crear": "42:3186",
       "Gerente / Catálogo / Desktop / Modal crear · Validación": "42:3458",
       "Gerente / Catálogo / Desktop / Modal guardando": "42:3748",
-      "Gerente / Catálogo / Desktop / Modal editar · Error 400": "42:4022"
+      "Gerente / Catálogo / Desktop / Modal editar · Error 400": "42:4022",
+      "Gerente / Catálogo / Desktop / Modal crear · Límites": "100:2768",
+      "Gerente / Catálogo / Desktop / Sin permiso": "100:3041",
+      "Gerente / Catálogo / Mobile / Lista": "100:3192",
+      "Gerente / Catálogo / Mobile / Modal crear": "100:3308",
+      "Mesero / Menú / Tablet / Sucursal fija": "99:2635"
     },
     "E2 Pedidos": {
       "Mesero / Comanda / Tablet / 1 · Mesa": "45:905",
@@ -235,24 +286,34 @@
       "Cliente / Carrito / Mobile / Cargando": "45:2040",
       "Cliente / Carrito / Mobile / Confirmando": "45:2078",
       "Cliente / Carrito / Mobile / Error": "45:2187",
-      "Cliente / Carrito / Mobile / Error 409": "45:2302"
+      "Cliente / Carrito / Mobile / Error 409": "45:2302",
+      "Mesero / Comanda / Tablet / Límites": "101:1641",
+      "Cliente / Carrito / Mobile / Resumen · En línea": "103:1753",
+      "Cliente / Carrito / Mobile / Resumen · En caja": "103:1808",
+      "Cliente / Carrito / Desktop / En línea": "103:1864",
+      "Cliente / Carrito / Desktop / Resumen · En línea": "103:1977"
     }
   },
   "notes": [
     "La task FE de cada frame va como anotación del frame (los frames no tienen descripción en Figma). Cada pantalla está en una sección con su task FE.",
     "Bug conocido: la opacidad de un relleno ligado a variable se pierde al crear instancias; se corrige reasignando los rellenos del componente principal con getMainComponentAsync() (mainComponent no sirve en instancias anidadas).",
     "Las capturas del servidor (get_screenshot) pueden mostrar los badges anidados con relleno sólido; el render del plugin y de la app los muestra con tinte al 12%.",
-    "Referencia funcional: HU_PLANTILLA_v3.pdf (no está en docs/referencias/; se leyó desde Descargas)."
+    "Referencia funcional: docs/referencias/HU_FINAL.pdf (documento final, 29/10/2026).",
+    "Al crear un componente con auto-layout, resize() deja el eje principal en FIXED: volver a poner primaryAxisSizingMode = AUTO después.",
+    "El bug de opacidad también afecta a BadgeEstado y Alerta instanciados directamente: copiar fills/strokes desde getMainComponentAsync()."
   ],
   "screenSections": {
     "E1 Menú": {
-      "FE-1.2.1 · Cliente / Menú / Mobile": "42:1495",
-      "FE-1.2.1 · Cliente / Menú / Desktop": "42:1939",
-      "FE-1.1.1 · Gerente / Catálogo / Desktop": "42:2461"
+      "FE-2.1 · Cliente / Menú / Mobile": "42:1495",
+      "FE-2.1 · Cliente / Menú / Desktop": "42:1939",
+      "FE-2.1 · Mesero / Menú / Tablet": "99:2634",
+      "FE-1.1 · Gerente / Catálogo / Desktop": "42:2461",
+      "FE-1.1 · Gerente / Catálogo / Mobile": "100:3191"
     },
     "E2 Pedidos": {
-      "FE-2.1.1 · Mesero / Comanda / Tablet": "45:904",
-      "FE-2.2.1 · Cliente / Carrito / Mobile": "45:1825"
+      "FE-3.1 · Mesero / Comanda / Tablet": "45:904",
+      "FE-4.1 · Cliente / Carrito / Mobile": "45:1825",
+      "FE-4.1 · Cliente / Carrito / Desktop": "103:1863"
     }
   },
   "invented": [
@@ -261,6 +322,50 @@
     "Títulos y mensajes de error: «No se pudo guardar el platillo…», «No se pudo enviar el pedido…», «Los precios cambiaron…», «No pudimos cargar el menú/el catálogo/las mesas», «No pudimos confirmar tu pedido…»",
     "Etiquetas de modalidad de pago («Pagar en línea / Pago simulado con tarjeta», «Pagar en caja / Pagas al retirar en la sucursal»)",
     "Textos de apoyo: «Cuenta abierta: este pedido se suma a la cuenta.», «Mesa 2 tiene una cuenta abierta…», «Verás la hora exacta de retiro en el resumen del pedido.», «Cambios guardados / …se actualizó en el catálogo.»",
-    "Nombres de platillos, descripciones, precios, mesas y personas (datos de ejemplo)"
-  ]
+    "Nombres de platillos, descripciones, precios, mesas y personas (datos de ejemplo)",
+    "Acceso denegado: «Tu cuenta no tiene permiso para ver esta pantalla.»; Error del servidor: botón «Reintentar»",
+    "Vacío genérico: «No hay datos para mostrar» / «Cuando haya registros, aparecerán aquí.»; «No hay registros» / «Cambia los filtros o vuelve más tarde.»",
+    "Mensajes de límites de FE-1.1: «Máximo 100 caracteres.», «Máximo 300 caracteres.», «El precio debe estar entre $0.01 y $9,999.99.»; Select: «Elige un estado válido.»",
+    "Selector de fecha: «Elige una fecha a partir de hoy.»; Textarea: «Se envía a Cocina con el platillo.», «Máximo 200 caracteres.», «Llegaste al máximo de 200 caracteres.»; comanda: «Máximo 20 unidades por platillo.»",
+    "Modal de confirmación: «¿Confirmar el pago?», «¿Cancelar la reservación?», «Volver», «Cancelar reservación», «Esta acción no se puede deshacer.»",
+    "Resumen FE-4.1: «¡Pedido registrado!», «Pedido #A3F9-12C7», «Hora estimada de retiro», «Tu pedido pasa a Cocina cuando se apruebe el pago.», «Tu pedido ya está en Cocina. Paga $26.25 en caja al retirar.», «Pagar en línea $26.25», «Ver mis pedidos»",
+    "Mesero / Menú: «· Sucursal de tu sesión»"
+  ],
+  "componentProps": {
+    "Botón": {
+      "Etiqueta": "Etiqueta#11:0"
+    },
+    "Input": {
+      "Label": "Label#11:13",
+      "Mensaje de error": "Mensaje de error#11:18"
+    },
+    "Select": {
+      "Label": "Label#96:0",
+      "Valor": "Valor#96:6"
+    },
+    "SelectorFecha": {
+      "Label": "Label#96:24"
+    },
+    "SelectorFecha/Día": {
+      "Día": "Día#96:18"
+    },
+    "Modal/Encabezado": {
+      "Título": "Título#27:36"
+    },
+    "EstadoVacio": {
+      "Título": "Título#27:14",
+      "Mensaje": "Mensaje#27:15",
+      "Mostrar acción": "Mostrar acción#27:16"
+    },
+    "CantidadStepper": {
+      "Cantidad": "Cantidad#27:3"
+    }
+  },
+  "taskIdMap": {
+    "FE-1.1.1": "FE-1.1",
+    "FE-1.2.1": "FE-2.1",
+    "FE-2.1.1": "FE-3.1",
+    "FE-2.2.1": "FE-4.1",
+    "FE-A.3.1": "FE-5.1"
+  }
 }
