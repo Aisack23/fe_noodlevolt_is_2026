@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { sampleInventory } from "@/lib/api/inventory";
 import { InventoryTable } from "./inventory-table";
+import { EstadoVacio } from "@/components/ui/EstadoVacio";
 
 export const metadata: Metadata = {
   title: "Inventario",
@@ -17,6 +18,8 @@ const formatoFecha = new Intl.DateTimeFormat("es-SV", {
 });
 
 export default function InventarioPage() {
+
+
   // SUPUESTO: datos de ejemplo hasta que BE-05 esté en develop.
   const items = sampleInventory;
 
@@ -37,8 +40,14 @@ export default function InventarioPage() {
           </p>
         )}
       </div>
-
-      <InventoryTable items={items} />
+           {items.length === 0 ? (
+        <EstadoVacio
+          titulo="No hay insumos registrados en tu sucursal"
+          mensaje="Cuando registres insumos, aparecerán aquí."
+        />
+      ) : (
+        <InventoryTable items={items} />
+      )}
     </main>
   );
 }
