@@ -1,12 +1,29 @@
+import type { Estado } from "@/components/ui/BadgeEstado";
+
 export type ModalidadPago = "ONLINE" | "CAJA";
 
 export type EstadoPedido =
-  | "PENDIENTE_PAGO"
-  | "PENDIENTE"
-  | "EN_PREPARACION"
-  | "LISTO"
-  | "ENTREGADO"
-  | "CANCELADO";
+  | "PENDING_PAYMENT"
+  | "PENDING"
+  | "CONFIRMED"
+  | "IN_PREPARATION"
+  | "READY"
+  | "DELIVERED"
+  | "CANCELED";
+
+export const ESTADO_PEDIDO_A_BADGE = {
+  PENDING_PAYMENT: "PAGO_LINEA_PENDIENTE",
+  PENDING: "PENDIENTE",
+  CONFIRMED: "CONFIRMADA",
+  IN_PREPARATION: "EN_PREPARACION",
+  READY: "LISTO",
+  DELIVERED: "ENTREGADO",
+  CANCELED: "CANCELADA",
+} as const satisfies Record<EstadoPedido, Estado>;
+
+export function mapearEstadoPedidoABadge(estado: EstadoPedido): Estado {
+  return ESTADO_PEDIDO_A_BADGE[estado];
+}
 
 export type ItemPedido = {
   platilloId: string;
@@ -46,4 +63,3 @@ export type PedidoRegistradoResult = {
   pedido?: Pedido;
   error?: string;
 };
-

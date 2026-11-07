@@ -6,7 +6,7 @@ import { Clock, MapPin, CheckCircle, ArrowRight } from "lucide-react";
 import { BadgeEstado } from "@/components/ui/BadgeEstado";
 import { Button } from "@/components/ui/Button";
 import { Alerta } from "@/components/ui/Alerta";
-import type { Pedido } from "@/lib/orders/types";
+import { type Pedido, mapearEstadoPedidoABadge } from "@/lib/orders/types";
 
 const formatoPrecio = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -62,7 +62,10 @@ export function ConfirmacionView({
             </h2>
           </div>
 
-          <BadgeEstado estado={pedido.estado} className="self-start sm:self-auto" />
+          <BadgeEstado
+            estado={mapearEstadoPedidoABadge(pedido.estado)}
+            className="self-start sm:self-auto"
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-control bg-white p-4 border border-border">

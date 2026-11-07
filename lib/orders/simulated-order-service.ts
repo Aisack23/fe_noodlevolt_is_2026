@@ -4,6 +4,7 @@ import type {
   PedidoRegistradoResult,
   Pedido,
   ItemPedido,
+  EstadoPedido,
 } from "./types";
 
 export class SimulatedOrderService implements IOrderService {
@@ -40,10 +41,10 @@ export class SimulatedOrderService implements IOrderService {
     const id = `ped-${Date.now()}`;
 
     // Estado inicial según la modalidad de pago
-    // En línea: PENDIENTE_PAGO (pasa a cocina cuando se apruebe el pago)
-    // En caja: PENDIENTE (pasa directamente a cocina)
-    const estado =
-      input.modalidadPago === "ONLINE" ? "PENDIENTE_PAGO" : "PENDIENTE";
+    // En línea: PENDING_PAYMENT (pasa a cocina cuando se apruebe el pago)
+    // En caja: PENDING (pasa directamente a cocina)
+    const estado: EstadoPedido =
+      input.modalidadPago === "ONLINE" ? "PENDING_PAYMENT" : "PENDING";
 
     const items: ItemPedido[] = input.items.map((item) => ({
       platilloId: item.platilloId,
