@@ -1,7 +1,22 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createSession, deleteSession } from "@/lib/session";
+import {
+  createSession,
+  deleteSession,
+  getSessionUser,
+  type SafeSessionUser,
+} from "@/lib/session";
+
+/**
+ * Server Action para consultar el estado actual del usuario autenticado
+ * desde componentes del cliente. Retorna SafeSessionUser o null si no hay sesión
+ * o si la sesión ha expirado.
+ */
+export async function checkAuth(): Promise<SafeSessionUser | null> {
+  return await getSessionUser();
+}
+
 
 export type LoginState = {
   error?: string;
@@ -26,14 +41,14 @@ export type RegistroState = {
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type ValidRole =
-  | "CLIENTE"
+  | "CLIENT"
   | "MESERO"
   | "COCINA"
   | "GERENTE"
   | "GERENTE_GENERAL";
 
 const ROLE_ROUTES: Record<ValidRole, string> = {
-  CLIENTE: "/menu",
+  CLIENT: "/menu",
   MESERO: "/mesero/salon",
   COCINA: "/cocina/tablero",
   GERENTE: "/gerente",
