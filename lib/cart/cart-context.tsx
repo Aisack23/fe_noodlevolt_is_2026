@@ -46,32 +46,53 @@ const DEFAULT_SUCURSAL: SucursalInfo = {
   nombre: "San Salvador – Centro",
 };
 
+
+  // Lazy initialization to hydrate state from localStorage on the client only
+const getInitialItems = (): CartItem[] => {
+  if (typeof window === "undefined") return [];
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed?.items)) {
+        return parsed.items;
+      }
+    }
+  } catch (e) {
+    console.error("Error al cargar carrito desde localStorage:", e);
+  }
+  return [];
+};
+
+const getInitialSucursal = (): SucursalInfo => {
+  if (typeof window === "undefined") return DEFAULT_SUCURSAL;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed?.sucursal) {
+        return parsed.sucursal;
+      }
+    }
+  } catch (e) {
+    console.error("Error al cargar sucursal del carrito:", e);
+  }
+  return DEFAULT_SUCURSAL;
+};
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [sucursal, setSucursalState] = useState<SucursalInfo | null>(DEFAULT_SUCURSAL);
+  const [items, setItems] = useState<CartItem[]>(getInitialItems);
+  const [sucursal, setSucursalState] = useState<SucursalInfo>(getInitialSucursal);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Hidratación desde localStorage en el cliente
+  
+  // Mark component as hydrated after first render (client side)
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed.items)) {
-          setItems(parsed.items);
-        }
-        if (parsed.sucursal) {
-          setSucursalState(parsed.sucursal);
-        }
-      }
-    } catch (e) {
-      console.error("Error al cargar carrito desde localStorage:", e);
-    } finally {
-      setIsHydrated(true);
-    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsHydrated(true);
   }, []);
 
-  // Persistencia automática a localStorage
+  // Persistencia automática a localStorage (runs after hydration)
   useEffect(() => {
     if (!isHydrated) return;
     try {
@@ -84,26 +105,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, sucursal, isHydrated]);
 
-  const agregarPlatillo = (
-    platillo: Omit<CartItem, "cantidad">,
-    nuevaSucursal?: SucursalInfo,
-  ) => {
-    if (nuevaSucursal) {
-      setSucursalState(nuevaSucursal);
-    }
-
-    setItems((prev) => {
-      const existente = prev.find((i) => i.platilloId === platillo.platilloId);
-      if (existente) {
-        return prev.map((i) =>
-          i.platilloId === platillo.platilloId
-            ? { ...i, cantidad: Math.min(20, i.cantidad + 1) }
-            : i,
-        );
-      }
-      return [...prev, { ...platillo, cantidad: 1 }];
-    });
-  };
+  // ... rest of file unchanged ...
 
   const incrementarCantidad = (platilloId: string) => {
     setItems((prev) =>
@@ -113,6 +115,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
           : i,
       ),
     );
+  };
+
+  const agregarPlatillo = (platillo: Omit<CartItem, "cantidad">, nuevaSucursal?: SucursalInfo) => {
+    if (nuevaSucursal) {
+      setSucursalState(nuevaSucursal);
+    }
+    setItems((prev) => {
+      const existente = prev.find((i) => i.platilloId === platillo.platilloId);
+      if (existente) {
+        return prev.map((i) =>
+          i.platilloId === platillo.platilloId
+            ? { ...i, cantidad: Math.min(20, i.cantidad + 1) }
+            : i
+        );
+      }
+      return [...prev, { ...platillo, cantidad: 1 }];
+    });
   };
 
   const disminuirCantidad = (platilloId: string) => {

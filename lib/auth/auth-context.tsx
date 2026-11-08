@@ -30,14 +30,16 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children, initialUser = null }: AuthProviderProps) {
   const [user, setUser] = useState<SafeSessionUser | null>(initialUser);
+  const [prevInitialUser, setPrevInitialUser] = useState(initialUser);
   const [isLoading, setIsLoading] = useState(false);
   const [, startTransition] = useTransition();
   const pathname = usePathname();
 
-  // Sincroniza si initialUser cambia desde un Server Component o hidratación SSR
-  useEffect(() => {
+  // Sincroniza si initialUser cambia desde un Server Component durante el renderizado (sin useEffect)
+  if (prevInitialUser !== initialUser) {
+    setPrevInitialUser(initialUser);
     setUser(initialUser);
-  }, [initialUser]);
+  }
 
   const refreshSession = useCallback(async () => {
     try {
@@ -51,13 +53,29 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
     }
   }, []);
 
-  // Al navegar entre rutas, verificar si la sesión sigue activa o ha expirado
+  // Al navegar entre rutas, verificar si la sesión sigue activa o ha expirado en segundo plano
   useEffect(() => {
+    let montado = true;
+
     // Si no estamos en rutas de autenticación, verificar vigencia en segundo plano
     if (pathname !== "/login" && pathname !== "/registro") {
-      refreshSession();
+      checkAuth()
+        .then((currentUser) => {
+          if (montado) {
+            setUser(currentUser);
+          }
+        })
+        .catch(() => {
+          if (montado) {
+            setUser(null);
+          }
+        });
     }
-  }, [pathname, refreshSession]);
+
+    return () => {
+      montado = false;
+    };
+  }, [pathname]);
 
   const logout = useCallback(async () => {
     startTransition(async () => {

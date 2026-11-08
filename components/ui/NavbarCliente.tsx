@@ -46,7 +46,14 @@ export function NavbarCliente({
   const usuarioActual = propUsuario !== undefined ? propUsuario : contextUser;
 
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [prevPathname, setPrevPathname] = useState(pathname);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Si la ruta cambia, cerramos el menú durante el renderizado (sin useEffect)
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setMenuAbierto(false);
+  }
 
   const enlaces = autenticado ? enlacesConSesion : enlacesInvitado;
 
@@ -74,11 +81,6 @@ export function NavbarCliente({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [menuAbierto]);
-
-  // Cerrar menú al cambiar de ruta
-  useEffect(() => {
-    setMenuAbierto(false);
-  }, [pathname]);
 
   const inicialUsuario =
     usuarioActual?.nombre?.trim()?.charAt(0).toUpperCase() ||
