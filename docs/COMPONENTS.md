@@ -309,3 +309,12 @@ Debes seguir estas reglas en todas las tareas frontend:
 10. Prioriza la mantenibilidad y consistencia de NoodleVolt.
 
 **El objetivo no es tener la mayor cantidad de componentes, sino una biblioteca coherente donde cada componente tenga una función clara y pueda reutilizarse correctamente.**
+
+## 13. Componentes añadidos para FE-08
+
+| Componente | Estado | Ubicación | Referencia Figma | Observaciones |
+|---|---|---|---|---|
+| `RatingStars` | Implementado para reseñas | `components/business/RatingStars.tsx` | No validada; faltan frame/capturas FE-08 | Selector de cinco estrellas con teclado y vista de solo lectura. |
+| `ReviewForm` | Implementado para reseñas | `components/business/ReviewForm.tsx` | No validada; faltan frame/capturas FE-08 | Comentario opcional de hasta 500 caracteres, contador, validación de apoyo y estado de envío. |
+
+FE-08 reutiliza `BadgeEstado`, `EstadoVacio`, `Alerta`, `Button` y `Skeleton`. No se añadieron dependencias.
