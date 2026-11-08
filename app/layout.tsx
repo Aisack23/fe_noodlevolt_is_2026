@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Antonio, Inter } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/lib/cart/cart-context";
+import { AuthProvider } from "@/lib/auth/auth-context";
+import { getSessionUser } from "@/lib/session";
+
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,13 +21,19 @@ export const metadata: Metadata = {
   description: "Plataforma de gestión de restaurantes NoodleVolt",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const initialUser = await getSessionUser();
+
   return (
     <html
       lang="es"
       className={`${inter.variable} ${antonio.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <AuthProvider initialUser={initialUser}>
+          <CartProvider>{children}</CartProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

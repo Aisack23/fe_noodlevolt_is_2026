@@ -44,7 +44,7 @@ export default async function MenuPage() {
           mensaje="Esta sucursal todavía no tiene platillos en su menú."
         />
       ) : (
-        <MenuCatalogo categorias={categorias} />
+        <MenuCatalogo categorias={categorias} sucursal={menu.sucursal} />
       )}
     </main>
   );
