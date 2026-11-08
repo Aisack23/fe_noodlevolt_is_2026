@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 import { PersonalSidebar, type RolPersonal } from "./PersonalSidebar";
 import { PersonalTopbar } from "./PersonalTopbar";
+import type { SafeSessionUser } from "@/lib/session";
 
 type PersonalShellProps = {
   rol: RolPersonal;
   sucursal: string;
-  usuario: { nombre: string; rol: string };
+  usuario: SafeSessionUser;
   children: ReactNode;
 };
 
