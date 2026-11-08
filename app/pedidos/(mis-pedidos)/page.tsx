@@ -7,6 +7,7 @@ import { BadgeEstado } from "@/components/ui/BadgeEstado";
 import { Button } from "@/components/ui/Button";
 import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import {
+  getBranchRating,
   getMyOrders,
   ORDER_STATUS_LABELS,
   ReviewApiError,
@@ -14,6 +15,7 @@ import {
   type OrderStatus,
 } from "@/lib/api/reviews";
 import { mapearEstadoPedidoABadge } from "@/lib/orders/types";
+import { RatingStars } from "@/components/business/RatingStars";
 import { deleteSession, getSession, getSessionUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +38,11 @@ function formatDate(value: string): string {
   }).format(date);
 }
 
-function PedidoCard({ order }: { order: CustomerOrder }) {
+type RatingState =
+  | { average: number | null; count: number }
+  | { error: string };
+
+function PedidoCard({ order, ratingState }: { order: CustomerOrder; ratingState: RatingState }) {
   return (
     <article className="flex flex-col gap-5 rounded-card border border-border bg-white p-5 shadow-sm sm:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -58,10 +64,33 @@ function PedidoCard({ order }: { order: CustomerOrder }) {
         <div>
           <dt className="text-text-secondary">Calificación</dt>
           <dd className="mt-1 font-semibold text-brown">
-            {order.review ? `${order.review.rating} de 5` : "Sin calificar"}
+            {order.review ? (
+              <span className="flex flex-wrap items-center gap-2">
+                <RatingStars value={order.review.rating} readOnly />
+                <span>{order.review.rating} de 5</span>
+              </span>
+            ) : "Sin calificar"}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-text-secondary">Promedio de sucursal</dt>
+          <dd className="mt-1 font-semibold text-brown">
+            {"error" in ratingState
+              ? <span className="text-danger">{ratingState.error}</span>
+              : ratingState.average === null
+                ? "Sin reseñas"
+                : `${ratingState.average.toFixed(1)} de 5 (${ratingState.count})`}
           </dd>
         </div>
       </dl>
+      {order.status === "DELIVERED" && order.review === null && (
+        <Link
+          href={`/pedidos/${encodeURIComponent(order.id)}/resena`}
+          className="inline-flex min-h-11 w-fit items-center justify-center rounded-control bg-crimson px-5 py-2 text-sm font-semibold text-white outline-none hover:bg-crimson-hover focus-visible:shadow-focus"
+        >
+          Calificar
+        </Link>
+      )}
     </article>
   );
 }
@@ -105,6 +134,20 @@ export default async function MisPedidosPage({ searchParams }: MisPedidosPagePro
     );
   }
 
+  const branchIds = [...new Set(orders.map((order) => order.branchId))];
+  const ratingEntries = await Promise.all(branchIds.map(async (branchId) => {
+    try {
+      const rating = await getBranchRating(branchId);
+      return [branchId, rating] as const;
+    } catch (error) {
+      const message = error instanceof ReviewApiError && error.status === 404
+        ? "Sucursal no encontrada."
+        : "No se pudo cargar el promedio.";
+      return [branchId, { error: message }] as const;
+    }
+  }));
+  const ratingsByBranch = new Map<string, RatingState>(ratingEntries);
+
   return (
     <main className="mx-auto flex w-full max-w-[1232px] flex-col gap-6 px-4 py-6 md:px-8 md:py-8">
       <PageHeading />
@@ -138,7 +181,13 @@ export default async function MisPedidosPage({ searchParams }: MisPedidosPagePro
         />
       ) : (
         <section aria-label="Lista de pedidos" className="grid gap-4 lg:grid-cols-2">
-          {orders.map((order) => <PedidoCard key={order.id} order={order} />)}
+          {orders.map((order) => (
+            <PedidoCard
+              key={order.id}
+              order={order}
+              ratingState={ratingsByBranch.get(order.branchId) ?? { error: "No se pudo cargar el promedio." }}
+            />
+          ))}
         </section>
       )}
     </main>
