@@ -4,20 +4,26 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Calendar, Receipt, Star, User, Utensils, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useAuth } from "@/lib/auth/auth-context";
 
 type Pestana = { href: string; etiqueta: string; Icon: LucideIcon };
 
-// Rutas provisionales: /pedidos y /cuenta 
-const pestanas: Pestana[] = [
-  { href: "/menu", etiqueta: "Menú", Icon: Utensils },
-  { href: "/reservas", etiqueta: "Reservar", Icon: Calendar },
-  { href: "/pedidos", etiqueta: "Pedidos", Icon: Receipt },
-  { href: "/perfil/puntos", etiqueta: "Puntos", Icon: Star },
-  { href: "/cuenta", etiqueta: "Cuenta", Icon: User },
-];
-
 export function BottomTabBar() {
   const pathname = usePathname();
+  const { isAuthenticated } = useAuth();
+
+  const pestanas: Pestana[] = [
+    { href: "/menu", etiqueta: "Menú", Icon: Utensils },
+    { href: "/reservas", etiqueta: "Reservar", Icon: Calendar },
+    { href: "/pedidos", etiqueta: "Pedidos", Icon: Receipt },
+    { href: "/perfil/puntos", etiqueta: "Puntos", Icon: Star },
+    {
+      href: isAuthenticated ? "/cuenta" : "/login",
+      etiqueta: isAuthenticated ? "Cuenta" : "Ingresar",
+      Icon: User,
+    },
+  ];
+
 
   return (
     <nav
