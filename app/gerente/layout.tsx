@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 import { PersonalShell } from "@/components/ui/PersonalShell";
+import { isBranchAdministrationRole } from "@/lib/auth/roles";
 import { getSessionUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function GerenteLayout({ children }: { children: ReactNode }) {
-  const user = (await getSessionUser()) as any;
+  const user = await getSessionUser();
 
   // Obtenemos el correo del usuario de la sesión actual
   const email = user?.email || "";
@@ -24,11 +25,12 @@ export default async function GerenteLayout({ children }: { children: ReactNode 
 
   return (
     <PersonalShell
-      rol={user?.rol ?? "BRANCH_ADMIN"}
+      rol={isBranchAdministrationRole(user?.rol) ? user.rol : "BRANCH_ADMIN"}
       sucursal={sucursalNombre}
       usuario={{
         nombre: nombreUsuario,
-        rol: "Gerente de Sucursal",
+        email: user?.email,
+        rol: user?.rol,
       }}
     >
       {children}

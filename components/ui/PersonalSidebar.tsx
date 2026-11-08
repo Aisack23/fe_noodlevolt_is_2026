@@ -14,6 +14,7 @@ import {
   Sparkles, 
   Star, 
   Receipt, 
+  Building2,
   LogOut, 
   type LucideIcon 
 } from "lucide-react";
@@ -37,6 +38,7 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
     { href: "/gerente/lealtad", etiqueta: "Lealtad", Icon: Sparkles },
     { href: "/gerente/calificaciones", etiqueta: "Calificaciones", Icon: Star },
     { href: "/gerente/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
+    { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
   ],
   GENERAL_MANAGER: [
     { href: "/gerente/panel", etiqueta: "Panel", Icon: LayoutDashboard },
@@ -49,6 +51,7 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
     { href: "/gerente/lealtad", etiqueta: "Lealtad", Icon: Sparkles },
     { href: "/gerente/calificaciones", etiqueta: "Calificaciones", Icon: Star },
     { href: "/gerente/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
+    { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
   ],
 };
 

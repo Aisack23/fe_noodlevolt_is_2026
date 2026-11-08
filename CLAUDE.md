@@ -27,9 +27,9 @@ sus rutas, roles, estados, mensajes y criterios de aceptación tal como están r
 - La definición de terminado de cada task FE incluye **"Revisión visual contra el diseño acordado"**.
   El diseño acordado es el archivo de Figma (ver más abajo).
 ## Roles (token: usuarioId, rol, sucursalId) — sección 2.1
-`CLIENTE`, `MESERO`, `COCINA`, `GERENTE`, `GERENTE_GENERAL`. No hay cajero ni encargado de
+`CLIENT`, `WAITER`, `COOK`, `BRANCH_ADMIN`, `GENERAL_MANAGER`. No hay cajero ni encargado de
 inventario: el **Mesero** cobra (H16, H17) y el **Gerente** lleva el inventario (H13–H15).
-- `CLIENTE` y `GERENTE_GENERAL` no tienen sucursal. El personal y el Gerente operan solo en su
+- `CLIENT` y `GENERAL_MANAGER` no tienen sucursal. El personal y el administrador de sucursal operan solo en su
   sucursal; el Gerente general opera en todas, pero solo en las funciones donde está permitido.
 - Solo `CLIENTE` se registra solo (`/registro` → `POST /users`; el cuerpo no puede traer `rol`).
   El resto del personal se crea por script.
@@ -37,8 +37,8 @@ inventario: el **Mesero** cobra (H16, H17) y el **Gerente** lleva el inventario 
   con un rol no permitido muestra «Acceso denegado». Ocultar opciones del menú es solo ayuda visual
   (el backend valida con 401/403). Ante un 401 se limpia la sesión y se redirige a `/login`.
 - Sesión de 8 horas (S17). Tras el login cada rol va a su pantalla de inicio (FE-35.1; la HU no fija
-  cuál, propuesta: CLIENTE `/menu`, MESERO `/mesero/salon`, COCINA `/cocina/tablero`,
-  GERENTE `/gerente`, GERENTE_GENERAL `/reportes/ventas`).
+  cuál, propuesta: CLIENT `/menu`, WAITER `/mesero/listos`, COOK `/cocina`,
+  BRANCH_ADMIN `/gerente/inventario`, GENERAL_MANAGER `/gerente/reportes`).
  
 ## Stack
  
