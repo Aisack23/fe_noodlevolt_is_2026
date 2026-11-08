@@ -9,6 +9,7 @@ import {
   CreditCard,
   Flame,
   Sparkles,
+  TriangleAlert,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -33,7 +34,12 @@ export type Estado =
   // Pago
   | "PAGADO"
   | "COBRO_CAJA_PENDIENTE"
-  | "PAGO_LINEA_PENDIENTE";
+  | "PAGO_LINEA_PENDIENTE"
+    | "PAGO_LINEA_PENDIENTE"
+  // Insumo (calculado)
+  | "SIN_STOCK"
+  | "BAJO_MINIMO"
+  | "SUFICIENTE";
 
 type Tone = "success" | "warning" | "danger" | "info" | "neutral";
 
@@ -60,6 +66,9 @@ const estados: Record<Estado, { label: string; tone: Tone; Icon: LucideIcon }> =
   PAGADO: { label: "Pagado", tone: "success", Icon: CircleCheck },
   COBRO_CAJA_PENDIENTE: { label: "Cobro en caja pendiente", tone: "warning", Icon: Banknote },
   PAGO_LINEA_PENDIENTE: { label: "Pago en línea pendiente", tone: "danger", Icon: CreditCard },
+    SIN_STOCK: { label: "Sin stock", tone: "danger", Icon: Ban },
+  BAJO_MINIMO: { label: "Bajo mínimo", tone: "warning", Icon: TriangleAlert },
+  SUFICIENTE: { label: "Suficiente", tone: "success", Icon: CircleCheck },
 };
 
 type BadgeEstadoProps = {
