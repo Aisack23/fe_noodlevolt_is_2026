@@ -29,6 +29,11 @@ export type CustomerOrder = {
   review: OrderReview | null;
 };
 
+/** Única regla de visibilidad para habilitar una reseña en la interfaz. */
+export function canRateOrder(order: Pick<CustomerOrder, "status" | "review">): boolean {
+  return order.status === "DELIVERED" && order.review === null;
+}
+
 export type CreateReviewInput = {
   orderId: string;
   rating: number;

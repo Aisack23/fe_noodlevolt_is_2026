@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import {
+  canRateOrder,
   createReview,
   getBranchRating,
   getMyOrders,
@@ -60,7 +61,7 @@ export async function submitReview(
     const orders = await getMyOrders(token);
     const order = orders.find((item) => item.id === orderId);
     if (!order) return { ok: false, kind: "not_found", message: "No se encontró el pedido." };
-    if (order.status !== "DELIVERED" || order.review !== null) {
+    if (!canRateOrder(order)) {
       return {
         ok: false,
         kind: "conflict",

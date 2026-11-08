@@ -7,6 +7,7 @@ import { Alerta } from "@/components/ui/Alerta";
 import { BadgeEstado } from "@/components/ui/BadgeEstado";
 import { ReviewSubmission } from "@/app/pedidos/ReviewSubmission";
 import {
+  canRateOrder,
   getMyOrders,
   ReviewApiError,
   type CustomerOrder,
@@ -56,7 +57,7 @@ export default async function ResenaPedidoPage({ params }: ReviewPageProps) {
   const order = orders.find((item) => item.id === id);
   if (!order) notFound();
 
-  const canReview = order.status === "DELIVERED" && order.review === null;
+  const canReview = canRateOrder(order);
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-6 md:px-8 md:py-8">
       <div className="flex flex-col gap-2">

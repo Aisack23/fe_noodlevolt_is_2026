@@ -7,6 +7,7 @@ import { BadgeEstado } from "@/components/ui/BadgeEstado";
 import { Button } from "@/components/ui/Button";
 import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import {
+  canRateOrder,
   getBranchRating,
   getMyOrders,
   ORDER_STATUS_LABELS,
@@ -83,7 +84,7 @@ function PedidoCard({ order, ratingState }: { order: CustomerOrder; ratingState:
           </dd>
         </div>
       </dl>
-      {order.status === "DELIVERED" && order.review === null && (
+      {canRateOrder(order) && (
         <Link
           href={`/pedidos/${encodeURIComponent(order.id)}/resena`}
           className="inline-flex min-h-11 w-fit items-center justify-center rounded-control bg-crimson px-5 py-2 text-sm font-semibold text-white outline-none hover:bg-crimson-hover focus-visible:shadow-focus"
