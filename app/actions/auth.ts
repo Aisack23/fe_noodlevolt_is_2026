@@ -42,17 +42,18 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type ValidRole =
   | "CLIENT"
-  | "MESERO"
-  | "COCINA"
-  | "GERENTE"
-  | "GERENTE_GENERAL";
+  | "WAITER"
+  | "COOK"
+  | "BRANCH_ADMIN"
+  | "GENERAL_MANAGER";
+
 
 const ROLE_ROUTES: Record<ValidRole, string> = {
   CLIENT: "/menu",
-  MESERO: "/mesero/salon",
-  COCINA: "/cocina/tablero",
-  GERENTE: "/gerente",
-  GERENTE_GENERAL: "/reportes/ventas",
+  WAITER: "/mesero/listos",
+  COOK: "/cocina",
+  BRANCH_ADMIN: "/gerente/inventario",
+  GENERAL_MANAGER: "/gerente/reportes",
 };
 
 /**
