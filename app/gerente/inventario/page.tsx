@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { sampleInventory } from "@/lib/api/inventory";
-import { InventoryTable } from "./inventory-table";
+import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
+import { AccesoDenegado } from "@/components/ui/AccesoDenegado";
 import { EstadoVacio } from "@/components/ui/EstadoVacio";
+import { getInventory, InventoryApiError, type InventoryItem } from "@/lib/api/inventory";
+import { getSession, getSessionUser } from "@/lib/session";
+import { InventoryTable } from "./inventory-table";
 
 export const metadata: Metadata = {
   title: "Inventario",
 };
+
+
+const ROLES_PERMITIDOS = ["BRANCH_ADMIN", "GENERAL_MANAGER"];
 
 const formatoFecha = new Intl.DateTimeFormat("es-SV", {
   day: "2-digit",
@@ -17,16 +24,13 @@ const formatoFecha = new Intl.DateTimeFormat("es-SV", {
   timeZone: "America/El_Salvador",
 });
 
-export default function InventarioPage() {
-
-
-  // SUPUESTO: datos de ejemplo hasta que BE-05 esté en develop.
-  const items = sampleInventory;
-
-  const ultimaMarca = items.length
-    ? Math.max(...items.map((item) => new Date(item.updatedAt).getTime()))
-    : null;
-
+function Pantalla({
+  children,
+  ultimaActualizacion,
+}: {
+  children: ReactNode;
+  ultimaActualizacion?: string;
+}) {
   return (
     <main className="flex flex-col gap-6 px-4 py-6 md:px-8">
       <div className="flex flex-col gap-1">
@@ -34,13 +38,63 @@ export default function InventarioPage() {
         <p className="text-sm text-brown">
           Nivel de inventario de los insumos clave de tu sucursal.
         </p>
-        {ultimaMarca !== null && (
+        {ultimaActualizacion && (
           <p className="text-sm text-text-secondary">
-            Última actualización: {formatoFecha.format(new Date(ultimaMarca))}
+            Última actualización: {ultimaActualizacion}
           </p>
         )}
       </div>
-           {items.length === 0 ? (
+      {children}
+    </main>
+  );
+}
+
+export default async function InventarioPage() {
+  const token = await getSession();
+  const usuario = await getSessionUser();
+
+  if (!token || !usuario) {
+    redirect("/login");
+  }
+
+  
+  if (!usuario.rol || !ROLES_PERMITIDOS.includes(usuario.rol)) {
+    return (
+      <Pantalla>
+        <AccesoDenegado href="/menu" />
+      </Pantalla>
+    );
+  }
+
+  let items: InventoryItem[];
+  try {
+    items = await getInventory(token);
+  } catch (error) {
+    if (error instanceof InventoryApiError) {
+      if (error.status === 401) redirect("/login");
+      if (error.status === 403) {
+        return (
+          <Pantalla>
+            <AccesoDenegado href="/menu" />
+          </Pantalla>
+        );
+      }
+    }
+    // Cualquier otro fallo lo muestra error.tsx, con «Reintentar».
+    throw error;
+  }
+
+  const ultimaMarca = items.length
+    ? Math.max(...items.map((item) => new Date(item.updatedAt).getTime()))
+    : null;
+
+  return (
+    <Pantalla
+      ultimaActualizacion={
+        ultimaMarca !== null ? formatoFecha.format(new Date(ultimaMarca)) : undefined
+      }
+    >
+      {items.length === 0 ? (
         <EstadoVacio
           titulo="No hay insumos registrados en tu sucursal"
           mensaje="Cuando registres insumos, aparecerán aquí."
@@ -48,6 +102,6 @@ export default function InventarioPage() {
       ) : (
         <InventoryTable items={items} />
       )}
-    </main>
+    </Pantalla>
   );
 }
