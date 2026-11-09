@@ -46,7 +46,11 @@ export function proxy(request: NextRequest) {
 
   // Si ya tiene sesión activa e intenta acceder a /login o /registro, redirigir al menú
   if (isAuthRoute && hasSession) {
-    return NextResponse.redirect(new URL("/menu", request.nextUrl));
+    const returnTo = request.nextUrl.searchParams.get("returnTo");
+    const destination = returnTo && returnTo.startsWith("/") && !returnTo.startsWith("//") && !returnTo.includes("\\")
+      ? returnTo
+      : "/menu";
+    return NextResponse.redirect(new URL(destination, request.nextUrl));
   }
 
   return NextResponse.next();

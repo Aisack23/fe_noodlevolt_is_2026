@@ -84,7 +84,9 @@ export function ConfirmacionView({
             <div className="flex flex-col">
               <span className="text-xs text-text-secondary">Hora estimada de retiro</span>
               <span className="text-sm font-semibold text-brown">
-                {pedido.horaEstimadaRetiro} (aprox. 20 min)
+                {pedido.horaEstimadaRetiro === "Por confirmar"
+                  ? pedido.horaEstimadaRetiro
+                  : `${pedido.horaEstimadaRetiro} (aprox. 20 min)`}
               </span>
             </div>
           </div>
@@ -92,7 +94,7 @@ export function ConfirmacionView({
 
         {esOnline ? (
           <Alerta tono="info" className="text-sm">
-            Tu pedido pasa a Cocina cuando se apruebe el pago.
+            Tu pedido fue registrado. El pago en línea se procesa en el siguiente paso.
           </Alerta>
         ) : (
           <Alerta tono="success" className="text-sm">

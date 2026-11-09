@@ -2,19 +2,13 @@
 
 import { useState } from "react";
 import type { Pedido } from "@/lib/orders/types";
-import { orderService } from "@/lib/orders/simulated-order-service";
 import { CarritoView } from "./carrito-view";
 import { ConfirmacionView } from "./confirmacion-view";
 
 export function PedidosLlevarClient() {
   const [pedidoConfirmado, setPedidoConfirmado] = useState<Pedido | null>(null);
 
-  const handleNuevoPedido = async () => {
-    try {
-      await orderService.limpiarUltimoPedido?.();
-    } catch {
-      // Ignorar fallo en almacenamiento local
-    }
+  const handleNuevoPedido = () => {
     setPedidoConfirmado(null);
   };
 

@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MapPin, ArrowLeft, Trash2, Clock } from "lucide-react";
 import { useCart } from "@/lib/cart/cart-context";
 import { Button } from "@/components/ui/Button";
 import { Alerta } from "@/components/ui/Alerta";
 import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import { OpcionPago, type ModalidadPago } from "@/components/business/OpcionPago";
-import { orderService } from "@/lib/orders/simulated-order-service";
+import { useAuth } from "@/lib/auth/auth-context";
 import type { Pedido } from "@/lib/orders/types";
+import { clearOperationKey, getOperationKey } from "@/lib/orders/operation-key";
+import { submitTakeoutOrder } from "./actions";
 import { CarritoItem } from "./carrito-item";
 
 const formatoPrecio = new Intl.NumberFormat("en-US", {
@@ -22,6 +25,8 @@ type CarritoViewProps = {
 };
 
 export function CarritoView({ onPedidoConfirmado }: CarritoViewProps) {
+  const router = useRouter();
+  const { user, isAuthenticated } = useAuth();
   const {
     items,
     sucursal,
@@ -38,6 +43,15 @@ export function CarritoView({ onPedidoConfirmado }: CarritoViewProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const redirectToLogin = () => {
+    router.push("/login?returnTo=%2Fpedidos%2Fllevar");
+  };
+
+  const handleVaciarCarrito = () => {
+    clearOperationKey();
+    vaciarCarrito();
+  };
+
   const handleConfirmar = async () => {
     setError(null);
     if (items.length === 0) {
@@ -50,30 +64,54 @@ export function CarritoView({ onPedidoConfirmado }: CarritoViewProps) {
       return;
     }
 
+    if (!isAuthenticated) {
+      redirectToLogin();
+      return;
+    }
+
+    if (user?.rol !== "CLIENT") {
+      setError("Tu cuenta no tiene permisos para realizar pedidos.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const result = await orderService.crearPedido({
-        sucursalId: sucursal.id,
-        sucursalNombre: sucursal.nombre,
-        modalidadPago,
-        items: items.map((i) => ({
-          platilloId: i.platilloId,
-          nombre: i.nombre,
-          precio: i.precio,
-          cantidad: i.cantidad,
+      const requestFingerprint = JSON.stringify({
+        branchId: sucursal.id,
+        paymentMode: modalidadPago,
+        lines: items.map((item) => ({
+          dishId: item.platilloId,
+          quantity: item.cantidad,
+          expectedPrice: item.precio.toFixed(2),
+        })),
+      });
+      const requestOperationKey = getOperationKey(requestFingerprint);
+      const result = await submitTakeoutOrder({
+        branchId: sucursal.id,
+        branchName: sucursal.nombre,
+        operationKey: requestOperationKey,
+        paymentMode: modalidadPago === "CAJA" ? "AT_COUNTER" : "ONLINE",
+        lines: items.map((item) => ({
+          dishId: item.platilloId,
+          quantity: item.cantidad,
+          expectedPrice: item.precio.toFixed(2),
         })),
       });
 
-      if (!result.exito || !result.pedido) {
-        setError(result.error || "No se pudo confirmar tu pedido. Intenta de nuevo.");
+      if (!result.ok) {
+        if (result.kind === "unauthenticated") {
+          redirectToLogin();
+          return;
+        }
+        setError(result.message);
         return;
       }
 
       // Vaciar carrito tras registro exitoso
+      clearOperationKey();
       vaciarCarrito();
       onPedidoConfirmado(result.pedido);
-    } catch (e) {
-      console.error("Error al procesar el pedido:", e);
+    } catch {
       setError("Ocurrió un error inesperado al procesar el pedido.");
     } finally {
       setIsSubmitting(false);
@@ -122,7 +160,7 @@ export function CarritoView({ onPedidoConfirmado }: CarritoViewProps) {
           </Link>
           <button
             type="button"
-            onClick={vaciarCarrito}
+            onClick={handleVaciarCarrito}
             className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-danger outline-none focus-visible:shadow-focus rounded-control py-1 px-2"
           >
             <Trash2 aria-hidden className="size-4" />

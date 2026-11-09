@@ -15,6 +15,7 @@ export function LoginForm() {
   const [state, formAction, pending] = useActionState(login, initialState);
   const searchParams = useSearchParams();
   const registrado = searchParams.get("registrado") === "true";
+  const returnTo = searchParams.get("returnTo");
 
   return (
     <div className="w-full max-w-[440px] rounded-none sm:rounded-card sm:border sm:border-border bg-background sm:bg-white p-6 sm:p-10 transition-all">
@@ -39,6 +40,7 @@ export function LoginForm() {
       </div>
 
       <form action={formAction} className="mt-6 flex flex-col gap-4" noValidate>
+        {returnTo && <input type="hidden" name="returnTo" value={returnTo} />}
         {registrado && !state.error && (
           <Alerta tono="success" className="text-sm">
             Cuenta creada exitosamente. Ingresa con tu correo y contraseña.
