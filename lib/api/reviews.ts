@@ -19,7 +19,8 @@ export type OrderReview = {
 
 export type CustomerOrder = {
   id: string;
-  orderNumber: string;
+  /** Puede ser null para pedidos creados sin folio comercial asignado. */
+  orderNumber: string | null;
   status: OrderStatus;
   /** Importe de presentación; se conserva como string para evitar cálculos/redondeos. */
   total: string;
@@ -103,7 +104,7 @@ function isCustomerOrder(value: unknown): value is CustomerOrder {
   return (
     isRecord(value) &&
     typeof value.id === "string" &&
-    typeof value.orderNumber === "string" &&
+    (typeof value.orderNumber === "string" || value.orderNumber === null) &&
     isOrderStatus(value.status) &&
     typeof value.total === "string" &&
     typeof value.createdAt === "string" &&
