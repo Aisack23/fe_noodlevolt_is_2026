@@ -56,6 +56,18 @@ const ROLE_ROUTES: Record<ValidRole, string> = {
   GENERAL_MANAGER: "/gerente/reportes",
 };
 
+function getSafeReturnTo(value: FormDataEntryValue | null): string | null {
+  if (
+    typeof value !== "string" ||
+    !value.startsWith("/") ||
+    value.startsWith("//") ||
+    value.includes("\\")
+  ) {
+    return null;
+  }
+  return value;
+}
+
 /**
  * Decodifica de forma segura la carga útil del JWT únicamente para seleccionar
  * la ruta inicial de la UI según el rol. No sustituye la validación de autenticidad
@@ -138,7 +150,7 @@ export async function login(
     return { error: "Correo o contraseña incorrectos.", email };
   }
 
-  const destination = getRouteForToken(token);
+  const destination = getSafeReturnTo(formData.get("returnTo")) ?? getRouteForToken(token);
   if (!destination) {
     return {
       error: "Tu cuenta no tiene un rol válido reconocido para acceder.",

@@ -1,19 +1,33 @@
 import type { Metadata } from "next";
-import { EstadoVacio } from "@/components/ui/EstadoVacio";
+import { getBranches } from "@/lib/api/branches";
 import { obtenerMenu } from "@/lib/api/menu";
-import { MenuCatalogo, type Categoria } from "./menu-catalogo";
+import { type Categoria } from "./menu-catalogo";
+import { MenuPageClient } from "./menu-page-client";
 
 export const metadata: Metadata = {
   title: "Menú",
 };
 
-export default async function MenuPage() {
-  const sucursalId = process.env.MENU_BRANCH_ID;
-  if (!sucursalId) {
-    throw new Error("Falta la variable de entorno MENU_BRANCH_ID.");
+type MenuPageProps = {
+  searchParams: Promise<{ sucursal?: string }>;
+};
+
+export default async function MenuPage({ searchParams }: MenuPageProps) {
+  const [branches, params] = await Promise.all([getBranches(), searchParams]);
+  const activeBranches = branches.filter((branch) => branch.isActive);
+  const selectedBranch = activeBranches.find((branch) => branch.id === params.sucursal)
+    ?? activeBranches[0];
+
+  if (!selectedBranch) {
+    return (
+      <main className="mx-auto flex w-full max-w-[1232px] flex-col gap-6 px-4 py-6">
+        <h1 className="font-display text-h1 font-bold uppercase text-brown">Menú</h1>
+        <p className="text-sm text-text-secondary">No hay sucursales activas disponibles.</p>
+      </main>
+    );
   }
 
-  const menu = await obtenerMenu(sucursalId);
+  const menu = await obtenerMenu(selectedBranch.id);
 
   
   const categorias: Categoria[] = menu.categorias.map((categoria) => ({
@@ -28,24 +42,5 @@ export default async function MenuPage() {
     })),
   }));
 
-  const sinPlatillos = categorias.length === 0;
-  //const sinPlatillos = true;
-
-  return (
-    <main className="mx-auto flex w-full max-w-[1232px] flex-col gap-6 px-4 py-6">
-      <div className="flex flex-col gap-1">
-        <h1 className="font-display text-h1 font-bold uppercase text-brown">Menú</h1>
-        <p className="text-sm text-text-secondary">{menu.sucursal.nombre}</p>
-      </div>
-
-      {sinPlatillos ? (
-        <EstadoVacio
-          titulo="Sin platillos por ahora"
-          mensaje="Esta sucursal todavía no tiene platillos en su menú."
-        />
-      ) : (
-        <MenuCatalogo categorias={categorias} sucursal={menu.sucursal} />
-      )}
-    </main>
-  );
+  return <MenuPageClient branches={activeBranches} selectedBranch={menu.sucursal} categorias={categorias} />;
 }

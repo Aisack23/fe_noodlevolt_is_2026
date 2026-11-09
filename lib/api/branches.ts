@@ -12,12 +12,12 @@ export interface BranchStatusResponse {
 }
 
 export class BranchApiError extends Error {
-  constructor(
-    message: string,
-    public readonly status: number,
-  ) {
+  readonly status: number;
+
+  constructor(message: string, status: number) {
     super(message);
     this.name = "BranchApiError";
+    this.status = status;
   }
 }
 
@@ -54,9 +54,10 @@ function authorizationHeaders(token: string): HeadersInit {
   return { Authorization: `Bearer ${token}` };
 }
 
-export async function getBranches(token: string): Promise<Branch[]> {
+/** GET /branches es público; token opcional para conservar consumidores administrativos. */
+export async function getBranches(token?: string): Promise<Branch[]> {
   const response = await fetch(new URL("branches", getApiUrl()), {
-    headers: authorizationHeaders(token),
+    ...(token ? { headers: authorizationHeaders(token) } : {}),
     cache: "no-store",
   });
 
