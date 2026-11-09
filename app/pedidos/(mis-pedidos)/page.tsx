@@ -49,7 +49,7 @@ function PedidoCard({ order, ratingState }: { order: CustomerOrder; ratingState:
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <h2 className="font-display text-h3 font-bold uppercase text-brown">
-            Pedido {order.orderNumber}
+            Pedido {order.orderNumber ?? order.id}
           </h2>
           <p className="text-sm font-semibold text-text-secondary">{order.branchName}</p>
           <p className="text-sm text-text-secondary">{formatDate(order.createdAt)}</p>

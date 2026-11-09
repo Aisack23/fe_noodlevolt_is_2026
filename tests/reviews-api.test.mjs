@@ -42,6 +42,23 @@ test("GET pedidos envía Bearer y el filtro permitido; acepta lista vacía", asy
   assert.equal(request.init.cache, "no-store");
 });
 
+test("GET pedidos acepta orderNumber nulo del contrato y conserva el UUID real", async () => {
+  globalThis.fetch = async () => jsonResponse([{
+    id: "10000000-0000-4000-8000-000000000001",
+    orderNumber: null,
+    status: "PENDING",
+    total: "8.50",
+    createdAt: "2026-11-08T18:00:00.000Z",
+    branchId: "20000000-0000-4000-8000-000000000001",
+    branchName: "NoodleVolt Centro",
+    review: null,
+  }]);
+
+  const [order] = await getMyOrders("token-demo");
+  assert.equal(order.orderNumber, null);
+  assert.equal(order.id, "10000000-0000-4000-8000-000000000001");
+});
+
 test("POST reseña devuelve éxito 201 y envía solo los campos del contrato", async () => {
   let request;
   globalThis.fetch = async (url, init) => {
