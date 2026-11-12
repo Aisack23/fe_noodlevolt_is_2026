@@ -8,6 +8,7 @@ import { LogOut, Receipt, ShoppingCart, Star, User } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useCart } from "@/lib/cart/cart-context";
 import { useAuth } from "@/lib/auth/auth-context";
+import Campana from "@/components/ui/Campana";
 import type { SafeSessionUser } from "@/lib/session";
 
 const enlacesInvitado = [
@@ -130,6 +131,9 @@ export function NavbarCliente({
 
         {/* Acciones de la derecha */}
         <div className="flex items-center gap-3 md:gap-4">
+          {/* Componente Campana (Solo visible si está autenticado o disponible según rol) */}
+          {autenticado && <Campana />}
+
           {/* Botón del Carrito (siempre visible con insignia de cantidad) */}
           <Link
             href="/pedidos/llevar"
