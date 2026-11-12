@@ -318,3 +318,10 @@ Debes seguir estas reglas en todas las tareas frontend:
 | `ReviewForm` | Implementado para reseñas | `components/business/ReviewForm.tsx` | No validada; faltan frame/capturas FE-08 | Comentario opcional de hasta 500 caracteres, contador, validación de apoyo y estado de envío. |
 
 FE-08 reutiliza `BadgeEstado`, `EstadoVacio`, `Alerta`, `Button` y `Skeleton`. No se añadieron dependencias.
+
+## 14. Componentes añadidos para FE-06
+
+| Componente | Estado | Ubicación | Referencia Figma | Observaciones |
+|---|---|---|---|---|
+| `CocinaTarjetaPedido` | Implementado para tablero de cocina | `components/business/CocinaTarjetaPedido.tsx` | `Cocina/EncabezadoPedido` 109:4357 | Presenta el pedido, sus líneas y la única transición de estado permitida. |
+| `CocinaLineaPedido` | Implementado para tablero de cocina | `components/business/CocinaLineaPedido.tsx` | `Cocina/LíneaPedido` 109:4471 | Mantiene nombres y cantidades a 24 px mínimos, y muestra notas o “Sin observaciones”. |
