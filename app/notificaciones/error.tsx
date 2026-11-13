@@ -1,8 +1,5 @@
 'use client';
 
-import React from 'react';
-import { AlertCircle } from 'lucide-react';
-
 interface ErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
@@ -10,16 +7,19 @@ interface ErrorProps {
 
 export default function ErrorBoundary({ reset }: ErrorProps) {
   return (
-    <main className="max-w-4xl mx-auto px-4 py-8">
-      <div className="bg-white rounded-2xl border-2 border-[#E8DED3] p-6 shadow-sm">
-        <div className="bg-[#9B2C2C]/10 border-2 border-[#9B2C2C]/20 rounded-2xl p-6 text-center space-y-4">
-          <AlertCircle className="w-10 h-10 text-[#9B2C2C] mx-auto" />
-          <p className="text-[#9B2C2C] font-medium">
+    <main className="mx-auto max-w-4xl px-4 py-8">
+      <div className="mx-auto w-full max-w-[400px] overflow-hidden rounded-card border border-border bg-white">
+        <h1 className="px-5 pb-3 pt-5 font-display text-h3 uppercase text-brown">
+          Notificaciones
+        </h1>
+        <div role="alert" className="space-y-3 bg-danger/10 p-5">
+          <p className="text-sm text-danger">
             No se pudo completar la operación. Intenta de nuevo
           </p>
           <button
-            onClick={() => reset()}
-            className="px-6 py-2.5 bg-[#C0392B] text-white font-semibold rounded-xl hover:bg-[#A93226] transition-colors"
+            type="button"
+            onClick={reset}
+            className="w-full rounded-control border-2 border-orange px-4 py-2.5 font-semibold text-brown transition-colors hover:bg-cream"
           >
             Reintentar
           </button>
