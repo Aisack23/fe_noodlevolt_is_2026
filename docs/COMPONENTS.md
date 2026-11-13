@@ -318,3 +318,12 @@ Debes seguir estas reglas en todas las tareas frontend:
 | `ReviewForm` | Implementado para reseñas | `components/business/ReviewForm.tsx` | No validada; faltan frame/capturas FE-08 | Comentario opcional de hasta 500 caracteres, contador, validación de apoyo y estado de envío. |
 
 FE-08 reutiliza `BadgeEstado`, `EstadoVacio`, `Alerta`, `Button` y `Skeleton`. No se añadieron dependencias.
+
+## 14. Componentes añadidos para FE-09
+
+| Componente | Estado | Ubicación | Referencia Figma | Observaciones |
+|---|---|---|---|---|
+| `Campana` | Implementado | `components/ui/Campana.tsx` | `12:99` (Navbar) y frames «Centro de notificaciones» | Sin contador ni «sin leer» (BE-09 no marca leído). Panel de 400 px. |
+| `NotificacionesContenido` | Implementado | `components/business/NotificacionesContenido.tsx` | Frames Vacío, Error, Cargando y Con avisos | Compartido por la campana y `/notificaciones`. No usa `EstadoVacio`, `Alerta` ni `Skeleton` todavía. |
+
+`NavbarCliente` recibió un cambio mínimo (`relative` en el grupo de acciones). No se añadieron dependencias.
