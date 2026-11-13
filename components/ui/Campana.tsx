@@ -57,9 +57,9 @@ export default function Campana() {
           aria-label="Notificaciones"
           className="fixed inset-x-2 top-[72px] z-50 overflow-hidden rounded-card border border-border bg-white md:absolute md:inset-x-auto md:right-0 md:top-full md:mt-3 md:w-[400px]"
         >
-          <h2 className="px-6 pb-2 pt-6 font-display text-h3 uppercase text-brown">
-            Notificaciones
-          </h2>
+          <h2 className="px-6 pb-2 pt-6 font-display text-h3 font-bold uppercase tracking-[0.01em] text-brown">
+  Notificaciones
+</h2>
           <div className="max-h-[70vh] overflow-y-auto px-6 pb-4">
             <NotificacionesContenido items={items} status={status} onRetry={retry} />
           </div>

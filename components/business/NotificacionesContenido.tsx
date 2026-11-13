@@ -78,16 +78,20 @@ export default function NotificacionesContenido({ items, status, onRetry }: Prop
     );
   }
 
-  return (
-    <ul className="divide-y divide-border">
+    return (
+    <ul className="-mx-6 -mt-2">
       {items.map((item) => (
-        <li key={item.id} className="py-4">
-          <h3 className="font-semibold text-brown">{item.title}</h3>
-          <p className="mt-1 text-sm text-text-secondary">{item.message}</p>
+        <li key={item.id} className="px-6 py-5">
+          <h3 className="text-base font-semibold leading-6 text-brown">
+            {item.title}
+          </h3>
+          <p className="mt-1 text-sm leading-5 text-text-secondary">
+            {item.message}
+          </p>
           <time
             dateTime={item.createdAt}
             suppressHydrationWarning
-            className="mt-1 block text-sm text-text-secondary"
+            className="mt-1 block text-sm leading-5 text-text-secondary"
           >
             {formatRelativeTime(item.createdAt)}
           </time>
@@ -95,4 +99,5 @@ export default function NotificacionesContenido({ items, status, onRetry }: Prop
       ))}
     </ul>
   );
-}
+  
+  }
