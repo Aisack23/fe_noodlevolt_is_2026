@@ -51,6 +51,8 @@ export function useNotifications(enabled = true) {
 
     stopped.current = false;
 
+    // Se difiere la primera carga para evitar setState síncrono dentro del efecto
+// (regla react-hooks/set-state-in-effect). El comportamiento no cambia.
     const initialTimeout = setTimeout(() => {
       void load();
     }, 0);
