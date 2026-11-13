@@ -114,3 +114,26 @@ export async function updateKitchenOrderStatus(
   }
   return payload;
 }
+
+export async function getReadyKitchenOrders(token: string): Promise<KitchenOrder[]> {
+  const response = await fetch(new URL("kitchen/orders/ready", apiBaseUrl()), {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new KitchenApiError(response.status, await messageFrom(response));
+
+  const payload: unknown = await response.json();
+  if (!Array.isArray(payload) || !payload.every(isKitchenOrder)) {
+    throw new Error("La respuesta de pedidos listos no tiene el formato esperado.");
+  }
+  return payload;
+}
+
+export async function deliverKitchenOrder(token: string, orderId: string): Promise<void> {
+  const response = await fetch(new URL(`kitchen/orders/${orderId}/deliver`, apiBaseUrl()), {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new KitchenApiError(response.status, await messageFrom(response));
+}

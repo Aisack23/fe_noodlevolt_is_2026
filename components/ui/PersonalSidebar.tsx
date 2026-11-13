@@ -15,16 +15,20 @@ import {
   Star, 
   Receipt, 
   Building2,
+  LayoutGrid,
+  ConciergeBell,
+  ShoppingBag,
+  BookOpen,
   LogOut, 
   type LucideIcon 
-} from "lucide-react";
+} from "lucide-react"; 
 import { logout } from "@/app/actions/auth";
 import { cn } from "@/lib/cn";
 
 type NavItem = { href: string; etiqueta: string; Icon: LucideIcon };
 
 // Sincronizado con los roles reales del backend
-export type RolPersonal = "BRANCH_ADMIN" | "GENERAL_MANAGER";
+export type RolPersonal = "BRANCH_ADMIN" | "GENERAL_MANAGER" | "WAITER";
 
 const itemsPorRol: Record<RolPersonal, NavItem[]> = {
   BRANCH_ADMIN: [
@@ -53,11 +57,21 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
     { href: "/gerente/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
     { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
   ],
+    WAITER: [
+    { href: "/mesero/salon", etiqueta: "Salón", Icon: LayoutGrid },
+    { href: "/mesero/comanda", etiqueta: "Comanda", Icon: ClipboardList },
+    { href: "/mesero/listos", etiqueta: "Listos para entregar", Icon: ConciergeBell },
+    { href: "/mesero/cuentas", etiqueta: "Cuentas", Icon: Receipt },
+    { href: "/mesero/pedidos-llevar", etiqueta: "Pedidos para llevar", Icon: ShoppingBag },
+    { href: "/mesero/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
+    { href: "/menu", etiqueta: "Menú", Icon: BookOpen },
+  ],
 };
 
 export function PersonalSidebar({ rol }: { rol: RolPersonal }) {
   const pathname = usePathname();
-  const items = itemsPorRol[rol] || itemsPorRol.BRANCH_ADMIN;
+ // const items = itemsPorRol[rol] || itemsPorRol.BRANCH_ADMIN;
+ const items = itemsPorRol[rol];
 
   return (
     <aside className="hidden w-56 shrink-0 flex-col bg-brown px-4 py-6 text-white md:flex overflow-y-auto shadow-md">
