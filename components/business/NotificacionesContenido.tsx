@@ -28,7 +28,7 @@ export default function NotificacionesContenido({ items, status, onRetry }: Prop
 
   if (status === "error") {
     return (
-      <div role="alert" className="space-y-3 rounded-control bg-danger/10 p-4">
+      <div role="alert" className="-mx-6 -mb-4 space-y-3 bg-danger/10 p-5">
         <p className="text-sm text-danger">
           No se pudo completar la operación. Intenta de nuevo
         </p>

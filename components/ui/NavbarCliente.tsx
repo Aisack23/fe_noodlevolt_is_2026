@@ -130,7 +130,7 @@ export function NavbarCliente({
         </nav>
 
         {/* Acciones de la derecha */}
-        <div className="flex items-center gap-3 md:gap-4">
+        <div className="relative flex items-center gap-3 md:gap-4">
           {/* Componente Campana (Solo visible si está autenticado o disponible según rol) */}
           {autenticado && <Campana />}
 
