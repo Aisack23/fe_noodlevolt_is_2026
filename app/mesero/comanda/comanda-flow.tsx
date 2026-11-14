@@ -1,23 +1,34 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { RefreshCw } from "lucide-react";
 import { SalonMesas, SalonMesasCargando } from "@/components/business/SalonMesas";
 import { Alerta } from "@/components/ui/Alerta";
+import { BadgeEstado } from "@/components/ui/BadgeEstado";
 import { Button } from "@/components/ui/Button";
-import { SalonApiError, getMesas, markMesaClean, type Mesa } from "@/lib/api/salon";
+import {
+  SalonApiError,
+  getMesas,
+  markMesaClean,
+  type Mesa,
+  type SalonOrderResult,
+} from "@/lib/api/salon";
+import { PasoPlatillos } from "./paso-platillos";
 
 type Carga = "cargando" | "listo" | "error";
+type Resultado = SalonOrderResult & { sumadaACuenta: boolean };
 
 const GENERIC_ERROR = "No se pudo completar la operación. Intenta de nuevo";
 
 export function ComandaFlow() {
-  const [paso, setPaso] = useState<1 | 2>(1);
+  const [paso, setPaso] = useState<1 | 2 | 3>(1);
   const [mesas, setMesas] = useState<Mesa[]>([]);
   const [carga, setCarga] = useState<Carga>("cargando");
   const [seleccionadaId, setSeleccionadaId] = useState<string | null>(null);
   const [limpiandoId, setLimpiandoId] = useState<string | null>(null);
   const [errorAccion, setErrorAccion] = useState<string | null>(null);
+  const [resultado, setResultado] = useState<Resultado | null>(null);
 
   const seleccionada = mesas.find((mesa) => mesa.id === seleccionadaId) ?? null;
 
@@ -30,8 +41,6 @@ export function ComandaFlow() {
     }
   }, []);
 
-  // La primera carga se difiere con setTimeout, igual que en useNotifications,
-  // para cumplir la regla react-hooks/set-state-in-effect.
   useEffect(() => {
     const timer = window.setTimeout(() => void cargarMesas(), 0);
     return () => window.clearTimeout(timer);
@@ -55,21 +64,51 @@ export function ComandaFlow() {
     setLimpiandoId(null);
   }
 
-  if (paso === 2 && seleccionada) {
+  function nuevaComanda() {
+    setPaso(1);
+    setSeleccionadaId(null);
+    setResultado(null);
+    setCarga("cargando");
+    void cargarMesas();
+  }
+
+  if (paso === 3 && resultado) {
+    const platillos = resultado.lineCount === 1 ? "platillo enviado" : "platillos enviados";
     return (
-      <main className="px-4 py-6 md:px-8">
-        <h1 className="font-display text-h2 font-bold uppercase text-brown">
-          Nueva comanda · Mesa {seleccionada.number}
-        </h1>
-        <p className="mt-1 text-sm text-text-secondary">Paso 2 de 3 · Agrega platillos</p>
-        {/* PROVISIONAL: aquí irá el paso 2 (platillos, cantidades y notas). */}
-        <p className="mt-6 text-base text-brown">El paso 2 se construye en la siguiente entrega.</p>
-        <div className="mt-6">
-          <Button variant="secondary" onClick={() => setPaso(1)}>
-            Atrás
-          </Button>
+      <main className="px-4 py-10 md:px-8">
+        <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-card border border-border bg-white p-8 text-center">
+          <h1 className="font-display text-h2 font-bold uppercase text-brown">
+            Pedido #{resultado.orderNumber} enviado
+          </h1>
+          <p className="text-base text-text-secondary">
+            Mesa {resultado.tableNumber} · {resultado.lineCount} {platillos} a Cocina.
+            {resultado.sumadaACuenta && " Se sumó a la cuenta abierta."}
+          </p>
+          <BadgeEstado estado="PENDIENTE" />
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="/mesero/salon"
+              className="inline-flex min-h-11 items-center justify-center rounded-control border-2 border-orange px-6 py-3 text-base font-semibold text-brown outline-none hover:bg-orange/16 focus-visible:shadow-focus"
+            >
+              Ver salón
+            </Link>
+            <Button onClick={nuevaComanda}>Nueva comanda</Button>
+          </div>
         </div>
       </main>
+    );
+  }
+
+  if (paso === 2 && seleccionada) {
+    return (
+      <PasoPlatillos
+        mesa={seleccionada}
+        onAtras={() => setPaso(1)}
+        onEnviado={(enviado) => {
+          setResultado({ ...enviado, sumadaACuenta: seleccionada.hasOpenAccount });
+          setPaso(3);
+        }}
+      />
     );
   }
 

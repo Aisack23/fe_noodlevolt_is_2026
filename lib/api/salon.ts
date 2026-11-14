@@ -65,7 +65,7 @@ const mesas: Mesa[] = [
 const platillos: SalonDish[] = [
   { id: "dish-ramen", name: "Ramen tonkotsu", price: "8.50", category: "Platos fuertes", available: true },
   { id: "dish-yakisoba", name: "Yakisoba de pollo", price: "7.25", category: "Platos fuertes", available: true },
-  { id: "dish-gyozas", name: "Gyozas de cerdo (6)", price: "5.50", category: "Entradas", available: false },
+  { id: "dish-gyozas", name: "Gyozas de cerdo (6)", price: "5.50", category: "Entradas", available: true },
   { id: "dish-te", name: "Té helado", price: "2.00", category: "Bebidas", available: true },
 ];
 
@@ -98,11 +98,16 @@ export async function createSalonOrder(input: SalonOrderInput): Promise<SalonOrd
   const mesa = mesas.find((item) => item.id === input.tableId);
   if (!mesa) throw new SalonApiError(404, "La mesa no existe.");
 
-  // Simula el 409 del backend cuando un platillo se agotó (frame «No se pudo enviar el pedido»).
+  // Simula un platillo que se agota justo al enviar (frame «No se pudo enviar el pedido»):
+  // las Gyozas responden 409 la primera vez y desde entonces el menú las muestra agotadas.
   const agotado = input.lines.find(
-    (linea) => platillos.find((platillo) => platillo.id === linea.dishId)?.available === false,
+    (linea) =>
+      linea.dishId === "dish-gyozas" ||
+      platillos.find((platillo) => platillo.id === linea.dishId)?.available === false,
   );
   if (agotado) {
+    const platillo = platillos.find((item) => item.id === agotado.dishId);
+    if (platillo) platillo.available = false;
     throw new SalonApiError(409, "Un platillo ya no está disponible.", agotado.dishId);
   }
 
@@ -110,4 +115,12 @@ export async function createSalonOrder(input: SalonOrderInput): Promise<SalonOrd
   mesa.hasOpenAccount = true;
   const orderNumber = String(siguienteNumeroPedido++);
   return { orderNumber, tableNumber: mesa.number, lineCount: input.lines.length };
+}
+
+export function toCents(price: string): number {
+  return Math.round(Number(price) * 100);
+}
+
+export function formatUsd(cents: number): string {
+  return `$${(cents / 100).toFixed(2)}`;
 }
