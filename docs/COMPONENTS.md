@@ -319,9 +319,19 @@ Debes seguir estas reglas en todas las tareas frontend:
 
 FE-08 reutiliza `BadgeEstado`, `EstadoVacio`, `Alerta`, `Button` y `Skeleton`. No se añadieron dependencias.
 
-## 14. Componentes añadidos para FE-06
+## 14. Componentes añadidos para FE-03
 
 | Componente | Estado | Ubicación | Referencia Figma | Observaciones |
 |---|---|---|---|---|
 | `CocinaTarjetaPedido` | Implementado para tablero de cocina | `components/business/CocinaTarjetaPedido.tsx` | `Cocina/EncabezadoPedido` 109:4357 | Presenta el pedido, sus líneas y la única transición de estado permitida. |
 | `CocinaLineaPedido` | Implementado para tablero de cocina | `components/business/CocinaLineaPedido.tsx` | `Cocina/LíneaPedido` 109:4471 | Mantiene nombres y cantidades a 24 px mínimos, y muestra notas o “Sin observaciones”. |
+
+## 15. Componentes añadidos para FE-09
+
+| Componente | Estado | Ubicación | Referencia Figma | Observaciones |
+|---|---|---|---|---|
+| `Campana` | Implementado | `components/ui/Campana.tsx` | `12:99` (Navbar) y frames «Centro de notificaciones» |Contador con `unreadCount`; marca como leídos al cerrar el panel. Panel de 400 px. |
+| `NotificacionesContenido` | Implementado | `components/business/NotificacionesContenido.tsx` | Frames Vacío, Error, Cargando y Con avisos | Compartido por la campana y `/notificaciones`. No usa `EstadoVacio`, `Alerta` ni `Skeleton` todavía. |
+
+`NavbarCliente` recibió un cambio mínimo (`relative` en el grupo de acciones). No se añadieron dependencias.
+
