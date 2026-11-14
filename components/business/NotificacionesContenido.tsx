@@ -78,10 +78,13 @@ export default function NotificacionesContenido({ items, status, onRetry }: Prop
     );
   }
 
-    return (
-    <ul className="-mx-6 -mt-2">
+  return (
+    <ul className="-mx-6 -mb-4">
       {items.map((item) => (
-        <li key={item.id} className="px-6 py-5">
+        <li
+          key={item.id}
+          className={`px-6 py-5 ${item.isRead ? "bg-white" : "bg-cream"}`}
+        >
           <h3 className="text-base font-semibold leading-6 text-brown">
             {item.title}
           </h3>
@@ -99,5 +102,4 @@ export default function NotificacionesContenido({ items, status, onRetry }: Prop
       ))}
     </ul>
   );
-  
-  }
+}

@@ -323,7 +323,7 @@ FE-08 reutiliza `BadgeEstado`, `EstadoVacio`, `Alerta`, `Button` y `Skeleton`. N
 
 | Componente | Estado | Ubicación | Referencia Figma | Observaciones |
 |---|---|---|---|---|
-| `Campana` | Implementado | `components/ui/Campana.tsx` | `12:99` (Navbar) y frames «Centro de notificaciones» | Sin contador ni «sin leer» (BE-09 no marca leído). Panel de 400 px. |
+| `Campana` | Implementado | `components/ui/Campana.tsx` | `12:99` (Navbar) y frames «Centro de notificaciones» |Contador con `unreadCount`; marca como leídos al cerrar el panel. Panel de 400 px. |
 | `NotificacionesContenido` | Implementado | `components/business/NotificacionesContenido.tsx` | Frames Vacío, Error, Cargando y Con avisos | Compartido por la campana y `/notificaciones`. No usa `EstadoVacio`, `Alerta` ni `Skeleton` todavía. |
 
 `NavbarCliente` recibió un cambio mínimo (`relative` en el grupo de acciones). No se añadieron dependencias.
