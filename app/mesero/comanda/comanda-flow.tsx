@@ -33,14 +33,19 @@ export function ComandaFlow({ initialMesas, initialError, initialDishes, initial
 
   const seleccionada = mesas.find((mesa) => mesa.id === seleccionadaId) ?? null;
 
-  const recargar = useCallback(async () => {
+   const recargar = useCallback(async () => {
     setCarga("cargando");
-    const respuesta = await refreshMesas();
-    if (respuesta.ok) {
-      setMesas(respuesta.mesas);
-      setCarga("listo");
-    } else {
-      setMensajeError(respuesta.message);
+    try {
+      const respuesta = await refreshMesas();
+      if (respuesta.ok) {
+        setMesas(respuesta.mesas);
+        setCarga("listo");
+      } else {
+        setMensajeError(respuesta.message);
+        setCarga("error");
+      }
+    } catch {
+      setMensajeError(GENERIC_ERROR);
       setCarga("error");
     }
   }, []);
@@ -117,7 +122,7 @@ export function ComandaFlow({ initialMesas, initialError, initialDishes, initial
         )}
       </div>
 
-      {/* Solo aparece cuando el backend informe cuentas abiertas (hoy hasOpenAccount es siempre false). */}
+      {}
       {seleccionada?.hasOpenAccount && (
         <Alerta tono="info" className="mt-5">
           <p className="font-semibold">Mesa {seleccionada.number} tiene una cuenta abierta</p>

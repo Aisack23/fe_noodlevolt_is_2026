@@ -43,13 +43,17 @@ export function PasoPlatillos({ mesa, initialDishes, initialError, onAtras, onEn
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function reintentarMenu() {
+   async function reintentarMenu() {
     setCarga("cargando");
-    const respuesta = await refreshMenu();
-    if (respuesta.ok) {
-      setMenu(respuesta.dishes);
-      setCarga("listo");
-    } else {
+    try {
+      const respuesta = await refreshMenu();
+      if (respuesta.ok) {
+        setMenu(respuesta.dishes);
+        setCarga("listo");
+      } else {
+        setCarga("error");
+      }
+    } catch {
       setCarga("error");
     }
   }
