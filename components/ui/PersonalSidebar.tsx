@@ -2,26 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  Utensils, 
-  Flame, 
-  Calendar, 
-  ClipboardList, 
-  AlertTriangle, 
-  ShoppingCart, 
-  Sparkles, 
-  Star, 
-  Receipt, 
+import { redirect, usePathname } from "next/navigation";
+import {
+  LayoutDashboard,
+  Utensils,
+  Flame,
+  Calendar,
+  ClipboardList,
+  AlertTriangle,
+  ShoppingCart,
+  Sparkles,
+  Star,
+  Receipt,
   Building2,
   LayoutGrid,
   ConciergeBell,
   ShoppingBag,
   BookOpen,
-  LogOut, 
-  type LucideIcon 
-} from "lucide-react"; 
+  LogOut,
+  type LucideIcon
+} from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { cn } from "@/lib/cn";
 
@@ -57,7 +57,7 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
     { href: "/gerente/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
     { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
   ],
-    WAITER: [
+  WAITER: [
     { href: "/mesero/salon", etiqueta: "Salón", Icon: LayoutGrid },
     { href: "/mesero/comanda", etiqueta: "Comanda", Icon: ClipboardList },
     { href: "/mesero/listos", etiqueta: "Listos para entregar", Icon: ConciergeBell },
@@ -70,8 +70,9 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
 
 export function PersonalSidebar({ rol }: { rol: RolPersonal }) {
   const pathname = usePathname();
- // const items = itemsPorRol[rol] || itemsPorRol.BRANCH_ADMIN;
- const items = itemsPorRol[rol];
+  // Un rol sin menú (no debería ocurrir) va al menú público en vez de romper la pantalla.
+  const items = (itemsPorRol as Partial<Record<RolPersonal, NavItem[]>>)[rol];
+  if (!items) redirect("/menu");
 
   return (
     <aside className="hidden w-56 shrink-0 flex-col bg-brown px-4 py-6 text-white md:flex overflow-y-auto shadow-md">
