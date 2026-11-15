@@ -97,9 +97,14 @@ export function ConfirmacionView({
             Tu pedido fue registrado. El pago en línea se procesa en el siguiente paso.
           </Alerta>
         ) : (
-          <Alerta tono="success" className="text-sm">
-            Tu pedido ya está en Cocina. Paga {formatoPrecio.format(pedido.total)} en caja al retirar.
-          </Alerta>
+          <div className="flex flex-col gap-3">
+            <Alerta tono="success" className="text-sm">
+              Tu pedido ya está en Cocina. Paga {formatoPrecio.format(pedido.total)} en caja al retirar.
+            </Alerta>
+            <Alerta tono="warning" className="text-sm">
+              Por favor, presenta tu código de orden <strong className="font-bold">{pedido.codigo}</strong> en caja para realizar el cobro y la entrega de tus platillos.
+            </Alerta>
+          </div>
         )}
 
         <div className="flex flex-col gap-3">
