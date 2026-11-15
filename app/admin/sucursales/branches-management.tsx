@@ -11,9 +11,13 @@ import { setBranchOperationalStatus } from "./actions";
 
 type BranchesManagementProps = {
   branches: Branch[];
+  mensajeVacio?: string;
 };
 
-export function BranchesManagement({ branches }: BranchesManagementProps) {
+export function BranchesManagement({
+  branches,
+  mensajeVacio = "Cuando haya sucursales registradas, aparecerán aquí.",
+}: BranchesManagementProps) {
   const [currentBranches, setCurrentBranches] = useState(branches);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [message, setMessage] = useState<{ text: string; tone: "success" | "danger" } | null>(null);
@@ -37,7 +41,7 @@ export function BranchesManagement({ branches }: BranchesManagementProps) {
   };
 
   if (currentBranches.length === 0) {
-    return <EstadoVacio titulo="No hay sucursales" mensaje="Cuando haya sucursales registradas, aparecerán aquí." />;
+    return <EstadoVacio titulo="No hay sucursales" mensaje={mensajeVacio} />;
   }
 
   return (
