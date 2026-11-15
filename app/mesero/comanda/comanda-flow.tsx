@@ -1,19 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { RefreshCw } from "lucide-react";
 import { SalonMesas, SalonMesasCargando } from "@/components/business/SalonMesas";
 import { Alerta } from "@/components/ui/Alerta";
 import { BadgeEstado } from "@/components/ui/BadgeEstado";
 import { Button } from "@/components/ui/Button";
-import {
-  SalonApiError,
-  getMesas,
-  markMesaClean,
-  type Mesa,
-  type SalonOrderResult,
-} from "@/lib/api/salon";
+import type { Mesa, SalonDish, SalonOrderResult } from "@/lib/api/salon";
+import { refreshMesas } from "./actions";
 import { PasoPlatillos } from "./paso-platillos";
 
 type Carga = "cargando" | "listo" | "error";
@@ -21,55 +16,40 @@ type Resultado = SalonOrderResult & { sumadaACuenta: boolean };
 
 const GENERIC_ERROR = "No se pudo completar la operación. Intenta de nuevo";
 
-export function ComandaFlow() {
+type ComandaFlowProps = {
+  initialMesas: Mesa[];
+  initialError?: string;
+  initialDishes: SalonDish[];
+  initialMenuError: boolean;
+};
+
+export function ComandaFlow({ initialMesas, initialError, initialDishes, initialMenuError }: ComandaFlowProps) {
   const [paso, setPaso] = useState<1 | 2 | 3>(1);
-  const [mesas, setMesas] = useState<Mesa[]>([]);
-  const [carga, setCarga] = useState<Carga>("cargando");
+  const [mesas, setMesas] = useState(initialMesas);
+  const [carga, setCarga] = useState<Carga>(initialError ? "error" : "listo");
+  const [mensajeError, setMensajeError] = useState(initialError ?? GENERIC_ERROR);
   const [seleccionadaId, setSeleccionadaId] = useState<string | null>(null);
-  const [limpiandoId, setLimpiandoId] = useState<string | null>(null);
-  const [errorAccion, setErrorAccion] = useState<string | null>(null);
   const [resultado, setResultado] = useState<Resultado | null>(null);
 
   const seleccionada = mesas.find((mesa) => mesa.id === seleccionadaId) ?? null;
 
-  const cargarMesas = useCallback(async () => {
-    try {
-      setMesas(await getMesas());
+  const recargar = useCallback(async () => {
+    setCarga("cargando");
+    const respuesta = await refreshMesas();
+    if (respuesta.ok) {
+      setMesas(respuesta.mesas);
       setCarga("listo");
-    } catch {
+    } else {
+      setMensajeError(respuesta.message);
       setCarga("error");
     }
   }, []);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => void cargarMesas(), 0);
-    return () => window.clearTimeout(timer);
-  }, [cargarMesas]);
-
-  function reintentar() {
-    setCarga("cargando");
-    void cargarMesas();
-  }
-
-  async function marcarLimpia(id: string) {
-    if (limpiandoId) return;
-    setLimpiandoId(id);
-    setErrorAccion(null);
-    try {
-      await markMesaClean(id);
-      setMesas(await getMesas());
-    } catch (error) {
-      setErrorAccion(error instanceof SalonApiError ? error.message : GENERIC_ERROR);
-    }
-    setLimpiandoId(null);
-  }
 
   function nuevaComanda() {
     setPaso(1);
     setSeleccionadaId(null);
     setResultado(null);
-    setCarga("cargando");
-    void cargarMesas();
+    void recargar();
   }
 
   if (paso === 3 && resultado) {
@@ -103,6 +83,8 @@ export function ComandaFlow() {
     return (
       <PasoPlatillos
         mesa={seleccionada}
+        initialDishes={initialDishes}
+        initialError={initialMenuError}
         onAtras={() => setPaso(1)}
         onEnviado={(enviado) => {
           setResultado({ ...enviado, sumadaACuenta: seleccionada.hasOpenAccount });
@@ -122,8 +104,8 @@ export function ComandaFlow() {
 
         {carga === "error" && (
           <div className="flex flex-col items-start gap-4">
-            <Alerta tono="danger">{GENERIC_ERROR}</Alerta>
-            <Button onClick={reintentar}>
+            <Alerta tono="danger">{mensajeError}</Alerta>
+            <Button onClick={() => void recargar()}>
               <RefreshCw aria-hidden className="size-5" />
               Reintentar
             </Button>
@@ -131,22 +113,11 @@ export function ComandaFlow() {
         )}
 
         {carga === "listo" && (
-          <SalonMesas
-            mesas={mesas}
-            seleccionadaId={seleccionadaId}
-            limpiandoId={limpiandoId}
-            onSeleccionar={setSeleccionadaId}
-            onMarcarLimpia={marcarLimpia}
-          />
+          <SalonMesas mesas={mesas} seleccionadaId={seleccionadaId} onSeleccionar={setSeleccionadaId} />
         )}
       </div>
 
-      {errorAccion && (
-        <Alerta tono="danger" className="mt-5">
-          {errorAccion}
-        </Alerta>
-      )}
-
+      {/* Solo aparece cuando el backend informe cuentas abiertas (hoy hasOpenAccount es siempre false). */}
       {seleccionada?.hasOpenAccount && (
         <Alerta tono="info" className="mt-5">
           <p className="font-semibold">Mesa {seleccionada.number} tiene una cuenta abierta</p>

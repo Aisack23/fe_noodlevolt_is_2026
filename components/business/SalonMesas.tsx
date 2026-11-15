@@ -6,17 +6,17 @@ import type { Mesa as MesaData } from "@/lib/api/salon";
 type SalonMesasProps = {
   mesas: MesaData[];
   seleccionadaId: string | null;
-  limpiandoId: string | null;
   onSeleccionar: (id: string) => void;
-  onMarcarLimpia: (id: string) => void;
+  onMarcarLimpia?: (id: string) => void;
+  limpiandoId?: string | null;
 };
 
 export function SalonMesas({
   mesas,
   seleccionadaId,
-  limpiandoId,
   onSeleccionar,
   onMarcarLimpia,
+  limpiandoId = null,
 }: SalonMesasProps) {
   if (mesas.length === 0) {
     return <EstadoVacio titulo="No hay mesas" mensaje="Esta sucursal todavía no tiene mesas registradas." />;
