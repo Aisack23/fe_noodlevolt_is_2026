@@ -51,7 +51,7 @@ type ValidRole =
 const ROLE_ROUTES: Record<ValidRole, string> = {
   CLIENT: "/menu",
   WAITER: "/mesero/listos",
-  COOK: "/cocina",
+  COOK: "/cocina/tablero",
   BRANCH_ADMIN: "/gerente/inventario",
   GENERAL_MANAGER: "/gerente/reportes",
 };

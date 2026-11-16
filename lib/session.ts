@@ -8,6 +8,7 @@ export type SafeSessionUser = {
   email?: string;
   nombre?: string;
   rol?: string;
+  branchId?: string;
 };
 
 // Guarda el token de sesión en una cookie httpOnly (no accesible desde JS del cliente).
@@ -66,6 +67,7 @@ export async function getSessionUser(): Promise<SafeSessionUser | null> {
       email: payload.email,
       nombre: payload.nombre ?? payload.name,
       rol: payload.rol ?? payload.role,
+      branchId: typeof payload.branchId === "string" ? payload.branchId : undefined,
     };
   } catch {
     await deleteSession();

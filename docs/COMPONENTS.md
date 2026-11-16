@@ -319,7 +319,20 @@ Debes seguir estas reglas en todas las tareas frontend:
 
 FE-08 reutiliza `BadgeEstado`, `EstadoVacio`, `Alerta`, `Button` y `Skeleton`. No se añadieron dependencias.
 
-## 14. Componentes añadidos para FE-09
+## 14. Componentes añadidos para FE-03
+
+| Componente | Estado | Ubicación | Referencia Figma | Observaciones |
+|---|---|---|---|---|
+| `MeseroFilaListo` | Implementado | `components/business/MeseroFilaListo.tsx` | `Mesero/FilaListo` 109:4502 (según roadmap; no validada) | Fila de pedido listo con platillos, notas y botón «Entregado» con estado de envío. |
+| `Mesa` | Implementado | `components/business/Mesa.tsx` | `Mesa` 27:478 (según roadmap; no validada) | Traduce el estado de la pantalla a `BadgeEstado`. `selectable` controla si se puede elegir. «Marcar limpia» es opcional y hoy no se muestra (no hay endpoint). |
+| `SalonMesas` | Implementado | `components/business/SalonMesas.tsx` | `SalonMesas` 109:4633 (según roadmap; no validada) | Cuadrícula con estado vacío y `SalonMesasCargando` (esqueleto). Reutilizable en Salón y Cuentas. |
+| `PlatilloFila` | Implementado | `components/business/PlatilloFila.tsx` | Frames «Nueva comanda»; nodo no registrado | Cantidad con `CantidadStepper`, nota con `TextareaContador` y estado agotado con «Quitar». |
+| `ResumenComanda` | Implementado | `components/business/ResumenComanda.tsx` | Frames «Nueva comanda»; nodo no registrado | Resumen del pedido. El total se calcula en centavos enteros. |
+| `TextareaContador` | Implementado | `components/ui/TextareaContador.tsx` | `TextareaContador` 96:1086 (según roadmap; no validada) | Límite configurable (200 por defecto), contador visible y aviso al llegar al máximo. `ReviewForm` conserva su propio contador de 500. |
+
+FE-03 reutiliza `BadgeEstado`, `Button`, `Alerta`, `EstadoVacio`, `Skeleton`, `CantidadStepper`, `ChipCategoria`, `AccesoDenegado` y `PersonalShell`. No se añadieron dependencias. `PersonalSidebar` recibió el rol `WAITER` con su menú y redirige a `/menu` si el rol no tiene menú.
+
+## 15. Componentes añadidos para FE-09
 
 | Componente | Estado | Ubicación | Referencia Figma | Observaciones |
 |---|---|---|---|---|
