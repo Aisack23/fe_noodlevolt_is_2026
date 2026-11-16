@@ -1,3 +1,6 @@
+export function isClientRole(role: string | undefined): boolean {
+  return role === 'CLIENT';
+}
 export const BRANCH_ADMINISTRATION_ROLES = ["GENERAL_MANAGER", "BRANCH_ADMIN"] as const;
 
 export type BranchAdministrationRole = (typeof BRANCH_ADMINISTRATION_ROLES)[number];

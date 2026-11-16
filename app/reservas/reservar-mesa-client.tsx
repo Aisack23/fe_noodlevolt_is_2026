@@ -116,16 +116,25 @@ export function ReservarMesaClient({
   };
 
   const handleConfirmarReserva = async () => {
+    const telefonoSinPrefijo = telefonoContacto.replace(/^\+?503\s*/, "");
+    const soloDigitos = telefonoSinPrefijo.replace(/\D/g, "");
+
+    if (!soloDigitos) {
+      setBookingError("Ingresa tu teléfono de contacto.");
+      return;
+    }
+
+    if (soloDigitos.length !== 8) {
+      setBookingError("El número de teléfono debe tener exactamente 8 dígitos.");
+      return;
+    }
+    
     if (!selectedBranchId) {
       setBookingError("Selecciona una sucursal.");
       return;
     }
     if (!nombreContacto.trim()) {
       setBookingError("Ingresa tu nombre para la reservación.");
-      return;
-    }
-    if (!telefonoContacto.trim()) {
-      setBookingError("Ingresa tu teléfono de contacto.");
       return;
     }
 

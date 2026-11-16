@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getBranches, type Branch } from "@/lib/api/branches";
 import { getSessionUser } from "@/lib/session";
 import { ReservarMesaClient } from "./reservar-mesa-client";
+import { isClientRole } from "@/lib/auth/roles";
+import { AccesoDenegado } from "@/components/ui/AccesoDenegado";
 
 export const metadata: Metadata = {
   title: "Reservar mesa · NoodleVolt",
@@ -15,6 +17,10 @@ type ReservasPageProps = {
 export default async function ReservasPage({ searchParams }: ReservasPageProps) {
   const { sucursal } = await searchParams;
   const user = await getSessionUser();
+
+  if (!isClientRole(user?.rol)) {
+    return <AccesoDenegado href="/" />;
+  }
 
   let branches: Branch[] = [];
   try {
