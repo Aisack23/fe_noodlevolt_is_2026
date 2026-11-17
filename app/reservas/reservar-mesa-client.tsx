@@ -148,6 +148,7 @@ export function ReservarMesaClient({
 
       const result = await bookReservation({
         branchId: selectedBranchId,
+        tableId: mesaSeleccionada?.id,
         startsAt,
         guests: personas,
         contactName: nombreContacto.trim(),

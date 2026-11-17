@@ -62,6 +62,14 @@ export async function bookReservation(
     };
   }
 
+  if (!input.tableId) {
+    return {
+      ok: false,
+      kind: "validation",
+      message: "Debes seleccionar una mesa específica para reservar.",
+    };
+  }
+
   const startsAtDate = new Date(input.startsAt);
   if (!Number.isFinite(startsAtDate.getTime()) || startsAtDate.getTime() <= Date.now()) {
     return {
@@ -98,6 +106,7 @@ export async function bookReservation(
   try {
     const reservation = await createReservation(token, {
       branchId: input.branchId,
+      tableId: input.tableId,
       startsAt: input.startsAt,
       guests: Number(input.guests),
       contactName: input.contactName.trim(),

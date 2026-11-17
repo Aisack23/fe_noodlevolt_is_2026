@@ -7,6 +7,7 @@ import type { ApiErrorMessage } from "./orders";
 /** DTO de entrada para crear una reservación (POST /reservations). */
 export interface CreateReservationDto {
   branchId: string;
+  tableId?: string;
   startsAt: string; // ISO 8601 con Z u offset explícito
   guests: number;
   contactName: string;
