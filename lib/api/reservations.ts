@@ -219,6 +219,39 @@ export async function getBranchReservations(
 
   return payload as ReservationItem[];
 }
+/**
+ * GET /reservations/availability?branchId=...&startsAt=...&guests=...
+ * Consulta las mesas disponibles para un horario y capacidad específicos.
+ */
+export async function getAvailableTablesForBooking(
+  token: string,
+  branchId: string,
+  startsAt: string,
+  guests: number,
+): Promise<DiningTableResponseDto[]> {
+  const url = new URL("reservations/availability", getApiBaseUrl());
+  url.searchParams.set("branchId", branchId);
+  url.searchParams.set("startsAt", startsAt);
+  url.searchParams.set("guests", guests.toString());
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new ReservationApiError(response.status, await messageFrom(response));
+  }
+
+  const payload: unknown = await response.json();
+  if (!Array.isArray(payload)) {
+    throw new Error("La respuesta de mesas disponibles no tiene el formato esperado.");
+  }
+
+  return payload as DiningTableResponseDto[];
+}
 
 /**
  * PATCH /reservations/:id/cancel

@@ -2,7 +2,7 @@
 
 import {
   createReservation,
-  getBranchTables,
+  getAvailableTablesForBooking,
   ReservationApiError,
   type CreateReservationDto,
   type DiningTableResponseDto,
@@ -154,30 +154,42 @@ export async function bookReservation(
   }
 }
 
-/**
- * Server Action para consultar mesas candidatas de una sucursal física.
- */
 export async function searchTables(
   branchId: string,
+  startsAt: string,
   guests: number,
 ): Promise<SearchTablesResult> {
   const token = await getSession();
 
-  try {
-    // Si tenemos sesión de usuario / personal podemos consultar /tables
-    if (token) {
-      const allTables = await getBranchTables(token, branchId);
-      // Filtrar mesas con capacidad suficiente y no fuera de servicio
-      const eligible = allTables.filter(
-        (t) => t.capacity >= guests && t.status !== "OUT_OF_SERVICE",
-      );
-      return { ok: true, tables: eligible };
-    }
+  if (!token) {
+    return {
+      ok: false,
+      message: "Debes iniciar sesión para buscar mesas disponibles.",
+    };
+  }
 
-    // Si es cliente no autenticado aún, retornamos lista vacía para permitir reservar directo
-    return { ok: true, tables: [] };
-  } catch {
-    // Si el endpoint de mesas requiere rol de personal, retornamos lista vacía para que el flujo de reserva gestione la mesa
-    return { ok: true, tables: [] };
+  if (!branchId || !startsAt || !guests) {
+    return {
+      ok: false,
+      message: "Faltan parámetros para realizar la búsqueda de mesas.",
+    };
+  }
+
+  try {
+    // Validamos que sea una fecha válida antes de enviarla
+    const dateObj = new Date(startsAt);
+    if (!Number.isFinite(dateObj.getTime())) {
+      return { ok: false, message: "Formato de fecha inválido." };
+    }
+    const tables = await getAvailableTablesForBooking(token, branchId, startsAt, guests);
+    return { ok: true, tables };
+  } catch (error) {
+    if (error instanceof ReservationApiError) {
+      return { ok: false, message: error.message };
+    }
+    return {
+      ok: false,
+      message: "No fue posible consultar las mesas disponibles. Intenta de nuevo.",
+    };
   }
 }

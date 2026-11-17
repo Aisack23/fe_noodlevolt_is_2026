@@ -94,7 +94,8 @@ export function ReservarMesaClient({
 
     startSearchTransition(async () => {
       try {
-        const result = await searchTables(selectedBranchId, personas);
+        const startsAt = `${fecha}T${hora}:00-06:00`
+        const result = await searchTables(selectedBranchId, startsAt, personas);
         if (result.ok && result.tables.length > 0) {
           setMesasDisponibles(result.tables);
         } else {
