@@ -3,6 +3,9 @@ import { getBranches } from "@/lib/api/branches";
 import { obtenerMenu } from "@/lib/api/menu";
 import { type Categoria } from "./menu-catalogo";
 import { MenuPageClient } from "./menu-page-client";
+import { getSessionUser } from "@/lib/session";
+import { isClientRole } from "@/lib/auth/roles";
+import { AccesoDenegado } from "@/components/ui/AccesoDenegado";
 
 export const metadata: Metadata = {
   title: "Menú",
@@ -13,10 +16,18 @@ type MenuPageProps = {
 };
 
 export default async function MenuPage({ searchParams }: MenuPageProps) {
-  const [branches, params] = await Promise.all([getBranches(), searchParams]);
+  const [branches, params, user] = await Promise.all([
+    getBranches(),
+    searchParams,
+    getSessionUser(),
+  ]);
+
+  if (!isClientRole(user?.rol)) {
+    return <AccesoDenegado href="/" />;
+  }
+
   const activeBranches = branches.filter((branch) => branch.isActive);
-  const selectedBranch = activeBranches.find((branch) => branch.id === params.sucursal)
-    ?? activeBranches[0];
+  const selectedBranch = activeBranches.find((branch) => branch.id === params.sucursal) ?? activeBranches[0];
 
   if (!selectedBranch) {
     return (
@@ -29,7 +40,6 @@ export default async function MenuPage({ searchParams }: MenuPageProps) {
 
   const menu = await obtenerMenu(selectedBranch.id);
 
-  
   const categorias: Categoria[] = menu.categorias.map((categoria) => ({
     id: categoria.id,
     nombre: categoria.nombre,
