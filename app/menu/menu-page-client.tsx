@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Alerta } from "@/components/ui/Alerta";
+import { Button } from "@/components/ui/Button";
+import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import { useCart, type SucursalInfo } from "@/lib/cart/cart-context";
 import type { Branch } from "@/lib/api/branches";
 import { MenuCatalogo, type Categoria } from "./menu-catalogo";
@@ -11,16 +13,20 @@ type MenuPageClientProps = {
   branches: Branch[];
   selectedBranch: SucursalInfo;
   categorias: Categoria[];
+  /** false para el personal: ve el menú, pero sin «Agregar». */
+  puedeAgregar: boolean;
 };
 
 export function MenuPageClient({
   branches,
   selectedBranch,
   categorias,
+  puedeAgregar,
 }: MenuPageClientProps) {
   const router = useRouter();
   const { items, sucursal, setSucursal } = useCart();
   const [error, setError] = useState<string | null>(null);
+  const selectorRef = useRef<HTMLSelectElement>(null);
 
   const handleBranchChange = (branchId: string) => {
     const branch = branches.find((item) => item.id === branchId);
@@ -48,6 +54,7 @@ export function MenuPageClient({
         <label className="flex w-full max-w-sm flex-col gap-1 text-sm font-semibold text-brown">
           Sucursal
           <select
+            ref={selectorRef}
             value={selectedBranch.id}
             onChange={(event) => handleBranchChange(event.target.value)}
             className="min-h-11 rounded-control border border-border bg-white px-3 text-base font-normal text-brown outline-none focus-visible:shadow-focus"
@@ -69,11 +76,20 @@ export function MenuPageClient({
       )}
 
       {categorias.length === 0 ? (
-        <p className="py-12 text-center text-sm text-text-secondary">
-          Esta sucursal todavía no tiene platillos en su menú.
-        </p>
+        // Frame «Cliente / Menú / Vacío» (EstadoVacio 42:1752): «Cambiar sucursal» lleva al selector.
+        <EstadoVacio
+          titulo="Sin platillos por ahora"
+          mensaje="Esta sucursal todavía no tiene platillos en su menú. Prueba con otra sucursal."
+          accion={
+            branches.length > 1 ? (
+              <Button variant="secondary" onClick={() => selectorRef.current?.focus()}>
+                Cambiar sucursal
+              </Button>
+            ) : undefined
+          }
+        />
       ) : (
-        <MenuCatalogo categorias={categorias} sucursal={selectedBranch} />
+        <MenuCatalogo categorias={categorias} sucursal={selectedBranch} puedeAgregar={puedeAgregar} />
       )}
     </main>
   );

@@ -340,3 +340,15 @@ FE-03 reutiliza `BadgeEstado`, `Button`, `Alerta`, `EstadoVacio`, `Skeleton`, `C
 | `NotificacionesContenido` | Implementado | `components/business/NotificacionesContenido.tsx` | Frames Vacío, Error, Cargando y Con avisos | Compartido por la campana y `/notificaciones`. No usa `EstadoVacio`, `Alerta` ni `Skeleton` todavía. |
 
 `NavbarCliente` recibió un cambio mínimo (`relative` en el grupo de acciones). No se añadieron dependencias.
+
+## 17 Componentes de FE-01 (menú público)
+
+| Componente | Estado | Ubicación | Referencia Figma | Observaciones |
+|---|---|---|---|---|
+| `ChipCategoria` | Implementado | `components/ui/ChipCategoria.tsx` | Instancias en «Cliente / Menú» (`42:1495`, `42:1939`) | Píldora de 44 px con `aria-pressed`; activo en orange. También la usará el catálogo del gerente. |
+| `NavbarCliente` | Implementado (variante invitado en FE-01) | `components/ui/NavbarCliente.tsx` | `Navbar cliente` 23:328 | FE-01 creó la variante de invitado; FE-02/FE-09 añadieron sesión, carrito y campana. |
+| `BottomTabBar` | Implementado | `components/ui/BottomTabBar.tsx` | `BottomTabBar` 24:486 | Navegación móvil del cliente (Menú, Reservar, Pedidos, Puntos, Cuenta). |
+| `FooterCliente` | Implementado | `components/ui/FooterCliente.tsx` | `Footer cliente` (frames de escritorio) | Solo escritorio. |
+| `TarjetaPlatillo` | Modificado | `components/ui/TarjetaPlatillo.tsx` | `TarjetaPlatillo` 12:84 | El botón «Agregar» solo aparece si recibe `onAgregar` (modo consulta para el personal). |
+
+FE-01 reutiliza `Alerta`, `Button`, `EstadoVacio`, `Skeleton`/`SkeletonTarjeta` y `BadgeEstado`. No se añadieron dependencias. Detalle en `docs/FE-01.md`.
