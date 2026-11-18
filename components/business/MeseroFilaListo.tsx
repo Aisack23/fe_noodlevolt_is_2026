@@ -8,7 +8,7 @@ type MeseroFilaListoProps = {
 };
 
 export function MeseroFilaListo({ order, busy, onDeliver }: MeseroFilaListoProps) {
-  const numero = order.orderNumber ?? order.id.slice(0, 8);
+  const numero = (order.orderNumber ?? order.id.slice(0, 8)).toUpperCase();
 
   return (
     <li className="flex flex-col gap-4 rounded-card border border-border bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
