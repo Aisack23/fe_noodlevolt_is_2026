@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 import { useCart } from "@/lib/cart/cart-context";
 import { useAuth } from "@/lib/auth/auth-context";
 import Campana from "@/components/ui/Campana";
+import { SaldoPuntos } from "@/components/ui/SaldoPuntos";
 import type { SafeSessionUser } from "@/lib/session";
 
 const enlacesInvitado = [
@@ -90,19 +91,30 @@ export function NavbarCliente({
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background">
-      <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-4 px-4 py-3 md:px-6 lg:px-10">
+      <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-2 px-4 py-2 md:gap-4 md:px-6 md:py-3 lg:px-10">
         <Link
           href="/menu"
           aria-label="NoodleVolt, ir al menú"
-          className="relative block h-12 w-28 shrink-0 overflow-hidden rounded-control outline-none focus-visible:shadow-focus md:h-16 md:w-[147px]"
+          className="relative block h-[31px] w-[68px] shrink-0 overflow-hidden rounded-control outline-none focus-visible:shadow-focus md:h-16 md:w-[147px]"
         >
+          {/* Móvil 360: Logo/Wordmark (recorte igual al de Figma). Escritorio: Logo/Horizontal. */}
+          <span className="absolute top-[-101.86%] left-[-15.07%] h-[297.95%] w-[134.68%] md:hidden">
+            <Image
+              src="/brand/Logo/WordMark.jpeg"
+              alt=""
+              fill
+              sizes="92px"
+              loading="eager"
+              className="object-cover"
+            />
+          </span>
           <Image
             src="/brand/Logo/Horizontal.jpeg"
             alt=""
             fill
             sizes="147px"
-            priority
-            className="object-cover"
+            loading="eager"
+            className="hidden object-cover md:block"
           />
         </Link>
 
@@ -130,7 +142,10 @@ export function NavbarCliente({
         </nav>
 
         {/* Acciones de la derecha */}
-        <div className="relative flex items-center gap-3 md:gap-4">
+        <div className="relative flex items-center gap-1 md:gap-4">
+          {/* Saldo de puntos (FE-07): solo para el rol CLIENT */}
+          {autenticado && usuarioActual?.rol === "CLIENT" && <SaldoPuntos />}
+
           {/* Componente Campana (Solo visible si está autenticado o disponible según rol) */}
           {autenticado && <Campana />}
 
