@@ -25,7 +25,7 @@ const statusBorder: Record<KitchenOrderStatus, string> = {
 
 function formatOrderType(type: string): string {
   if (type === "DINE_IN" || type === "TABLE") return "Mesa";
-  if (type === "TAKEAWAY" || type === "TAKE_OUT") return "Para llevar";
+  if (type === "TAKEOUT" || type === "TAKEAWAY" || type === "TAKE_OUT") return "Para llevar";
   return type;
 }
 
