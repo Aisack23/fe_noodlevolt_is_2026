@@ -341,6 +341,14 @@ FE-03 reutiliza `BadgeEstado`, `Button`, `Alerta`, `EstadoVacio`, `Skeleton`, `C
 
 `NavbarCliente` recibió un cambio mínimo (`relative` en el grupo de acciones). No se añadieron dependencias.
 
+## 16. Componentes añadidos para FE-07
+
+| Componente | Estado | Ubicación | Referencia Figma | Observaciones |
+|---|---|---|---|---|
+| `SaldoPuntos` | Implementado | `components/ui/SaldoPuntos.tsx` | `SaldoPuntos` 12:95; frames «Cliente / Saldo de puntos» | Estados normal, cargando (skeleton) y error («Sin saldo»). Solo para `CLIENT`; se oculta ante 401/403. Consulta `/api/loyalty/me` en cada cambio de ruta. |
+| `NavbarCliente` | Modificado | `components/ui/NavbarCliente.tsx` | `Navbar cliente` 23:328 | Integra `SaldoPuntos` y usa `Logo/Wordmark` en móvil 360. Se reemplazó `priority` (obsoleto en Next 16) por `loading="eager"`. |
+
+FE-07 reutiliza `Alerta`, `EstadoVacio`, `Skeleton` y `AccesoDenegado`. No se añadieron dependencias.
 ## 17 Componentes de FE-01 (menú público)
 
 | Componente | Estado | Ubicación | Referencia Figma | Observaciones |
@@ -351,4 +359,4 @@ FE-03 reutiliza `BadgeEstado`, `Button`, `Alerta`, `EstadoVacio`, `Skeleton`, `C
 | `FooterCliente` | Implementado | `components/ui/FooterCliente.tsx` | `Footer cliente` (frames de escritorio) | Solo escritorio. |
 | `TarjetaPlatillo` | Modificado | `components/ui/TarjetaPlatillo.tsx` | `TarjetaPlatillo` 12:84 | El botón «Agregar» solo aparece si recibe `onAgregar` (modo consulta para el personal). |
 
-FE-01 reutiliza `Alerta`, `Button`, `EstadoVacio`, `Skeleton`/`SkeletonTarjeta` y `BadgeEstado`. No se añadieron dependencias. Detalle en `docs/FE-01.md`.
+FE-01 reutiliza `Alerta`, `Button`, `EstadoVacio`, `Skeleton`/`SkeletonTarjeta` y `BadgeEstado`. No se añadieron dependencias. Detalle en `docs/FE-01.md`
