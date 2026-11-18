@@ -31,7 +31,7 @@ export class SimulatedOrderService implements IOrderService {
     const horaEstimadaRetiro = fechaRetiro.toLocaleTimeString("es-SV", {
       hour: "2-digit",
       minute: "2-digit",
-      hour12: false,
+      hourCycle: "h23",
     });
 
     // Código de pedido simulado (#A3F9-12C7 según referencia de Figma)

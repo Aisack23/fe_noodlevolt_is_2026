@@ -20,7 +20,7 @@ const formatoFecha = new Intl.DateTimeFormat("es-SV", {
   year: "numeric",
   hour: "2-digit",
   minute: "2-digit",
-  hour12: false,
+  hourCycle: "h23",
   timeZone: "America/El_Salvador",
 });
 

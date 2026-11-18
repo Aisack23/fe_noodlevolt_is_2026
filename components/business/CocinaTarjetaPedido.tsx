@@ -25,7 +25,7 @@ const statusBorder: Record<KitchenOrderStatus, string> = {
 
 function formatOrderType(type: string): string {
   if (type === "DINE_IN" || type === "TABLE") return "Mesa";
-  if (type === "TAKEAWAY" || type === "TAKE_OUT") return "Para llevar";
+  if (type === "TAKEOUT" || type === "TAKEAWAY" || type === "TAKE_OUT") return "Para llevar";
   return type;
 }
 
@@ -35,7 +35,7 @@ function formatCreatedAt(value: string): string {
   return new Intl.DateTimeFormat("es-SV", {
     hour: "2-digit",
     minute: "2-digit",
-    hour12: false,
+     hourCycle: "h23",
     timeZone: "America/El_Salvador",
   }).format(date);
 }
@@ -50,7 +50,7 @@ export function CocinaTarjetaPedido({ order, busy, onTransition }: CocinaTarjeta
       <header className="px-4 py-4">
         <div className="flex items-start justify-between gap-3">
           <h2 className="font-display text-h3 font-bold uppercase text-brown">
-            #{order.orderNumber ?? "—"}
+            #{order.orderNumber ?? order.id.slice(0, 8).toUpperCase()}
           </h2>
           <BadgeEstado estado={statusToBadge[order.status]} />
         </div>
@@ -59,7 +59,10 @@ export function CocinaTarjetaPedido({ order, busy, onTransition }: CocinaTarjeta
           <span className="inline-flex items-center gap-1"><Clock aria-hidden className="size-4" />{formatCreatedAt(order.createdAt)}</span>
         </div>
       </header>
-      <ul className="flex-1" aria-label={`Platillos del pedido ${order.orderNumber ?? order.id}`}>
+            <ul
+        className="flex-1"
+        aria-label={`Platillos del pedido ${order.orderNumber ?? order.id.slice(0, 8).toUpperCase()}`}
+      >
         {order.items.map((item) => <CocinaLineaPedido key={item.id} item={item} orderStatus={order.status} />)}
       </ul>
       {nextStatus && (
