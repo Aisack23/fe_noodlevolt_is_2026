@@ -35,7 +35,7 @@ function formatCreatedAt(value: string): string {
   return new Intl.DateTimeFormat("es-SV", {
     hour: "2-digit",
     minute: "2-digit",
-    hour12: false,
+     hourCycle: "h23",
     timeZone: "America/El_Salvador",
   }).format(date);
 }

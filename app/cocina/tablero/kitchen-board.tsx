@@ -25,7 +25,7 @@ function formatTime(date: Date): string {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false,
+     hourCycle: "h23",
     timeZone: "America/El_Salvador",
   }).format(date);
 }
