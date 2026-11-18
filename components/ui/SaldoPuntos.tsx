@@ -75,7 +75,7 @@ export function SaldoPuntos() {
     <Link
       href="/perfil/puntos"
       aria-label={`Saldo de puntos: ${formatPoints(estado.points)}. Ver mis puntos`}
-      className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-cream px-2.5 py-2 text-sm font-semibold whitespace-nowrap text-brown md:gap-2 md:px-3 md:text-base outline-none hover:bg-cream/70 focus-visible:shadow-focus"
+      className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-cream px-2.5 py-2 text-sm font-semibold whitespace-nowrap text-brown md:gap-2 md:px-3 md:text-base outline-none focus-visible:shadow-focus"
     >
       <Star aria-hidden className="size-5 fill-gold text-gold" />
       {formatPoints(estado.points)}

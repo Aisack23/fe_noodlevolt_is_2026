@@ -28,14 +28,15 @@ function getApiBaseUrl(): string {
   return apiUrl.replace(/\/?$/, "/");
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+/** Valida la respuesta sin aserciones de tipo: `points` debe ser un entero no negativo. */
 export function isLoyaltyBalance(value: unknown): value is LoyaltyBalance {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    typeof (value as Record<string, unknown>).points === "number" &&
-    Number.isInteger((value as Record<string, unknown>).points) &&
-    ((value as Record<string, unknown>).points as number) >= 0
-  );
+  if (!isRecord(value)) return false;
+  const { points } = value;
+  return typeof points === "number" && Number.isInteger(points) && points >= 0;
 }
 
 /**
