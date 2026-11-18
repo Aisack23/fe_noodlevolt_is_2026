@@ -138,7 +138,7 @@ export function mapOrderResponseToPedido(
   const pickupDate = response.pickupAt ? new Date(response.pickupAt) : null;
   const horaEstimadaRetiro =
     pickupDate && !Number.isNaN(pickupDate.getTime())
-      ? pickupDate.toLocaleTimeString("es-SV", { hour: "2-digit", minute: "2-digit", hour12: false })
+      ? pickupDate.toLocaleTimeString("es-SV", { hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
       : "Por confirmar";
 
   return {

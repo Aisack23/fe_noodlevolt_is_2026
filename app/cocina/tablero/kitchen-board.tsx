@@ -25,7 +25,7 @@ function formatTime(date: Date): string {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false,
+     hourCycle: "h23",
     timeZone: "America/El_Salvador",
   }).format(date);
 }
@@ -52,15 +52,19 @@ export function KitchenBoard({ initialOrders, initialError, userName }: KitchenB
   const [busyOrderId, setBusyOrderId] = useState<string | null>(null);
   const [updatedAt, setUpdatedAt] = useState(() => new Date());
 
-  const refresh = useCallback(async (showLoading = false) => {
+    const refresh = useCallback(async (showLoading = false) => {
     if (showLoading) setIsLoading(true);
-    const result = await refreshKitchenOrders();
-    if (result.ok) {
-      setOrders(result.orders);
-      setError(null);
-      setUpdatedAt(new Date());
-    } else {
-      setError(result.message);
+    try {
+      const result = await refreshKitchenOrders();
+      if (result.ok) {
+        setOrders(result.orders);
+        setError(null);
+        setUpdatedAt(new Date());
+      } else {
+        setError(result.message);
+      }
+    } catch {
+      setError("No se pudo completar la operación. Intenta de nuevo");
     }
     if (showLoading) setIsLoading(false);
   }, []);
@@ -70,16 +74,20 @@ export function KitchenBoard({ initialOrders, initialError, userName }: KitchenB
     return () => window.clearInterval(timer);
   }, [refresh]);
 
-  async function transition(orderId: string, status: KitchenNextStatus) {
+    async function transition(orderId: string, status: KitchenNextStatus) {
     if (busyOrderId) return;
     setBusyOrderId(orderId);
     setError(null);
-    const result = await advanceKitchenOrder(orderId, status);
-    if (result.ok) {
-      setOrders((current) => current.map((order) => (order.id === orderId ? result.order : order)));
-      setUpdatedAt(new Date());
-    } else {
-      setError(result.message);
+    try {
+      const result = await advanceKitchenOrder(orderId, status);
+      if (result.ok) {
+        setOrders((current) => current.map((order) => (order.id === orderId ? result.order : order)));
+        setUpdatedAt(new Date());
+      } else {
+        setError(result.message);
+      }
+    } catch {
+      setError("No se pudo completar la operación. Intenta de nuevo");
     }
     setBusyOrderId(null);
   }
@@ -95,9 +103,9 @@ export function KitchenBoard({ initialOrders, initialError, userName }: KitchenB
           <span className="text-sm font-semibold">· Sucursal asignada</span>
         </div>
         <div className="ml-auto flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-sm">
-          <span aria-live="polite" className="inline-flex items-center gap-2 whitespace-nowrap text-white/90">
-            <RefreshCw aria-hidden className="size-4" /> Se actualiza cada 5 s · {formatTime(updatedAt)}
-          </span>
+          <span aria-live="polite" suppressHydrationWarning className="inline-flex items-center gap-2 whitespace-nowrap text-white/90">
+  <RefreshCw aria-hidden className="size-4" /> Se actualiza cada 5 s · {formatTime(updatedAt)}
+</span>
           <span className="inline-flex items-center gap-2 whitespace-nowrap font-semibold">
             <Bell aria-hidden className="size-5" /> {userName ?? "Cocina"}
           </span>

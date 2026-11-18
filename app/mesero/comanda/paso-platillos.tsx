@@ -10,14 +10,12 @@ import { ChipCategoria } from "@/components/ui/ChipCategoria";
 import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import { Skeleton } from "@/components/ui/Skeleton";
 import {
-  SalonApiError,
-  createSalonOrder,
   toCents,
   type Mesa,
   type SalonDish,
   type SalonOrderResult,
 } from "@/lib/api/salon";
-import { refreshMenu } from "./actions";
+import { refreshMenu, sendSalonOrder } from "./actions";
 
 const TODAS = "Todas";
 const MAX_CANTIDAD = 20;
@@ -103,14 +101,13 @@ export function PasoPlatillos({ mesa, initialDishes, initialError, onAtras, onEn
     .filter((platillo) => categoriaActiva === TODAS || platillo.category === categoriaActiva)
     .sort((a, b) => prioridad(a) - prioridad(b));
 
-  async function confirmar() {
+    async function confirmar() {
     if (enviando || lineas.length === 0 || hayAgotado) return;
     setEnviando(true);
     setError(null);
     try {
-      const resultado = await createSalonOrder({
+      const respuesta = await sendSalonOrder({
         tableId: mesa.id,
-        tableNumber: mesa.number,
         operationKey,
         lines: lineas.map((linea) => ({
           dishId: linea.platillo.id,
@@ -118,18 +115,24 @@ export function PasoPlatillos({ mesa, initialDishes, initialError, onAtras, onEn
           note: linea.note.trim() || null,
         })),
       });
-      onEnviado(resultado);
-    } catch (fallo) {
-      if (fallo instanceof SalonApiError && fallo.status === 409 && fallo.dishId) {
-        const nombre = menu.find((platillo) => platillo.id === fallo.dishId)?.name ?? "Un platillo";
-        setError(`«${nombre}» ya no está disponible. Quítalo para confirmar; el resto del pedido se conserva.`);
-        const respuesta = await refreshMenu();
-        if (respuesta.ok) setMenu(respuesta.dishes);
-      } else {
-        setError(GENERIC_ERROR);
+
+      if (respuesta.ok) {
+        onEnviado({ ...respuesta.result, tableNumber: respuesta.result.tableNumber || mesa.number });
+        return;
       }
-      setEnviando(false);
+
+      if (respuesta.status === 409 && respuesta.dishId) {
+        const nombre = menu.find((platillo) => platillo.id === respuesta.dishId)?.name ?? "Un platillo";
+        setError(`«${nombre}» ya no está disponible. Quítalo para confirmar; el resto del pedido se conserva.`);
+        const menuActualizado = await refreshMenu();
+        if (menuActualizado.ok) setMenu(menuActualizado.dishes);
+      } else {
+        setError(respuesta.message);
+      }
+    } catch {
+      setError(GENERIC_ERROR);
     }
+    setEnviando(false);
   }
 
   return (
