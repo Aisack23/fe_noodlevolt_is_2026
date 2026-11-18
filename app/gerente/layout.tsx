@@ -1,27 +1,34 @@
 import type { ReactNode } from "react";
 import { PersonalShell } from "@/components/ui/PersonalShell";
 import { isBranchAdministrationRole } from "@/lib/auth/roles";
-import { getSessionUser } from "@/lib/session";
+import { getMyBranch } from "@/lib/api/branches";
+import { getSession, getSessionUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function GerenteLayout({ children }: { children: ReactNode }) {
+  const token = await getSession();
   const user = await getSessionUser();
 
-  // Obtenemos el correo del usuario de la sesión actual
-  const email = user?.email || "";
-
-  // Asignamos la sucursal y el nombre basándonos estrictamente en el correo del Seed
-  let sucursalNombre = "NoodleVolt Santa Tecla";
-  let nombreUsuario = "Gerente Santa Tecla";
-
-  if (email.includes("centro")) {
-    sucursalNombre = "NoodleVolt Centro";
-    nombreUsuario = "Gerente Centro";
-  } else if (email.includes("branch_admin@example.com")) {
-    sucursalNombre = "NoodleVolt Santa Tecla";
-    nombreUsuario = "Gerente Santa Tecla";
+  // Obtener el nombre de la sucursal del usuario autenticado
+  let sucursalNombre = "NoodleVolt";
+  if (token) {
+    try {
+      const myBranch = await getMyBranch(token);
+      if (myBranch) {
+        sucursalNombre = myBranch.name;
+      }
+    } catch {
+      // Si falla, se usa el nombre genérico
+    }
   }
+
+  // Para GENERAL_MANAGER sin sucursal asignada, mostramos "Todas las sucursales"
+  if (user?.rol === "GENERAL_MANAGER" && sucursalNombre === "NoodleVolt") {
+    sucursalNombre = "Todas las sucursales";
+  }
+
+  const nombreUsuario = user?.nombre || user?.email || "Personal NoodleVolt";
 
   return (
     <PersonalShell

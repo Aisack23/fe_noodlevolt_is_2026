@@ -15,6 +15,7 @@ type TarjetaPlatilloProps = {
   precio: number;
   disponible: boolean;
   imagenUrl?: string;
+  /** Sin esta función la tarjeta es solo de consulta: no se muestra «Agregar». */
   onAgregar?: () => void;
   agregando?: boolean;
   className?: string;
@@ -72,9 +73,11 @@ export function TarjetaPlatillo({
           >
             {formatoPrecio.format(precio)}
           </span>
-          <Button disabled={!disponible} loading={agregando} onClick={onAgregar}>
-            Agregar
-          </Button>
+          {onAgregar && (
+            <Button disabled={!disponible} loading={agregando} onClick={onAgregar}>
+              Agregar
+            </Button>
+          )}
         </div>
       </div>
     </article>

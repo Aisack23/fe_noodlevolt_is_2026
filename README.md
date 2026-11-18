@@ -14,6 +14,11 @@ npm run build
 
 Configura `API_URL` en `.env.local` con la base `/api/v1` de la API. Usa `.env.example` como referencia y no guardes credenciales en el repositorio.
 
+## FE-01 — Menú público
+
+- Catálogo por sucursal y categorías en [`/menu`](./app/menu/page.tsx), público para invitados, clientes y personal (solo invitado y cliente pueden agregar al carrito).
+- Contrato, estados, diferencias con Figma y pendientes: [docs/FE-01.md](./docs/FE-01.md).
+
 ## FE-08 — Mis pedidos y reseñas
 
 - Listado protegido por rol en [`/pedidos`](./app/pedidos/(mis-pedidos)/page.tsx), con filtro opcional por estado.

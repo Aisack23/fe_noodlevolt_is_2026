@@ -22,9 +22,11 @@ export type Categoria = {
 type MenuCatalogoProps = {
   categorias: Categoria[];
   sucursal?: SucursalInfo;
+  /** Si es false, las tarjetas se muestran sin el botón «Agregar». */
+  puedeAgregar?: boolean;
 };
 
-export function MenuCatalogo({ categorias, sucursal }: MenuCatalogoProps) {
+export function MenuCatalogo({ categorias, sucursal, puedeAgregar = true }: MenuCatalogoProps) {
   const { agregarPlatillo } = useCart();
   const [agregandoId, setAgregandoId] = useState<string | null>(null);
   // null significa "Todas".
@@ -80,7 +82,7 @@ export function MenuCatalogo({ categorias, sucursal }: MenuCatalogoProps) {
                 descripcion={platillo.descripcion}
                 precio={platillo.precio}
                 disponible={platillo.disponible}
-                onAgregar={() => handleAgregar(platillo)}
+                onAgregar={puedeAgregar ? () => handleAgregar(platillo) : undefined}
                 agregando={agregandoId === platillo.id}
               />
             ))}
