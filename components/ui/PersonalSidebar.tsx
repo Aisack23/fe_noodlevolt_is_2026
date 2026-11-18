@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Utensils,
@@ -15,10 +15,7 @@ import {
   Star,
   Receipt,
   Building2,
-  LayoutGrid,
-  ConciergeBell,
-  ShoppingBag,
-  BookOpen,
+  TrendingUp,
   LogOut,
   type LucideIcon
 } from "lucide-react";
@@ -28,7 +25,7 @@ import { cn } from "@/lib/cn";
 type NavItem = { href: string; etiqueta: string; Icon: LucideIcon };
 
 // Sincronizado con los roles reales del backend
-export type RolPersonal = "BRANCH_ADMIN" | "GENERAL_MANAGER" | "WAITER";
+export type RolPersonal = "BRANCH_ADMIN" | "GENERAL_MANAGER";
 
 const itemsPorRol: Record<RolPersonal, NavItem[]> = {
   BRANCH_ADMIN: [
@@ -41,38 +38,20 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
     { href: "/gerente/compras", etiqueta: "Compras", Icon: ShoppingCart },
     { href: "/gerente/lealtad", etiqueta: "Lealtad", Icon: Sparkles },
     { href: "/gerente/calificaciones", etiqueta: "Calificaciones", Icon: Star },
+    { href: "/gerente/reportes/ventas", etiqueta: "Ventas", Icon: TrendingUp },
+    { href: "/gerente/reportes/top-dishes", etiqueta: "Platillos más vendidos", Icon: Utensils },
     { href: "/gerente/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
     { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
   ],
   GENERAL_MANAGER: [
-    { href: "/gerente/panel", etiqueta: "Panel", Icon: LayoutDashboard },
-    { href: "/gerente/catalogo", etiqueta: "Catálogo", Icon: Utensils },
-    { href: "/gerente/cocina", etiqueta: "Tablero de cocina", Icon: Flame },
-    { href: "/gerente/reservaciones", etiqueta: "Reservaciones", Icon: Calendar },
-    { href: "/gerente/inventario", etiqueta: "Inventario", Icon: ClipboardList },
-    { href: "/gerente/insumos-por-comprar", etiqueta: "Insumos por comprar", Icon: AlertTriangle },
-    { href: "/gerente/compras", etiqueta: "Compras", Icon: ShoppingCart },
-    { href: "/gerente/lealtad", etiqueta: "Lealtad", Icon: Sparkles },
-    { href: "/gerente/calificaciones", etiqueta: "Calificaciones", Icon: Star },
-    { href: "/gerente/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
-    { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
-  ],
-  WAITER: [
-    { href: "/mesero/salon", etiqueta: "Salón", Icon: LayoutGrid },
-    { href: "/mesero/comanda", etiqueta: "Comanda", Icon: ClipboardList },
-    { href: "/mesero/listos", etiqueta: "Listos para entregar", Icon: ConciergeBell },
-    { href: "/mesero/cuentas", etiqueta: "Cuentas", Icon: Receipt },
-    { href: "/mesero/pedidos-llevar", etiqueta: "Pedidos para llevar", Icon: ShoppingBag },
-    { href: "/mesero/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
-    { href: "/menu", etiqueta: "Menú", Icon: BookOpen },
+    { href: "/gerente/reportes/ventas", etiqueta: "Ventas", Icon: TrendingUp },
+    { href: "/gerente/reportes/top-dishes", etiqueta: "Platillos más vendidos", Icon: Utensils },
   ],
 };
 
 export function PersonalSidebar({ rol }: { rol: RolPersonal }) {
   const pathname = usePathname();
-  // Un rol sin menú (no debería ocurrir) va al menú público en vez de romper la pantalla.
-  const items = (itemsPorRol as Partial<Record<RolPersonal, NavItem[]>>)[rol];
-  if (!items) redirect("/menu");
+  const items = itemsPorRol[rol] || itemsPorRol.BRANCH_ADMIN;
 
   return (
     <aside className="hidden w-56 shrink-0 flex-col bg-brown px-4 py-6 text-white md:flex overflow-y-auto shadow-md">
