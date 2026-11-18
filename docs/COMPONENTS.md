@@ -341,7 +341,7 @@ FE-03 reutiliza `BadgeEstado`, `Button`, `Alerta`, `EstadoVacio`, `Skeleton`, `C
 
 `NavbarCliente` recibió un cambio mínimo (`relative` en el grupo de acciones). No se añadieron dependencias.
 
-## 15. Componentes añadidos para FE-07
+## 16. Componentes añadidos para FE-07
 
 | Componente | Estado | Ubicación | Referencia Figma | Observaciones |
 |---|---|---|---|---|
