@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 export type NotificationItem = {
   id: string;
   type: string;
@@ -25,17 +26,10 @@ export class NotificationApiError extends Error {
   }
 }
 
-function getBaseUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) {
-    throw new Error("Falta la variable de entorno API_URL.");
-  }
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 
 export async function getMyNotifications(token: string): Promise<NotificationsPage> {
-  const url = new URL("notifications/me", getBaseUrl());
+  const url = new URL("notifications/me", getApiBaseUrl());
   url.searchParams.set("page", "1");
   url.searchParams.set("limit", "20");
 
@@ -56,7 +50,7 @@ export async function markNotificationRead(
   token: string,
   id: string,
 ): Promise<NotificationItem> {
-  const url = new URL(`notifications/${encodeURIComponent(id)}/read`, getBaseUrl());
+  const url = new URL(`notifications/${encodeURIComponent(id)}/read`, getApiBaseUrl());
 
   const res = await fetch(url, {
     method: "PATCH",

@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { BranchApiError, updateBranchStatus, type BranchStatusResponse } from "@/lib/api/branches";
-import { canAccessBranchAdministration } from "@/lib/auth/roles";
 import { deleteSession, getSession, getSessionUser } from "@/lib/session";
 
 export type UpdateBranchStatusResult =
@@ -29,7 +28,7 @@ export async function setBranchOperationalStatus(
     await deleteSession();
     redirect("/login");
   }
-  if (!canAccessBranchAdministration(user.rol)) {
+  if (user.rol !== "BRANCH_ADMIN" || user.branchId !== branchId) {
     return { ok: false, message: "No tienes autorización para modificar la configuración de esta sucursal." };
   }
 

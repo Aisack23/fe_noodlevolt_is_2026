@@ -13,7 +13,7 @@ import {
   type CustomerOrder,
 } from "@/lib/api/reviews";
 import { mapearEstadoPedidoABadge } from "@/lib/orders/types";
-import { deleteSession, getSession, getSessionUser } from "@/lib/session";
+import { getSession, getSessionUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Calificar pedido" };
@@ -40,7 +40,6 @@ export default async function ResenaPedidoPage({ params }: ReviewPageProps) {
     orders = await getMyOrders(token);
   } catch (error) {
     if (error instanceof ReviewApiError && error.status === 401) {
-      await deleteSession();
       redirect("/login");
     }
     if (error instanceof ReviewApiError && error.status === 403) {

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { AccesoDenegado } from "@/components/ui/AccesoDenegado";
 import { PersonalShell } from "@/components/ui/PersonalShell";
 import { KitchenApiError, getReadyKitchenOrders, type KitchenOrder } from "@/lib/api/kitchen";
-import { deleteSession, getSession, getSessionUser } from "@/lib/session";
+import { getSession, getSessionUser } from "@/lib/session";
 import { ListosBoard } from "./listos-board";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +28,6 @@ export default async function ListosPage() {
     initialOrders = await getReadyKitchenOrders(token);
   } catch (error) {
     if (error instanceof KitchenApiError && error.status === 401) {
-      await deleteSession();
       redirect("/login");
     }
     if (error instanceof KitchenApiError && error.status === 403) return <AccessDenied />;

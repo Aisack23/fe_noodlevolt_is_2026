@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 /** Contrato FE-07 (HU-07): saldo de puntos de lealtad del cliente autenticado. */
 
 export type LoyaltyBalance = {
@@ -20,13 +21,6 @@ export class LoyaltyApiError extends Error {
   }
 }
 
-function getApiBaseUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) {
-    throw new Error("Falta la variable de entorno API_URL.");
-  }
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;

@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 export type KitchenOrderStatus = "PENDING" | "IN_PREPARATION" | "READY";
 export type KitchenNextStatus = "IN_PREPARATION" | "READY";
 
@@ -71,15 +72,18 @@ async function messageFrom(response: Response): Promise<string | null> {
   return null;
 }
 
-function apiBaseUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) throw new Error("Falta la variable de entorno API_URL.");
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 /** Operaciones de cocina. Deben invocarse en Server Components o Server Actions para resguardar el token. */
-export async function getKitchenOrders(token: string): Promise<KitchenOrder[]> {
-  const response = await fetch(new URL("kitchen/orders", apiBaseUrl()), {
+export function getKitchenOrders(token: string) {
+  return getKitchenQueue(token, "kitchen/orders");
+}
+
+export function getKitchenSupervision(token: string) {
+  return getKitchenQueue(token, "kitchen/orders/supervision");
+}
+
+async function getKitchenQueue(token: string, path: string): Promise<KitchenOrder[]> {
+  const response = await fetch(new URL(path, getApiBaseUrl()), {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
@@ -97,7 +101,7 @@ export async function updateKitchenOrderStatus(
   orderId: string,
   status: KitchenNextStatus,
 ): Promise<KitchenOrder> {
-  const response = await fetch(new URL(`kitchen/orders/${orderId}/status`, apiBaseUrl()), {
+  const response = await fetch(new URL(`kitchen/orders/${orderId}/status`, getApiBaseUrl()), {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -116,7 +120,7 @@ export async function updateKitchenOrderStatus(
 }
 
 export async function getReadyKitchenOrders(token: string): Promise<KitchenOrder[]> {
-  const response = await fetch(new URL("kitchen/orders/ready", apiBaseUrl()), {
+  const response = await fetch(new URL("kitchen/orders/ready", getApiBaseUrl()), {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });
@@ -130,7 +134,7 @@ export async function getReadyKitchenOrders(token: string): Promise<KitchenOrder
 }
 
 export async function deliverKitchenOrder(token: string, orderId: string): Promise<void> {
-  const response = await fetch(new URL(`kitchen/orders/${orderId}/deliver`, apiBaseUrl()), {
+  const response = await fetch(new URL(`kitchen/orders/${orderId}/deliver`, getApiBaseUrl()), {
     method: "PATCH",
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",

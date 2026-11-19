@@ -1,56 +1,27 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { SESSION_COOKIE } from "@/lib/session";
+import { safeReturnTo, SESSION_COOKIE, verifySession } from "@/lib/auth/api-session";
 
-// Rutas de autenticación exclusivas para usuarios sin sesión activa
+const publicRoutes = ["/menu", "/pedidos/llevar", "/reservas"];
 const authRoutes = ["/login", "/registro"];
 
-// Rutas públicas accesibles tanto por invitados como por clientes autenticados
-const publicRoutes = ["/menu", "/pedidos/llevar", "/reservas"];
-
-/**
- * Verifica si el token JWT no ha expirado según su payload `exp`.
- */
-function isTokenValid(token: string): boolean {
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return false;
-    const payloadStr = Buffer.from(parts[1], "base64url").toString("utf8");
-    const payload = JSON.parse(payloadStr);
-    if (payload.exp && Date.now() >= payload.exp * 1000) {
-      return false;
-    }
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const isAuthRoute = authRoutes.includes(pathname);
-  const isPublicRoute =
-    publicRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
-
-  const sessionToken = request.cookies.get(SESSION_COOKIE)?.value;
-  const hasSession = Boolean(sessionToken && isTokenValid(sessionToken));
-
-  // Si se visita la raíz "/", redirigir siempre a la carta del menú
-  if (pathname === "/") {
-    return NextResponse.redirect(new URL("/menu", request.nextUrl));
+export async function proxy(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
+  if (pathname === "/") return NextResponse.redirect(new URL("/menu", request.url));
+  if (publicRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`))) {
+    return NextResponse.next();
   }
 
-  // Si no tiene sesión activa y la ruta requiere autenticación, redirigir a /login
-  if (!isAuthRoute && !isPublicRoute && !hasSession) {
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
+  const user = await verifySession(request.cookies.get(SESSION_COOKIE)?.value);
+  if (authRoutes.includes(pathname)) {
+    if (!user) return NextResponse.next();
+    const destination = safeReturnTo(request.nextUrl.searchParams.get("returnTo")) ?? "/menu";
+    return NextResponse.redirect(new URL(destination, request.url));
   }
 
-  // Si ya tiene sesión activa e intenta acceder a /login o /registro, redirigir al menú
-  if (isAuthRoute && hasSession) {
-    const returnTo = request.nextUrl.searchParams.get("returnTo");
-    const destination = returnTo && returnTo.startsWith("/") && !returnTo.startsWith("//") && !returnTo.includes("\\")
-      ? returnTo
-      : "/menu";
-    return NextResponse.redirect(new URL(destination, request.nextUrl));
+  if (!user) {
+    const login = new URL("/login", request.url);
+    login.searchParams.set("returnTo", pathname + search);
+    return NextResponse.redirect(login, 303);
   }
 
   return NextResponse.next();
@@ -59,4 +30,3 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)"],
 };
-

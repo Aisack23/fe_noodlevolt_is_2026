@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useMemo } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Calendar as CalendarIcon,
   CalendarCheck,
@@ -22,8 +23,9 @@ import {
 type ReservacionesClientProps = {
   branchId: string;
   initialDate: string;
-  initialReservations: ReservationItem[];
-  totalMesas?: number;
+  initialResult: Awaited<ReturnType<typeof getBranchReservationsAction>>;
+  timeZone: string;
+  branches: { id: string; name: string }[];
 };
 
 // Genera franjas horarias de 12:00 a 20:00
@@ -39,7 +41,7 @@ const FRANJAS_HORARIAS = [
   "20:00",
 ];
 
-function extraerHora(iso: string): string {
+function extraerHora(iso: string, timeZone: string): string {
   try {
     const d = new Date(iso);
     if (!Number.isFinite(d.getTime())) return iso;
@@ -47,7 +49,7 @@ function extraerHora(iso: string): string {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
-      timeZone: "America/El_Salvador",
+      timeZone,
     });
   } catch {
     return iso;
@@ -57,13 +59,16 @@ function extraerHora(iso: string): string {
 export function ReservacionesClient({
   branchId,
   initialDate,
-  initialReservations,
-  totalMesas = 6,
+  initialResult,
+  timeZone,
+  branches,
 }: ReservacionesClientProps) {
+  const router = useRouter();
   const [fecha, setFecha] = useState<string>(initialDate);
-  const [reservaciones, setReservaciones] = useState<ReservationItem[]>(initialReservations);
+  const [reservaciones, setReservaciones] = useState<ReservationItem[]>(initialResult.ok ? initialResult.reservations : []);
+  const [totalMesas, setTotalMesas] = useState(initialResult.ok ? initialResult.totalMesas : 0);
   const [isLoading, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(initialResult.ok ? null : initialResult.message);
 
   // Modal de cancelación
   const [reservaACancelar, setReservaACancelar] = useState<ReservationItem | null>(null);
@@ -82,6 +87,7 @@ export function ReservacionesClient({
         return;
       }
       setReservaciones(result.reservations);
+      setTotalMesas(result.totalMesas);
     });
   };
 
@@ -97,15 +103,19 @@ export function ReservacionesClient({
 
       // Una reservación dura 90 min. Ocupa la franja si su intervalo se cruza con [franjaMinutos, franjaMinutos + 60)
       const activas = reservaciones.filter((r) => {
-        if (r.status !== "CONFIRMED") return false;
-        const dInicio = new Date(r.startsAt);
-        const rInicioMin = dInicio.getHours() * 60 + dInicio.getMinutes();
-        const rFinMin = rInicioMin + 90;
-
-        return rInicioMin < franjaMinutos + 60 && rFinMin > franjaMinutos;
+        if (r.status !== "CONFIRMED" && r.status !== "PENDING") return false;
+        const dateFormat = new Intl.DateTimeFormat("en-CA", { timeZone });
+        const toMinutes = (iso: string) => {
+          const day = dateFormat.format(new Date(iso));
+          if (day < fecha) return -1440;
+          if (day > fecha) return 1440;
+          const [hours, minutes] = extraerHora(iso, timeZone).split(":").map(Number);
+          return hours * 60 + minutes;
+        };
+        return toMinutes(r.startsAt) < franjaMinutos + 60 && toMinutes(r.endsAt) > franjaMinutos;
       });
 
-      const ocupadas = activas.length;
+      const ocupadas = new Set(activas.map((reserva) => reserva.tableId)).size;
       const libres = Math.max(0, totalMesas - ocupadas);
 
       return {
@@ -114,7 +124,7 @@ export function ReservacionesClient({
         libres,
       };
     });
-  }, [reservaciones, totalMesas]);
+  }, [reservaciones, totalMesas, fecha, timeZone]);
 
   // Cancelar reservación
   const handleConfirmarCancelacion = async () => {
@@ -133,7 +143,7 @@ export function ReservacionesClient({
       // Actualizar el estado en la lista local para reflejar CANCELLED
       setReservaciones((prev) =>
         prev.map((r) =>
-          r.id === reservaACancelar.id ? { ...r, status: "CANCELLED" } : r,
+          r.id === result.id ? { ...r, status: result.status } : r,
         ),
       );
       setReservaACancelar(null);
@@ -157,6 +167,15 @@ export function ReservacionesClient({
           </p>
         </div>
 
+        {branches.length > 0 && (
+          <label className="flex flex-col gap-1 text-xs font-semibold text-text-secondary">
+            Sucursal
+            <select className="min-h-11 rounded-control border border-border bg-white px-3 text-sm text-brown"
+              value={branchId} onChange={(event) => router.push(`?sucursal=${encodeURIComponent(event.target.value)}`)}>
+              {branches.map((branch) => <option key={branch.id} value={branch.id}>{branch.name}</option>)}
+            </select>
+          </label>
+        )}
         {/* Filtro Fecha */}
         <div className="flex flex-col gap-1">
           <label htmlFor="filtro-fecha" className="text-xs font-semibold text-text-secondary">
@@ -247,8 +266,8 @@ export function ReservacionesClient({
                 </thead>
                 <tbody className="divide-y divide-border">
                   {reservaciones.map((reserva) => {
-                    const horaFormateada = extraerHora(reserva.startsAt);
-                    const esConfirmada = reserva.status === "CONFIRMED";
+                    const horaFormateada = extraerHora(reserva.startsAt, timeZone);
+                    const cancelable = reserva.status === "CONFIRMED" || reserva.status === "PENDING";
 
                     return (
                       <tr
@@ -256,7 +275,7 @@ export function ReservacionesClient({
                         className="transition-colors hover:bg-background/80"
                       >
                         <td className="px-4 py-4 text-sm font-medium text-brown">
-                          {reserva.code || reserva.id}
+                          {reserva.alias}
                         </td>
                         <td className="px-4 py-4 text-sm font-medium text-brown">
                           {reserva.contactName}
@@ -268,7 +287,7 @@ export function ReservacionesClient({
                           {reserva.guests}
                         </td>
                         <td className="px-4 py-4 text-center">
-                          {esConfirmada ? (
+                          {cancelable ? (
                             <button
                               type="button"
                               onClick={() => {
@@ -276,15 +295,15 @@ export function ReservacionesClient({
                                 setCancelError(null);
                               }}
                               title="Cancelar reservación"
-                              aria-label={`Cancelar reservación ${reserva.code || reserva.id}`}
+                              aria-label={`Cancelar reservación ${reserva.alias}`}
                               className="inline-flex size-9 items-center justify-center rounded-full bg-success/12 text-success hover:bg-success/20 transition-colors outline-none focus-visible:shadow-focus"
                             >
                               <CalendarCheck aria-hidden className="size-5" />
                             </button>
                           ) : (
                             <span
-                              title="Reservación cancelada"
-                              aria-label="Reservación cancelada"
+                              title={reserva.status === "CANCELED" ? "Reservación cancelada" : "Reservación finalizada"}
+                              aria-label={reserva.status === "CANCELED" ? "Reservación cancelada" : "Reservación finalizada"}
                               className="inline-flex size-9 items-center justify-center rounded-full bg-danger/12 text-danger"
                             >
                               <CalendarX aria-hidden className="size-5" />
@@ -393,16 +412,16 @@ export function ReservacionesClient({
             <p className="text-sm leading-relaxed text-brown">
               La reservación{" "}
               <strong className="text-brown">
-                {reservaACancelar.code || reservaACancelar.id}
+                {reservaACancelar.alias}
               </strong>{" "}
               de <strong className="text-brown">{reservaACancelar.contactName}</strong> (
-              {extraerHora(reservaACancelar.startsAt)} · {reservaACancelar.guests} personas)
-              quedará «Cancelada», su mesa se liberará y el cliente será avisado. Esta
+              {extraerHora(reservaACancelar.startsAt, timeZone)} · {reservaACancelar.guests} personas)
+              quedará «Cancelada» y su horario se liberará. Esta
               acción no se puede deshacer.
             </p>
 
             {cancelError && (
-              <p className="text-sm font-semibold text-danger">{cancelError}</p>
+              <p role="alert" className="text-sm font-semibold text-danger">{cancelError}</p>
             )}
 
             <div className="flex items-center justify-end gap-3 pt-2">
