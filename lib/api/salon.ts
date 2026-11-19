@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 export type MesaStatus = "FREE" | "OCCUPIED" | "TO_CLEAN";
 
 export type Mesa = {
@@ -69,10 +70,8 @@ function messageFrom(payload: unknown): string | null {
 
 
 export async function createSalonOrder(token: string, input: SalonOrderInput): Promise<SalonOrderResult> {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) throw new Error("Falta la variable de entorno API_URL.");
 
-  const response = await fetch(new URL("orders/salon", apiUrl.replace(/\/?$/, "/")), {
+  const response = await fetch(new URL("orders/salon", getApiBaseUrl()), {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

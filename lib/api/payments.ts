@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 import type { ApiErrorMessage } from "./orders";
 
 
@@ -87,11 +88,6 @@ async function messageFrom(response: Response): Promise<ApiErrorMessage> {
 }
 
 
-function getApiBaseUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) throw new Error("Falta la variable de entorno API_URL.");
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 
 export async function simulatePayment(

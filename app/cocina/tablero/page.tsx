@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { KitchenApiError, getKitchenOrders, type KitchenOrder } from "@/lib/api/kitchen";
-import { deleteSession, getSession, getSessionUser } from "@/lib/session";
+import { getSession, getSessionUser } from "@/lib/session";
 import { KitchenAccessDenied, KitchenBoard } from "./kitchen-board";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,6 @@ export default async function KitchenBoardPage() {
     initialOrders = await getKitchenOrders(token);
   } catch (error) {
     if (error instanceof KitchenApiError && error.status === 401) {
-      await deleteSession();
       redirect("/login");
     }
     if (error instanceof KitchenApiError && error.status === 403) return <KitchenAccessDenied />;

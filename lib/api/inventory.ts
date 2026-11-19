@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 export type InventoryItem = {
   id: string;
   branchId: string;
@@ -28,12 +29,8 @@ export class InventoryApiError extends Error {
 
 // Conectado al endpoint real de BE-05 en develop. El token es el de la sesión del gerente.
 export async function getInventory(token: string): Promise<InventoryItem[]> {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) {
-    throw new Error("Falta la variable de entorno API_URL.");
-  }
 
-  const res = await fetch(new URL("inventory", apiUrl.replace(/\/?$/, "/")), {
+  const res = await fetch(new URL("inventory", getApiBaseUrl()), {
     headers: { Authorization: `Bearer ${token}` },
     cache: "no-store",
   });

@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 /** Tipos y acceso al contrato FE-08 de pedidos, reseñas y calificación de sucursal. */
 
 export const ORDER_STATUS_LABELS = {
@@ -73,13 +74,6 @@ export class ReviewApiError extends Error {
   }
 }
 
-function getApiBaseUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) {
-    throw new Error("Falta la variable de entorno API_URL.");
-  }
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;

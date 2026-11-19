@@ -14,3 +14,20 @@ export function isBranchAdministrationRole(
 ): role is BranchAdministrationRole {
   return canAccessBranchAdministration(role);
 }
+
+
+const HOME_BY_ROLE = {
+  CLIENT: "/menu",
+  WAITER: "/mesero/listos",
+  COOK: "/cocina/tablero",
+  BRANCH_ADMIN: "/gerente/inventario",
+  GENERAL_MANAGER: "/gerente/reportes",
+  CASHIER: "/menu",
+  INVENTORY_MANAGER: "/menu",
+} as const;
+
+export function homeForRole(role: string | null): string | null {
+  return role && Object.hasOwn(HOME_BY_ROLE, role)
+    ? HOME_BY_ROLE[role as keyof typeof HOME_BY_ROLE]
+    : null;
+}

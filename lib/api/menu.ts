@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 export type PlatilloApi = {
   id: string;
   nombre: string;
@@ -18,13 +19,9 @@ export type MenuApi = {
 };
 
 export async function obtenerMenu(sucursalId: string): Promise<MenuApi> {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) {
-    throw new Error("Falta la variable de entorno API_URL.");
-  }
 
   const res = await fetch(
-    new URL(`sucursales/${sucursalId}/menu`, apiUrl.replace(/\/?$/, "/")),
+    new URL(`sucursales/${sucursalId}/menu`, getApiBaseUrl()),
     { cache: "no-store" },
   );
 

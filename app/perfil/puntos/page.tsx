@@ -6,7 +6,7 @@ import { AccesoDenegado } from "@/components/ui/AccesoDenegado";
 import { Alerta } from "@/components/ui/Alerta";
 import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import { formatPoints, getMyLoyalty, LoyaltyApiError } from "@/lib/api/loyalty";
-import { deleteSession, getSession, getSessionUser } from "@/lib/session";
+import { getSession, getSessionUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Mis puntos" };
@@ -25,7 +25,6 @@ export default async function MisPuntosPage() {
     ({ points } = await getMyLoyalty(token));
   } catch (error) {
     if (error instanceof LoyaltyApiError && error.status === 401) {
-      await deleteSession();
       redirect("/login");
     }
     if (error instanceof LoyaltyApiError && error.status === 403) {

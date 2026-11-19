@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 import type { ApiErrorMessage } from "./orders";
 
 // ---------------------------------------------------------------------------
@@ -28,16 +29,15 @@ export interface ReservationResponseDto {
 /** Modelo de reservación para listados de gerencia. */
 export interface ReservationItem {
   id: string;
-  code?: string;
-  branchId: string;
-  tableId?: string;
-  tableNumber?: string;
+  alias: string;
+  tableId: string;
+  tableNumber: string;
   guests: number;
   contactName: string;
   phone: string;
-  startsAt: string; // ISO 8601
-  endsAt: string;   // ISO 8601
-  status: "CONFIRMED" | "CANCELLED";
+  startsAt: string;
+  endsAt: string;
+  status: "PENDING" | "CONFIRMED" | "CANCELED" | "COMPLETED" | "NO_SHOW";
 }
 
 /** DTO de salón de comedor (Dining Room). */
@@ -109,11 +109,6 @@ async function messageFrom(response: Response): Promise<ApiErrorMessage> {
   return null;
 }
 
-function getApiBaseUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) throw new Error("Falta la variable de entorno API_URL.");
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 // ---------------------------------------------------------------------------
 // Llamadas al Backend (BE-04)
@@ -156,40 +151,32 @@ export async function createReservation(
   return payload as unknown as ReservationResponseDto;
 }
 
-/**
- * GET /branches/:branchId/tables
- * Consulta las mesas de una sucursal física.
- */
-export async function getBranchTables(
-  token: string,
-  branchId: string,
-): Promise<DiningTableResponseDto[]> {
+/** Cuenta mesas reservables en todas las páginas de la sucursal. */
+export async function getReservationTableCount(token: string, branchId: string): Promise<number> {
   const url = new URL(`branches/${encodeURIComponent(branchId)}/tables`, getApiBaseUrl());
-  url.searchParams.set("limit", "100");
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new ReservationApiError(response.status, await messageFrom(response));
-  }
-
-  const payload: unknown = await response.json();
-  if (!isRecord(payload) || !Array.isArray(payload.items)) {
-    throw new Error("La respuesta de mesas no tiene el formato esperado.");
-  }
-
-  return payload.items as DiningTableResponseDto[];
+  const limit = 100;
+  url.searchParams.set("limit", String(limit));
+  let count = 0;
+  let page = 1;
+  let total: number;
+  do {
+    url.searchParams.set("page", String(page));
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+    if (!response.ok) throw new ReservationApiError(response.status, await messageFrom(response));
+    const payload: DiningTablesResponseDto = await response.json();
+    total = payload.total;
+    count += payload.items.filter((table) => table.status !== "OUT_OF_SERVICE" && table.room?.isActive !== false).length;
+    page += 1;
+  } while ((page - 1) * limit < total);
+  return count;
 }
 
 /**
- * GET /branches/:branchId/reservations?date=YYYY-MM-DD
+ * GET /reservations/branches/:branchId/reservations?date=YYYY-MM-DD
  * Consulta las reservaciones para una fecha específica en una sucursal.
- * Si el endpoint no existe en el backend actual, maneja 404/501 de forma controlada.
  */
 export async function getBranchReservations(
   token: string,
@@ -212,9 +199,6 @@ export async function getBranchReservations(
 
   const payload: unknown = await response.json();
   if (!Array.isArray(payload)) {
-    if (isRecord(payload) && Array.isArray(payload.items)) {
-      return payload.items as ReservationItem[];
-    }
     throw new Error("La respuesta de reservaciones no tiene el formato esperado.");
   }
 
@@ -261,7 +245,7 @@ export async function getAvailableTablesForBooking(
 export async function cancelReservation(
   token: string,
   reservationId: string,
-): Promise<void> {
+): Promise<{ id: string; status: "CANCELED" }> {
   const response = await fetch(new URL(`reservations/${encodeURIComponent(reservationId)}/cancel`, getApiBaseUrl()), {
     method: "PATCH",
     headers: {
@@ -274,4 +258,8 @@ export async function cancelReservation(
   if (!response.ok) {
     throw new ReservationApiError(response.status, await messageFrom(response));
   }
+  const payload: unknown = await response.json();
+  if (!isRecord(payload) || payload.id !== reservationId || payload.status !== "CANCELED")
+    throw new Error("No se pudo confirmar el estado de la reservación.");
+  return { id: reservationId, status: payload.status };
 }

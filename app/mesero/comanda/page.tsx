@@ -5,7 +5,7 @@ import { PersonalShell } from "@/components/ui/PersonalShell";
 import type { Mesa, SalonDish } from "@/lib/api/salon";
 import { getSalonMenu } from "@/lib/api/salon-menu";
 import { TablesApiError, getBranchTables } from "@/lib/api/tables";
-import { deleteSession, getSession, getSessionUser } from "@/lib/session";
+import { getSession, getSessionUser } from "@/lib/session";
 import { ComandaFlow } from "./comanda-flow";
 
 export const dynamic = "force-dynamic";
@@ -46,8 +46,7 @@ export default async function ComandaPage() {
     } else {
       const error: unknown = mesasResult.reason;
       if (error instanceof TablesApiError && error.status === 401) {
-        await deleteSession();
-        redirect("/login");
+          redirect("/login");
       }
       if (error instanceof TablesApiError && error.status === 403) return <AccessDenied />;
       mesasError = GENERIC_ERROR;

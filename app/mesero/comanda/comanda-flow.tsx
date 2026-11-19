@@ -71,12 +71,6 @@ export function ComandaFlow({ initialMesas, initialError, initialDishes, initial
           </p>
           <BadgeEstado estado="PENDIENTE" />
           <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="/mesero/salon"
-              className="inline-flex min-h-11 items-center justify-center rounded-control border-2 border-orange px-6 py-3 text-base font-semibold text-brown outline-none hover:bg-orange/16 focus-visible:shadow-focus"
-            >
-              Ver salón
-            </Link>
             <Button onClick={nuevaComanda}>Nueva comanda</Button>
           </div>
         </div>

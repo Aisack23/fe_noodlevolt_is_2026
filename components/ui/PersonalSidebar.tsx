@@ -4,16 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
   Utensils,
   Flame,
+  ListChecks,
   Calendar,
   ClipboardList,
   AlertTriangle,
   ShoppingCart,
-  Sparkles,
-  Star,
-  Receipt,
   Building2,
   TrendingUp,
   LogOut,
@@ -25,25 +22,27 @@ import { cn } from "@/lib/cn";
 type NavItem = { href: string; etiqueta: string; Icon: LucideIcon };
 
 // Sincronizado con los roles reales del backend
-export type RolPersonal = "BRANCH_ADMIN" | "GENERAL_MANAGER";
+export type RolPersonal = "BRANCH_ADMIN" | "GENERAL_MANAGER" | "WAITER";
 
 const itemsPorRol: Record<RolPersonal, NavItem[]> = {
+  WAITER: [
+    { href: "/mesero/comanda", etiqueta: "Nueva comanda", Icon: Utensils },
+    { href: "/mesero/listos", etiqueta: "Listos para entregar", Icon: ListChecks },
+  ],
   BRANCH_ADMIN: [
-    { href: "/gerente/panel", etiqueta: "Panel", Icon: LayoutDashboard },
-    { href: "/gerente/catalogo", etiqueta: "Catálogo", Icon: Utensils },
     { href: "/gerente/cocina", etiqueta: "Tablero de cocina", Icon: Flame },
     { href: "/gerente/reservaciones", etiqueta: "Reservaciones", Icon: Calendar },
     { href: "/gerente/inventario", etiqueta: "Inventario", Icon: ClipboardList },
     { href: "/gerente/insumos-por-comprar", etiqueta: "Insumos por comprar", Icon: AlertTriangle },
     { href: "/gerente/compras", etiqueta: "Compras", Icon: ShoppingCart },
-    { href: "/gerente/lealtad", etiqueta: "Lealtad", Icon: Sparkles },
-    { href: "/gerente/calificaciones", etiqueta: "Calificaciones", Icon: Star },
     { href: "/gerente/reportes/ventas", etiqueta: "Ventas", Icon: TrendingUp },
     { href: "/gerente/reportes/top-dishes", etiqueta: "Platillos más vendidos", Icon: Utensils },
-    { href: "/gerente/documentos-fiscales", etiqueta: "Documentos fiscales", Icon: Receipt },
     { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
   ],
   GENERAL_MANAGER: [
+    { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
+    { href: "/gerente/reservaciones", etiqueta: "Reservaciones", Icon: Calendar },
+    { href: "/gerente/inventario", etiqueta: "Inventario", Icon: ClipboardList },
     { href: "/gerente/reportes/ventas", etiqueta: "Ventas", Icon: TrendingUp },
     { href: "/gerente/reportes/top-dishes", etiqueta: "Platillos más vendidos", Icon: Utensils },
   ],
@@ -51,7 +50,7 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
 
 export function PersonalSidebar({ rol }: { rol: RolPersonal }) {
   const pathname = usePathname();
-  const items = itemsPorRol[rol] || itemsPorRol.BRANCH_ADMIN;
+  const items = itemsPorRol[rol];
 
   return (
     <aside className="hidden w-56 shrink-0 flex-col bg-brown px-4 py-6 text-white md:flex overflow-y-auto shadow-md">

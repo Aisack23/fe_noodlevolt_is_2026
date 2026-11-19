@@ -11,11 +11,13 @@ import { setBranchOperationalStatus } from "./actions";
 
 type BranchesManagementProps = {
   branches: Branch[];
+  canWrite: boolean;
   mensajeVacio?: string;
 };
 
 export function BranchesManagement({
   branches,
+  canWrite,
   mensajeVacio = "Cuando haya sucursales registradas, aparecerán aquí.",
 }: BranchesManagementProps) {
   const [currentBranches, setCurrentBranches] = useState(branches);
@@ -61,13 +63,13 @@ export function BranchesManagement({
               <div className="flex items-center justify-between gap-3"><dt className="text-text-secondary">Estado administrativo</dt><dd><BadgeEstado estado={branch.isActive ? "ACTIVA" : "INACTIVA"} /></dd></div>
               <div className="flex items-center justify-between gap-3"><dt className="text-text-secondary">Estado operativo</dt><dd><BadgeEstado estado={branch.isOpen ? "ABIERTA" : "CERRADA"} /></dd></div>
             </dl>
-            {branch.isActive ? (
+            {canWrite && (branch.isActive ? (
               <Button className="mt-auto w-full" variant={branch.isOpen ? "danger" : "primary"} loading={updatingId === branch.id} loadingText={branch.isOpen ? "Cerrando…" : "Abriendo…"} onClick={() => updateStatus(branch)}>
                 {branch.isOpen ? "Cerrar sucursal" : "Abrir sucursal"}
               </Button>
             ) : (
               <p className="mt-auto pt-5 text-sm text-text-secondary">Esta sucursal está inactiva y no puede abrirse.</p>
-            )}
+            ))}
           </article>
         ))}
       </div>

@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 import type { Mesa, MesaStatus } from "@/lib/api/salon";
 
 export class TablesApiError extends Error {
@@ -70,10 +71,8 @@ function toMesa(table: BackendTable): Mesa[] {
 
 /** Debe invocarse en Server Components o Server Actions para resguardar el token. */
 export async function getBranchTables(token: string, branchId: string): Promise<Mesa[]> {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) throw new Error("Falta la variable de entorno API_URL.");
 
-  const url = new URL(`branches/${encodeURIComponent(branchId)}/tables`, apiUrl.replace(/\/?$/, "/"));
+  const url = new URL(`branches/${encodeURIComponent(branchId)}/tables`, getApiBaseUrl());
   url.searchParams.set("limit", "100");
 
   const response = await fetch(url, {
