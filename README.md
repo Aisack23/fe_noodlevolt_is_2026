@@ -21,7 +21,7 @@ La documentación completa (roles, arquitectura, modelo de datos, API, despliegu
 
 ## Requisitos
 
-- Node.js 20.9 o superior, requisito de Next.js 16 [verificar la versión mínima en el despliegue].
+- Node.js 20.9 o superior, requisito de Next.js 16 (`engines.node` del paquete `next`).
 - npm.
 - La API de NoodleVolt en ejecución (ver el [README del backend](https://github.com/Aisack23/be_noodlevolt_is_2026#readme)).
 
@@ -40,14 +40,14 @@ Editar `.env.local` y definir `API_URL` con la base de la API, incluido el prefi
 API_URL=http://localhost:3000/api/v1
 ```
 
-El puerto debe coincidir con el de la API (`PORT` del backend, 3000 por defecto). El archivo `.env.example` trae `http://localhost:8000` y no coincide con ese valor [verificar: ver [09 · Problemas conocidos](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/09-problemas-conocidos.md#97-frontend)].
+El puerto de la API debe coincidir con `API_URL` (`PORT` del backend, 3000 por defecto). El archivo `.env.example` trae `http://localhost:8000`, que no coincide con ese valor. `API_URL` debe terminar en `/api/v1`, porque las rutas se construyen de forma relativa a esa base.
 
 No guardar credenciales en el repositorio. Las cuentas de prueba se entregan en Moodle.
 
 ## Ejecución
 
 ```bash
-npm run dev       # servidor de desarrollo de Next.js [verificar el puerto asignado]
+npm run dev       # servidor de desarrollo de Next.js (puerto 3000 por defecto, el mismo de la API; usar otro para una de las dos)
 npm run lint
 npm run build
 npm run start     # servidor de producción tras npm run build
@@ -61,7 +61,7 @@ Las pruebas de contrato de la API usan el runner integrado de Node y `fetch` sim
 node --experimental-strip-types tests/reviews-api.test.mjs
 ```
 
-Cada archivo de `tests/` se ejecuta del mismo modo. No hay un script `npm test` en `package.json` [verificar].
+Cada archivo de `tests/` se ejecuta del mismo modo. `package.json` no tiene un script `npm test`.
 
 ## Estructura
 
