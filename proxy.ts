@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { safeReturnTo, SESSION_COOKIE, verifySession } from "@/lib/auth/api-session";
+import { homeForRole } from "@/lib/auth/roles";
 
 const publicRoutes = ["/menu", "/pedidos/llevar", "/reservas"];
 const authRoutes = ["/login", "/registro"];
@@ -14,7 +15,7 @@ export async function proxy(request: NextRequest) {
   const user = await verifySession(request.cookies.get(SESSION_COOKIE)?.value);
   if (authRoutes.includes(pathname)) {
     if (!user) return NextResponse.next();
-    const destination = safeReturnTo(request.nextUrl.searchParams.get("returnTo")) ?? "/menu";
+    const destination = safeReturnTo(request.nextUrl.searchParams.get("returnTo")) ?? homeForRole(user.role) ?? "/menu";
     return NextResponse.redirect(new URL(destination, request.url));
   }
 

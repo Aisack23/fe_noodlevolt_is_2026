@@ -2,7 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api/base-url";
-import { authPost, safeReturnTo, verifiedExpiration, type SessionTokens } from "@/lib/auth/api-session";
+import { homeForRole } from "@/lib/auth/roles";
+import { authenticateSession, authPost, safeReturnTo, verifiedExpiration, type SessionTokens } from "@/lib/auth/api-session";
 import {
   createSession,
   deleteSession,
@@ -43,29 +44,6 @@ export type RegistroState = {
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type ValidRole =
-  | "CLIENT"
-  | "WAITER"
-  | "COOK"
-  | "BRANCH_ADMIN"
-  | "GENERAL_MANAGER";
-
-
-const ROLE_ROUTES: Record<ValidRole, string> = {
-  CLIENT: "/menu",
-  WAITER: "/mesero/listos",
-  COOK: "/cocina/tablero",
-  BRANCH_ADMIN: "/gerente/inventario",
-  GENERAL_MANAGER: "/gerente/reportes",
-};
-
-async function authenticate(email: string, password: string): Promise<SessionTokens | null> {
-  const response = await authPost("login", { email, password });
-  if (response.status === 401 || response.status === 403) return null;
-  if (!response.ok) throw new Error(`auth/login respondió ${response.status}`);
-  return response.json();
-}
-
 export async function login(
   _prevState: LoginState,
   formData: FormData,
@@ -83,9 +61,9 @@ export async function login(
     return { error: "Ingresa tu contraseña.", email };
   }
 
-  let session: SessionTokens | null;
+  let session: Awaited<ReturnType<typeof authenticateSession>>;
   try {
-    session = await authenticate(email, password);
+    session = await authenticateSession(email, password);
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
     return { error: "No se pudo iniciar sesión. Intenta más tarde.", email };
@@ -94,17 +72,18 @@ export async function login(
     return { error: "Correo o contraseña incorrectos.", email };
   }
 
-  const destination = safeReturnTo(formData.get("returnTo")) ??
-    (Object.hasOwn(ROLE_ROUTES, session.user.role) ? ROLE_ROUTES[session.user.role as ValidRole] : null);
-  if (!destination) {
+  const home = homeForRole(session.user.role);
+  if (!home) {
     return {
-      error: "Tu cuenta no tiene un rol válido reconocido para acceder.",
+      error: session.user.role === null
+        ? "El servidor de autenticación no devolvió un rol. Revisa la versión del backend conectado."
+        : "Tu cuenta tiene un rol que esta aplicación no reconoce.",
       email,
     };
   }
 
-  await createSession(session);
-  redirect(destination);
+  await createSession(session.tokens);
+  redirect(safeReturnTo(formData.get("returnTo")) ?? home);
 }
 
 export async function registro(

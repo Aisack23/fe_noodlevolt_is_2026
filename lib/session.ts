@@ -26,10 +26,11 @@ export async function createSession(tokens: SessionTokens) {
     ...cookieOptions,
     expires: new Date(verifiedExpiration(tokens.accessToken)),
   });
+  const refreshExpiration = tokens.refreshExpiresAt ? new Date(tokens.refreshExpiresAt) : undefined;
   store.set(REFRESH_COOKIE, tokens.refreshToken, {
     ...cookieOptions,
     sameSite: "strict",
-    expires: new Date(tokens.refreshExpiresAt),
+    expires: refreshExpiration,
   });
 }
 
@@ -48,7 +49,7 @@ const getVerifiedSession = cache(async () => {
       id: user.id,
       email: user.email,
       nombre: user.name ?? undefined,
-      rol: user.role,
+      rol: user.role ?? undefined,
       branchId: user.branchId ?? undefined,
       expiresAt: verifiedExpiration(token),
     } satisfies SafeSessionUser,
