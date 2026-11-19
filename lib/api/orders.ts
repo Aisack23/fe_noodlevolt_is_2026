@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 import type { Pedido, EstadoPedido, ModalidadPago } from "@/lib/orders/types";
 
 export type CreateOrderRequest = {
@@ -100,11 +101,6 @@ async function messageFrom(response: Response): Promise<ApiErrorMessage> {
   return null;
 }
 
-function getApiBaseUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) throw new Error("Falta la variable de entorno API_URL.");
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 /** POST /orders. Solo se invoca desde una Server Action para no exponer el token. */
 export async function createOrder(token: string, input: CreateOrderRequest): Promise<OrderResponse> {

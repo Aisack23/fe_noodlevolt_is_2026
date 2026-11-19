@@ -43,14 +43,14 @@ export function RegistroForm() {
         )}
 
         <Input
-          label="Nombre completo *"
-          name="nombre"
+          label="Nombre *"
+          name="name"
           type="text"
-          autoComplete="name"
+          autoComplete="given-name"
           required
-          placeholder="Ej. María López"
-          defaultValue={state.values?.nombre}
-          error={state.fieldErrors?.nombre}
+          placeholder="Ej. María"
+          defaultValue={state.values?.name}
+          error={state.fieldErrors?.name}
           disabled={pending}
         />
 
@@ -67,13 +67,14 @@ export function RegistroForm() {
         />
 
         <Input
-          label="Teléfono (opcional)"
-          name="telefono"
-          type="tel"
-          autoComplete="tel"
-          placeholder="71234567"
-          defaultValue={state.values?.telefono}
-          error={state.fieldErrors?.telefono}
+          label="Apellido *"
+          name="lastName"
+          type="text"
+          autoComplete="family-name"
+          required
+          placeholder="Ej. López"
+          defaultValue={state.values?.lastName}
+          error={state.fieldErrors?.lastName}
           disabled={pending}
         />
 

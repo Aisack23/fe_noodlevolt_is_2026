@@ -17,7 +17,7 @@ import {
 } from "@/lib/api/reviews";
 import { mapearEstadoPedidoABadge } from "@/lib/orders/types";
 import { RatingStars } from "@/components/business/RatingStars";
-import { deleteSession, getSession, getSessionUser } from "@/lib/session";
+import { getSession, getSessionUser } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Mis pedidos" };
@@ -110,7 +110,6 @@ export default async function MisPedidosPage({ searchParams }: MisPedidosPagePro
     orders = await getMyOrders(token, status);
   } catch (error) {
     if (error instanceof ReviewApiError && error.status === 401) {
-      await deleteSession();
       redirect("/login");
     }
     if (error instanceof ReviewApiError && error.status === 403) {

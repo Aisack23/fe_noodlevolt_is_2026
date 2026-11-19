@@ -39,10 +39,10 @@
   --text-h3--line-height: 32px;
 }
 
-/* Fuentes cargadas con next/font en app/layout.tsx. */
+/* Familias empaquetadas en app/layout.tsx. */
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-antonio);
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-display: "Antonio Variable", "Arial Narrow", sans-serif;
 }
 
 body {

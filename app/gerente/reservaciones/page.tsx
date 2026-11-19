@@ -2,74 +2,48 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AccesoDenegado } from "@/components/ui/AccesoDenegado";
 import { Alerta } from "@/components/ui/Alerta";
-import { getMyBranch } from "@/lib/api/branches";
+import { getBranches, getMyBranch } from "@/lib/api/branches";
 import { canAccessBranchAdministration } from "@/lib/auth/roles";
 import { getSession, getSessionUser } from "@/lib/session";
 import { ReservacionesClient } from "./reservaciones-client";
 import { getBranchReservationsAction } from "./actions";
 
-export const metadata: Metadata = {
-  title: "Reservaciones · Gerencia NoodleVolt",
-  description: "Consulta y cancela las reservaciones de tu sucursal.",
-};
+export const metadata: Metadata = { title: "Reservaciones · Gerencia NoodleVolt" };
 
-function getFechaActual(): string {
-  return new Date().toISOString().split("T")[0];
-}
+export default async function ReservacionesPage({
+  searchParams,
+}: { searchParams: Promise<{ sucursal?: string }> }) {
+  const [token, user, { sucursal }] = await Promise.all([getSession(), getSessionUser(), searchParams]);
+  if (!token || !user) redirect("/login");
+  if (!canAccessBranchAdministration(user.rol)) return <AccesoDenegado href="/menu" />;
 
-export default async function ReservacionesPage() {
-  const token = await getSession();
-  const user = await getSessionUser();
+  const isGeneral = user.rol === "GENERAL_MANAGER";
+  const [branches, assigned] = await Promise.all([
+    isGeneral ? getBranches(token) : [],
+    isGeneral ? null : getMyBranch(token),
+  ]);
+  const active = branches.filter((branch) => branch.isActive);
+  const branch = isGeneral ? active.find((row) => row.id === sucursal) ?? active[0] : assigned;
 
-  if (!token || !user) {
-    redirect("/login");
-  }
-
-  // Comprobación estricta de autorización de rol de gerencia
-  if (!canAccessBranchAdministration(user.rol)) {
+  if (!branch) {
     return (
-      <main className="flex flex-col gap-6 px-4 py-6 md:px-8">
-        <AccesoDenegado href="/menu" />
+      <main className="space-y-4 px-4 py-6 md:px-8">
+        <h1 className="font-display text-h2 font-bold text-brown">Reservaciones</h1>
+        <Alerta tono="warning">No hay una sucursal disponible para consultar reservaciones.</Alerta>
       </main>
     );
   }
 
-  // Obtener la sucursal asignada al gerente autenticado mediante GET /branches/me/branch
-  const myBranch = await getMyBranch(token);
-
-  if (!myBranch) {
-    return (
-      <main className="flex flex-col gap-6 px-4 py-6 md:px-8">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-display text-h2 font-bold uppercase text-brown">
-            Reservaciones
-          </h1>
-          <p className="text-sm text-text-secondary">
-            Consulta y cancela las reservaciones de tu sucursal.
-          </p>
-        </div>
-        <Alerta tono="warning">
-          Tu cuenta no tiene una sucursal asignada para consultar reservaciones.
-        </Alerta>
-      </main>
-    );
-  }
-
-  const branchId = myBranch.id;
-  const fechaHoy = getFechaActual();
-
-  const result = await getBranchReservationsAction(branchId, fechaHoy);
-
-  const initialReservations = result.ok ? result.reservations : [];
-  const totalMesas = result.ok ? result.totalMesas : 6;
-
+  const date = new Intl.DateTimeFormat("en-CA", { timeZone: branch.timeZone }).format(new Date());
   return (
     <main className="flex-1">
       <ReservacionesClient
-        branchId={branchId}
-        initialDate={fechaHoy}
-        initialReservations={initialReservations}
-        totalMesas={totalMesas}
+        key={branch.id}
+        branchId={branch.id}
+        timeZone={branch.timeZone}
+        branches={active.map(({ id, name }) => ({ id, name }))}
+        initialDate={date}
+        initialResult={await getBranchReservationsAction(branch.id, date)}
       />
     </main>
   );

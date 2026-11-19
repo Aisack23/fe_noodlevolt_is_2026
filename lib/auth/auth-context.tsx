@@ -11,7 +11,7 @@ import {
 } from "react";
 import { usePathname } from "next/navigation";
 import type { SafeSessionUser } from "@/lib/session";
-import { checkAuth, logout as logoutAction } from "@/app/actions/auth";
+import { checkAuth, renewSession, logout as logoutAction } from "@/app/actions/auth";
 
 type AuthContextType = {
   user: SafeSessionUser | null;
@@ -76,6 +76,29 @@ export function AuthProvider({ children, initialUser = null }: AuthProviderProps
       montado = false;
     };
   }, [pathname]);
+
+  useEffect(() => {
+    if (!user?.expiresAt) return;
+    let mounted = true;
+    let timer: ReturnType<typeof setTimeout>;
+    const schedule = (expiresAt: number, delay = Math.max(0, expiresAt - Date.now() - 45_000)) => {
+      timer = setTimeout(async () => {
+        try {
+          const nextExpiry = await (navigator.locks
+            ? navigator.locks.request("noodlevolt-session", () => renewSession())
+            : renewSession());
+          if (mounted && nextExpiry) schedule(nextExpiry);
+        } catch {
+          if (mounted && Date.now() + 5000 < expiresAt) schedule(expiresAt, 5000);
+        }
+      }, delay);
+    };
+    schedule(user.expiresAt);
+    return () => {
+      mounted = false;
+      clearTimeout(timer);
+    };
+  }, [user?.expiresAt]);
 
   const logout = useCallback(async () => {
     startTransition(async () => {

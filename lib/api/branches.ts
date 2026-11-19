@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 export interface Branch {
   id: string;
   name: string;
@@ -21,14 +22,6 @@ export class BranchApiError extends Error {
   }
 }
 
-function getApiUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) {
-    throw new Error("Falta la variable de entorno API_URL.");
-  }
-
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -67,7 +60,7 @@ function authorizationHeaders(token: string): HeadersInit {
 
 /** GET /branches es público; token opcional para conservar consumidores administrativos. */
 export async function getBranches(token?: string): Promise<Branch[]> {
-  const response = await fetch(new URL("branches", getApiUrl()), {
+  const response = await fetch(new URL("branches", getApiBaseUrl()), {
     ...(token ? { headers: authorizationHeaders(token) } : {}),
     cache: "no-store",
   });
@@ -91,7 +84,7 @@ export async function getBranches(token?: string): Promise<Branch[]> {
  * Lanza BranchApiError ante otros errores HTTP.
  */
 export async function getMyBranch(token: string): Promise<Branch | null> {
-  const response = await fetch(new URL("branches/me/branch", getApiUrl()), {
+  const response = await fetch(new URL("branches/me/branch", getApiBaseUrl()), {
     headers: authorizationHeaders(token),
     cache: "no-store",
   });
@@ -120,7 +113,7 @@ export async function updateBranchStatus(
   branchId: string,
   isOpen: boolean,
 ): Promise<BranchStatusResponse> {
-  const response = await fetch(new URL(`branches/${branchId}/config`, getApiUrl()), {
+  const response = await fetch(new URL(`branches/${branchId}/config`, getApiBaseUrl()), {
     method: "PATCH",
     headers: {
       ...authorizationHeaders(token),

@@ -1,3 +1,4 @@
+import { getApiBaseUrl } from "./base-url.ts";
 // Tipos para los reportes del backend
 export interface SalesReportResponse {
   from: string;
@@ -72,11 +73,6 @@ function isTopDishesReport(value: unknown): value is TopDishesReportResponse {
   );
 }
 
-function getApiBaseUrl(): string {
-  const apiUrl = process.env.API_URL;
-  if (!apiUrl) throw new Error("Falta la variable de entorno API_URL.");
-  return apiUrl.replace(/\/?$/, "/");
-}
 
 function authorizationHeaders(token: string): HeadersInit {
   return { Authorization: `Bearer ${token}` };
