@@ -25,9 +25,13 @@ import { cn } from "@/lib/cn";
 type NavItem = { href: string; etiqueta: string; Icon: LucideIcon };
 
 // Sincronizado con los roles reales del backend
-export type RolPersonal = "BRANCH_ADMIN" | "GENERAL_MANAGER";
+export type RolPersonal = "BRANCH_ADMIN" | "GENERAL_MANAGER" | "WAITER";
 
 const itemsPorRol: Record<RolPersonal, NavItem[]> = {
+  WAITER: [
+    { href: "/mesero/comanda", etiqueta: "Nueva comanda", Icon: ClipboardList },
+    { href: "/mesero/listos", etiqueta: "Listos para entregar", Icon: Utensils },
+  ],
   BRANCH_ADMIN: [
     { href: "/gerente/panel", etiqueta: "Panel", Icon: LayoutDashboard },
     { href: "/gerente/catalogo", etiqueta: "Catálogo", Icon: Utensils },
