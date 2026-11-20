@@ -1,39 +1,79 @@
 # NoodleVolt — Frontend
 
-Frontend de NoodleVolt con Next.js App Router, React, TypeScript y Tailwind CSS. Las pantallas protegidas consultan la sesión de servidor y la API configurada mediante `API_URL`.
+Interfaz web de NoodleVolt, una plataforma de gestión para un restaurante chino multisucursal. Permite a los clientes consultar el menú, hacer pedidos para llevar, pagar, reservar mesa y consultar sus puntos; al personal, atender comandas, consultar inventario y ventas; y al gerente, abrir o cerrar su sucursal.
 
-## Desarrollo
+Proyecto 3: Plataforma de gestión de restaurantes · Ingeniería de Software, UCA, ciclo 02/2026, Sección 02 · Equipo Elektro.
 
-Requisitos: Node.js compatible con la versión de Next del proyecto y dependencias instaladas con `npm install`.
+## Documentación
+
+La documentación completa (roles, arquitectura, modelo de datos, API, despliegue, historias y problemas conocidos) está en el backend:
+
+**[Documentación de NoodleVolt en el repositorio de backend](https://github.com/Aisack23/be_noodlevolt_is_2026/tree/develop/docs)**
+
+Índice: [01 · Guía de uso](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/01-guia-de-uso.md) · [04 · API](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/04-api.md) · [05 · Instalación local](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/05-instalacion-local.md) · [06 · Despliegue](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/06-despliegue.md)
+
+## Despliegue
+
+| Componente | URL |
+|---|---|
+| Aplicación web (Vercel) | [pendiente] |
+| API (Render) | [pendiente] |
+
+## Requisitos
+
+- Node.js 20.9 o superior, requisito de Next.js 16 (`engines.node` del paquete `next`).
+- npm.
+- La API de NoodleVolt en ejecución (ver el [README del backend](https://github.com/Aisack23/be_noodlevolt_is_2026#readme)).
+
+## Instalación
 
 ```bash
-npm run dev
-npm run lint
-npm run build
+git clone https://github.com/Aisack23/fe_noodlevolt_is_2026.git
+cd fe_noodlevolt_is_2026
+npm install
+cp .env.example .env.local
 ```
 
-Configura `API_URL` en `.env.local` con la base `/api/v1` de la API. Usa `.env.example` como referencia y no guardes credenciales en el repositorio.
+Editar `.env.local` y definir `API_URL` con la base de la API, incluido el prefijo `/api/v1`:
 
-## FE-01 — Menú público
+```bash
+API_URL=http://localhost:3000/api/v1
+```
 
-- Catálogo por sucursal y categorías en [`/menu`](./app/menu/page.tsx), público para invitados, clientes y personal (solo invitado y cliente pueden agregar al carrito).
-- Contrato, estados, diferencias con Figma y pendientes: [docs/FE-01.md](./docs/FE-01.md).
+El puerto de la API debe coincidir con `API_URL` (`PORT` del backend, 3000 por defecto). El archivo `.env.example` trae `http://localhost:8000`, que no coincide con ese valor. `API_URL` debe terminar en `/api/v1`, porque las rutas se construyen de forma relativa a esa base.
 
-## FE-08 — Mis pedidos y reseñas
+No guardar credenciales en el repositorio. Las cuentas de prueba se entregan en Moodle.
 
-- Listado protegido por rol en [`/pedidos`](./app/pedidos/(mis-pedidos)/page.tsx), con filtro opcional por estado.
-- Formulario para calificar un pedido entregado en [`/pedidos/[id]/resena`](./app/pedidos/[id]/resena/page.tsx).
-- Contrato, manejo de errores, decisiones y límites de verificación: [docs/FE-08.md](./docs/FE-08.md).
-- Componentes reutilizados y añadidos: [docs/COMPONENTS.md](./docs/COMPONENTS.md).
+## Ejecución
 
-Pruebas de contrato FE-08 con `fetch` simulado (runner integrado de Node 24; no requiere dependencias de pruebas):
+```bash
+npm run dev       # servidor de desarrollo de Next.js (puerto 3000 por defecto, el mismo de la API; usar otro para una de las dos)
+npm run lint
+npm run build
+npm run start     # servidor de producción tras npm run build
+```
+
+## Pruebas
+
+Las pruebas de contrato de la API usan el runner integrado de Node y `fetch` simulado. No requieren dependencias adicionales:
 
 ```bash
 node --experimental-strip-types tests/reviews-api.test.mjs
 ```
 
-## Documentación del proyecto
+Cada archivo de `tests/` se ejecuta del mismo modo. `package.json` no tiene un script `npm test`.
 
-- [Sistema de diseño](./docs/DESIGN_SYSTEM.md)
-- [Inventario de componentes](./docs/COMPONENTS.md)
-- [Roadmap frontend](./docs/FRONTEND_ROADMAP.md)
+## Estructura
+
+```text
+app/          rutas (App Router): menú, pedidos, reservas, cocina, mesero, gerente, perfil
+components/   componentes reutilizables
+lib/          clientes de la API, sesión y utilidades
+proxy.ts      protección de rutas por sesión y rol
+tests/        pruebas de contrato de la API
+docs/         documentación de las pantallas por historia de usuario
+```
+
+## Sesión
+
+La sesión se guarda en una cookie `httpOnly` llamada `session`, creada por el servidor de Next.js. El JavaScript del navegador no puede leer el token. Las rutas protegidas consultan la sesión en el servidor; el control por rol en la interfaz es un apoyo visual y no sustituye los permisos del backend.
