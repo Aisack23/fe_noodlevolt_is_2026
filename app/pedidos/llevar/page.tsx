@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function PedidosLlevarPage() {
   const user = await getSessionUser();
 
-  if (!isClientRole(user?.rol)) {
+  if (user && !isClientRole(user.rol)) {
     return <AccesoDenegado href="/" />;
   }
 

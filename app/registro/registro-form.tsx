@@ -55,6 +55,18 @@ export function RegistroForm() {
         />
 
         <Input
+          label="Apellido *"
+          name="lastName"
+          type="text"
+          autoComplete="family-name"
+          required
+          placeholder="Ej. López"
+          defaultValue={state.values?.lastName}
+          error={state.fieldErrors?.lastName}
+          disabled={pending}
+        />
+
+        <Input
           label="Correo electrónico *"
           name="email"
           type="email"
@@ -66,17 +78,6 @@ export function RegistroForm() {
           disabled={pending}
         />
 
-        <Input
-          label="Apellido *"
-          name="lastName"
-          type="text"
-          autoComplete="family-name"
-          required
-          placeholder="Ej. López"
-          defaultValue={state.values?.lastName}
-          error={state.fieldErrors?.lastName}
-          disabled={pending}
-        />
 
         <Input
           label="Contraseña * (mínimo 8 caracteres)"

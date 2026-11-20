@@ -17,11 +17,6 @@ export function BottomTabBar() {
     { href: "/reservas", etiqueta: "Reservar", Icon: Calendar },
     { href: "/pedidos", etiqueta: "Pedidos", Icon: Receipt },
     { href: "/perfil/puntos", etiqueta: "Puntos", Icon: Star },
-    {
-      href: isAuthenticated ? "/cuenta" : "/login",
-      etiqueta: isAuthenticated ? "Cuenta" : "Ingresar",
-      Icon: User,
-    },
   ];
 
 
