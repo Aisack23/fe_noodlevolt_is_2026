@@ -1,17 +1,18 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
   title: "Iniciar sesión",
+  description: "Inicia sesión en NoodleVolt",
 };
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-1 items-center justify-center px-4">
-      <main className="w-full max-w-sm rounded-xl border border-zinc-200 p-8 dark:border-zinc-800">
-        <h1 className="mb-6 text-2xl font-semibold">Iniciar sesión</h1>
+    <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background px-4 py-8 sm:py-12">
+      <Suspense fallback={<div className="w-full max-w-[440px] animate-pulse p-6 sm:p-10" />}>
         <LoginForm />
-      </main>
-    </div>
+      </Suspense>
+    </main>
   );
 }

@@ -1,0 +1,63 @@
+import { getApiBaseUrl } from "./base-url.ts";
+/** Contrato FE-07 (HU-07): saldo de puntos de lealtad del cliente autenticado. */
+
+export type LoyaltyBalance = {
+  /** Entero no negativo. El backend devuelve 0 si el cliente aún no tiene cuenta. */
+  points: number;
+};
+
+export type LoyaltyApiErrorKind = "unauthorized" | "forbidden" | "http";
+
+/** Conserva el status HTTP para que la UI distinga 401, 403 y el resto. */
+export class LoyaltyApiError extends Error {
+  readonly status: number;
+  readonly kind: LoyaltyApiErrorKind;
+
+  constructor(status: number) {
+    super(`La API de puntos respondió ${status}.`);
+    this.name = "LoyaltyApiError";
+    this.status = status;
+    this.kind = status === 401 ? "unauthorized" : status === 403 ? "forbidden" : "http";
+  }
+}
+
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+/** Valida la respuesta sin aserciones de tipo: `points` debe ser un entero no negativo. */
+export function isLoyaltyBalance(value: unknown): value is LoyaltyBalance {
+  if (!isRecord(value)) return false;
+  const { points } = value;
+  return typeof points === "number" && Number.isInteger(points) && points >= 0;
+}
+
+/**
+ * GET /loyalty/me — solo CLIENTE. La identidad sale del token; no se envía userId.
+ * Siempre sin caché: el saldo cambia cuando se aprueba un pago.
+ */
+export async function getMyLoyalty(token: string): Promise<LoyaltyBalance> {
+  const response = await fetch(new URL("loyalty/me", getApiBaseUrl()), {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new LoyaltyApiError(response.status);
+  }
+
+  const data: unknown = await response.json();
+  if (!isLoyaltyBalance(data)) {
+    throw new Error("La respuesta de puntos no tiene el formato esperado.");
+  }
+  // Solo se usa `points`, aunque el servidor agregue otros campos.
+  return { points: data.points };
+}
+
+const pointsFormatter = new Intl.NumberFormat("en-US");
+
+/** 1250 → "1,250 pts" (formato del diseño acordado). */
+export function formatPoints(points: number): string {
+  return `${pointsFormatter.format(points)} pts`;
+}
