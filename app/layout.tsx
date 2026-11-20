@@ -5,6 +5,8 @@ import "./globals.css";
 import { CartProvider } from "@/lib/cart/cart-context";
 import { AuthProvider } from "@/lib/auth/auth-context";
 import { getSessionUser } from "@/lib/session";
+import { Alerta } from "@/components/ui/Alerta";
+import { BotonReintentar } from "@/components/ui/BotonReintentar";
 
 
 export const metadata: Metadata = {
@@ -13,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const initialUser = await getSessionUser();
+  const initialUser = await getSessionUser().catch(() => undefined);
 
   return (
     <html
@@ -21,9 +23,16 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col font-sans">
-        <AuthProvider initialUser={initialUser}>
-          <CartProvider>{children}</CartProvider>
-        </AuthProvider>
+        {initialUser === undefined ? (
+          <main className="mx-auto flex w-full max-w-[1232px] flex-col items-start gap-4 px-4 py-6">
+            <Alerta>No se pudo verificar tu sesión. Intenta de nuevo.</Alerta>
+            <BotonReintentar />
+          </main>
+        ) : (
+          <AuthProvider initialUser={initialUser}>
+            <CartProvider>{children}</CartProvider>
+          </AuthProvider>
+        )}
       </body>
     </html>
   );

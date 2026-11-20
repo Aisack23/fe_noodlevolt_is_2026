@@ -1,79 +1,53 @@
 # NoodleVolt — Frontend
 
-Interfaz web de NoodleVolt, una plataforma de gestión para un restaurante chino multisucursal. Permite a los clientes consultar el menú, hacer pedidos para llevar, pagar, reservar mesa y consultar sus puntos; al personal, atender comandas, consultar inventario y ventas; y al gerente, abrir o cerrar su sucursal.
+Interfaz web para una cadena de restaurantes chinos. Los clientes consultan el menú, hacen pedidos para llevar, reservan mesas y revisan sus puntos. El personal gestiona comandas, inventario, ventas y el estado operativo de las sucursales.
 
-Proyecto 3: Plataforma de gestión de restaurantes · Ingeniería de Software, UCA, ciclo 02/2026, Sección 02 · Equipo Elektro.
+Proyecto 3 · Ingeniería de Software, UCA · Ciclo 02/2026, Sección 02 · Equipo Elektro.
+
+## Ambiente desplegado
+
+| Componente | URL |
+| --- | --- |
+| Frontend | Pendiente de confirmar al publicar `main` en Render |
+| API | [Backend en Render](https://noodlevolt-api.onrender.com/api/v1) |
+| Swagger | [Documentación de la API](https://noodlevolt-api.onrender.com/api/docs), sujeta a verificación de disponibilidad |
+
+Las cuentas de prueba se entregan por Moodle.
+
+## Integrantes
+
+| Nombre | Carnet | GitHub | Historias principales |
+| --- | --- | --- | --- |
+| Abraham Alejandro Flores Vásquez | 00067323 | [AlejandroFV74](https://github.com/AlejandroFV74) | HU-08, HU-10 |
+| Pamela Alexandra Gómez Tenorio | 00139622 | [pamelalexndra](https://github.com/pamelalexndra) | HU-01, HU-05, HU-07, HU-11 |
+| Diego Alejandro Iraheta Monterrosa | 00041923 | [DiegoIraheta00041923](https://github.com/DiegoIraheta00041923) | HU-04 |
+| Gabriela Denise Maldonado Girón | 00133523 | [DeniseMaldonadoG](https://github.com/DeniseMaldonadoG) | HU-03 |
+| César Isaac Tovar Jovel | 00016023 | [Aisack23](https://github.com/Aisack23) | HU-02, HU-06, HU-09 |
+
+La asignación corresponde a la registrada en el proyecto. [Ficha del equipo](https://github.com/Aisack23/be_noodlevolt_is_2026#integrantes)
+
+## Inicio rápido
+
+Con Node.js 24 y la API local en el puerto `3000`, ejecuta estos comandos en la raíz del frontend.
+
+```bash
+npm ci
+cp .env.example .env.local
+npm run dev -- --port 3001
+```
+
+Abre `http://localhost:3001`. La plantilla configura `API_URL=http://localhost:3000/api/v1`. Para verificar la rama ejecuta `npm run lint`, `npm test` y `npm run build`. [Instalación local](docs/05-instalacion-local.md)
 
 ## Documentación
 
-La documentación completa (roles, arquitectura, modelo de datos, API, despliegue, historias y problemas conocidos) está en el backend:
+1. [Guía de uso](docs/01-guia-de-uso.md)
+2. [Arquitectura](docs/02-arquitectura.md)
+3. [Modelo de datos](docs/03-modelo-de-datos.md)
+4. [API](docs/04-api.md)
+5. [Instalación local](docs/05-instalacion-local.md)
+6. [Despliegue](docs/06-despliegue.md)
+7. [Forma de trabajo](docs/07-forma-de-trabajo.md)
+8. [Historias por módulo](docs/08-historias.md)
+9. [Problemas conocidos](docs/09-problemas-conocidos.md)
 
-**[Documentación de NoodleVolt en el repositorio de backend](https://github.com/Aisack23/be_noodlevolt_is_2026/tree/develop/docs)**
-
-Índice: [01 · Guía de uso](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/01-guia-de-uso.md) · [04 · API](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/04-api.md) · [05 · Instalación local](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/05-instalacion-local.md) · [06 · Despliegue](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/develop/docs/06-despliegue.md)
-
-## Despliegue
-
-| Componente | URL |
-|---|---|
-| Aplicación web (Vercel) | [pendiente] |
-| API (Render) | [pendiente] |
-
-## Requisitos
-
-- Node.js 20.9 o superior, requisito de Next.js 16 (`engines.node` del paquete `next`).
-- npm.
-- La API de NoodleVolt en ejecución (ver el [README del backend](https://github.com/Aisack23/be_noodlevolt_is_2026#readme)).
-
-## Instalación
-
-```bash
-git clone https://github.com/Aisack23/fe_noodlevolt_is_2026.git
-cd fe_noodlevolt_is_2026
-npm install
-cp .env.example .env.local
-```
-
-Editar `.env.local` y definir `API_URL` con la base de la API, incluido el prefijo `/api/v1`:
-
-```bash
-API_URL=http://localhost:3000/api/v1
-```
-
-El puerto de la API debe coincidir con `API_URL` (`PORT` del backend, 3000 por defecto). El archivo `.env.example` trae `http://localhost:8000`, que no coincide con ese valor. `API_URL` debe terminar en `/api/v1`, porque las rutas se construyen de forma relativa a esa base.
-
-No guardar credenciales en el repositorio. Las cuentas de prueba se entregan en Moodle.
-
-## Ejecución
-
-```bash
-npm run dev       # servidor de desarrollo de Next.js (puerto 3000 por defecto, el mismo de la API; usar otro para una de las dos)
-npm run lint
-npm run build
-npm run start     # servidor de producción tras npm run build
-```
-
-## Pruebas
-
-Las pruebas de contrato de la API usan el runner integrado de Node y `fetch` simulado. No requieren dependencias adicionales:
-
-```bash
-node --experimental-strip-types tests/reviews-api.test.mjs
-```
-
-Cada archivo de `tests/` se ejecuta del mismo modo. `package.json` no tiene un script `npm test`.
-
-## Estructura
-
-```text
-app/          rutas (App Router): menú, pedidos, reservas, cocina, mesero, gerente, perfil
-components/   componentes reutilizables
-lib/          clientes de la API, sesión y utilidades
-proxy.ts      protección de rutas por sesión y rol
-tests/        pruebas de contrato de la API
-docs/         documentación de las pantallas por historia de usuario
-```
-
-## Sesión
-
-La sesión se guarda en una cookie `httpOnly` llamada `session`, creada por el servidor de Next.js. El JavaScript del navegador no puede leer el token. Las rutas protegidas consultan la sesión en el servidor; el control por rol en la interfaz es un apoyo visual y no sustituye los permisos del backend.
+El backend conserva la documentación de todo el sistema, incluido el modelo de datos y los contratos de la API. [Repositorio del backend](https://github.com/Aisack23/be_noodlevolt_is_2026) · [Documentación central](https://github.com/Aisack23/be_noodlevolt_is_2026/tree/main/docs)

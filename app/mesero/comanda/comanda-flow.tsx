@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Link from "next/link";
 import { RefreshCw } from "lucide-react";
 import { SalonMesas, SalonMesasCargando } from "@/components/business/SalonMesas";
 import { Alerta } from "@/components/ui/Alerta";

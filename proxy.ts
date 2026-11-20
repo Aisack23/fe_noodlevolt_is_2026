@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { safeReturnTo, SESSION_COOKIE, verifySession } from "@/lib/auth/api-session";
 import { homeForRole } from "@/lib/auth/roles";
 
-const publicRoutes = ["/menu", "/pedidos/llevar", "/reservas"];
+const publicRoutes = ["/menu", "/pedidos/llevar"];
 const authRoutes = ["/login", "/registro"];
 
 export async function proxy(request: NextRequest) {
@@ -12,7 +12,18 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const user = await verifySession(request.cookies.get(SESSION_COOKIE)?.value);
+  const user = await verifySession(request.cookies.get(SESSION_COOKIE)?.value)
+    .catch(() => undefined);
+  if (user === undefined) {
+    return new NextResponse("No se pudo verificar tu sesión. Recarga la página para reintentar.", {
+      status: 503,
+      headers: {
+        "Cache-Control": "no-store",
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
+  }
+
   if (authRoutes.includes(pathname)) {
     if (!user) return NextResponse.next();
     const destination = safeReturnTo(request.nextUrl.searchParams.get("returnTo")) ?? homeForRole(user.role) ?? "/menu";

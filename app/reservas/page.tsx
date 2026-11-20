@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { getBranches, type Branch } from "@/lib/api/branches";
+import { redirect } from "next/navigation";
+import { getBranches } from "@/lib/api/branches";
 import { getSessionUser } from "@/lib/session";
 import { ReservarMesaClient } from "./reservar-mesa-client";
 import { isClientRole } from "@/lib/auth/roles";
 import { AccesoDenegado } from "@/components/ui/AccesoDenegado";
+import { Alerta } from "@/components/ui/Alerta";
+import { BotonReintentar } from "@/components/ui/BotonReintentar";
 
 export const metadata: Metadata = {
   title: "Reservar mesa · NoodleVolt",
@@ -11,47 +14,39 @@ export const metadata: Metadata = {
 };
 
 type ReservasPageProps = {
-  searchParams: Promise<{ sucursal?: string }>;
+  searchParams: Promise<{ sucursal?: string | string[] }>;
 };
 
 export default async function ReservasPage({ searchParams }: ReservasPageProps) {
   const { sucursal } = await searchParams;
   const user = await getSessionUser();
 
-  if (!isClientRole(user?.rol)) {
+  if (!user) {
+    const params = typeof sucursal === "string" ? new URLSearchParams({ sucursal }) : null;
+    const returnTo = params ? `/reservas?${params}` : "/reservas";
+    redirect(`/login?${new URLSearchParams({ returnTo })}`);
+  }
+
+  if (!isClientRole(user.rol)) {
     return <AccesoDenegado href="/" />;
   }
 
-  let branches: Branch[] = [];
-  try {
-    branches = await getBranches();
-  } catch {
-    // Si falla la API pública, ofrecemos opciones mínimas por defecto
-    branches = [
-      {
-        id: "branch-santa-tecla",
-        name: "Santa Tecla",
-        address: "Av. Principal #123",
-        timeZone: "America/El_Salvador",
-        isActive: true,
-        isOpen: true,
-      },
-      {
-        id: "branch-centro",
-        name: "San Salvador – Centro",
-        address: "Calle Rubén Darío #456",
-        timeZone: "America/El_Salvador",
-        isActive: true,
-        isOpen: true,
-      },
-    ];
+  const branches = await getBranches().catch(() => null);
+  if (!branches) {
+    return (
+      <main className="mx-auto flex w-full max-w-[1232px] flex-col items-start gap-4 px-4 py-6">
+        <h1 className="font-display text-h1 font-bold uppercase text-brown">Reservar mesa</h1>
+        <Alerta>No se pudieron cargar las sucursales. Intenta de nuevo.</Alerta>
+        <BotonReintentar />
+      </main>
+    );
   }
 
   return (
     <main className="flex-1">
       <ReservarMesaClient
         branches={branches}
-        initialBranchId={sucursal}
+        initialBranchId={branches.find((branch) => branch.id === sucursal)?.id}
         user={user}
       />
     </main>

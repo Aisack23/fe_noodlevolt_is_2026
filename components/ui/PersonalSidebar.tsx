@@ -48,6 +48,34 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
   ],
 };
 
+export function PersonalMobileNav({ rol }: { rol: RolPersonal }) {
+  const pathname = usePathname();
+
+  return (
+    <nav
+      aria-label="Principal"
+      className="flex flex-wrap gap-2 border-b border-border px-4 py-3 md:hidden"
+    >
+      {itemsPorRol[rol].map(({ href, etiqueta }) => {
+        const activo = pathname === href || pathname.startsWith(`${href}/`);
+        return (
+          <Link
+            key={href}
+            href={href}
+            aria-current={activo ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 items-center rounded-control px-3 py-2 text-sm font-semibold outline-none focus-visible:shadow-focus",
+              activo ? "bg-crimson text-white" : "text-crimson hover:bg-cream",
+            )}
+          >
+            {etiqueta}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
 export function PersonalSidebar({ rol }: { rol: RolPersonal }) {
   const pathname = usePathname();
   const items = itemsPorRol[rol];
