@@ -1,23 +1,14 @@
-# Despliegue del frontend en Vercel
+# Desplegar el frontend en Render
 
-El procedimiento completo (Neon, Render, seed y lista de verificación) está en `docs/despliegue-pasos.md` del repo del backend. Aquí solo lo que aplica al frontend.
+El frontend ejecuta Next.js en un **Web Service** con runtime **Node**. El backend NestJS vive en un servicio separado. [Guía de Next.js en Render](https://render.com/docs/deploy-nextjs-app)
 
-## Proyecto en Vercel
+1. En Render, elige **New → Web Service** y conecta `Aisack23/fe_noodlevolt_is_2026`.
+2. Selecciona `develop` para pruebas o `main` para la release aprobada. Deja **Root Directory** vacío.
+3. Selecciona **Node** y, para la demo, **Free**.
+4. Usa `npm ci --include=dev && npm run build` como **Build Command** y `npm start -- --hostname 0.0.0.0` como **Start Command**.
+5. En **Environment**, configura `NODE_VERSION=24.22.1` y `API_URL=https://noodlevolt-api.onrender.com/api/v1`.
+6. Despliega. Cuando el servicio esté **Live**, registra su dominio exacto en el README y la página de despliegue.
 
-1. **Add New → Project** e importa este repo. Elige la rama **`main`** (solo después de que la PR esté fusionada).
-2. **Framework Preset:** Next.js (se detecta solo).
-3. **Node.js Version:** `22.x` o `24.x`. Next 16 requiere Node 20.9 o superior; el campo `engines` de `package.json` lo documenta.
-4. Variables de entorno, ámbito **Production**:
+Las llamadas de sesión a NestJS salen desde el servidor de Next.js. Configura `CORS_ORIGINS` en el backend si el navegador realiza llamadas directas a la API. La conexión de base de datos y los secretos JWT se configuran en el servicio del backend.
 
-   | Variable | Valor | De dónde sale |
-   | --- | --- | --- |
-   | `API_URL` | `https://<servicio>.onrender.com/api/v1` | URL pública del servicio en Render, más `/api/v1` |
-
-   `API_URL` debe terminar en `/api/v1`: el login construye `auth/login` relativo a esa base. Con `localhost:8000` o sin `/api/v1` el login falla.
-
-5. Despliega y anota la URL de producción (`https://<proyecto>.vercel.app`).
-6. Pon esa URL exacta en `CORS_ORIGINS` del servicio de Render, sin barra final.
-
-## Sin secretos en el repo
-
-`.env*` está ignorado en git y solo `.env.example` se versiona. El frontend no usa secretos propios: el token lo emite el backend y se guarda en una cookie `httpOnly`. No pongas ninguna credencial en variables `NEXT_PUBLIC_*`.
+[Comprobaciones de producción](06-despliegue.md#validación-de-producción) · [Límites del plan gratuito](https://render.com/docs/free)

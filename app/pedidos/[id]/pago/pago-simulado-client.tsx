@@ -60,13 +60,7 @@ function formatDate(iso: string): string {
 }
 
 
-function ResultadoAprobado({
-  payment,
-  orderId,
-}: {
-  payment: PaymentResult;
-  orderId: string;
-}) {
+function ResultadoAprobado({ payment }: { payment: PaymentResult }) {
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="flex flex-col items-center text-center gap-2">
@@ -245,7 +239,7 @@ export function PagoSimuladoClient({ orderId }: PagoSimuladoClientProps) {
     if (result.status === "APROBADO") {
       return (
         <div className="mx-auto flex w-full max-w-[640px] flex-col gap-6 px-4 py-8 sm:py-12">
-          <ResultadoAprobado payment={result} orderId={orderId} />
+          <ResultadoAprobado payment={result} />
         </div>
       );
     }
