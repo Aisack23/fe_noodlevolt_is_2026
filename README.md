@@ -8,9 +8,9 @@ Proyecto 3 · Ingeniería de Software, UCA · Ciclo 02/2026, Sección 02 · Equi
 
 | Componente | URL |
 | --- | --- |
-| Frontend | Pendiente de confirmar al publicar `main` en Render |
+| Frontend | [NoodleVolt](https://fe-noodlevolt-is-2026.onrender.com) |
 | API | [Backend en Render](https://noodlevolt-api.onrender.com/api/v1) |
-| Swagger | [Documentación de la API](https://noodlevolt-api.onrender.com/api/docs), sujeta a verificación de disponibilidad |
+| Swagger | [Documentación de la API](https://noodlevolt-api.onrender.com/api/docs) |
 
 Las cuentas de prueba se entregan por Moodle.
 
