@@ -12,8 +12,11 @@
 | Inventario y compras | `GET /inventory`, `GET /purchases/low-stock`, `GET /purchases`, `POST /purchases`. |
 | Pagos, lealtad y reseñas | `POST /payments/simulate`, `GET /loyalty/me`, `POST /reviews`, `GET /branches/:id/rating`. |
 | Notificaciones | `GET /notifications/me`, `PATCH /notifications/:id/read`. |
+| Reseñas en gerencia | `GET /branches/:id/reviews`, paginado y restringido por rol y sucursal. |
 | Reportes y sucursales | `GET /reports/sales`, `GET /reports/top-dishes`, `GET /branches/:id/config`, `PATCH /branches/:id/config`. |
 
 El frontend expone `GET /api/loyalty/me`, `GET /api/notifications` y `PATCH /api/notifications/:id/read` en su propio dominio. Esas rutas usan las cookies de la sesión para consultar NestJS.
+
+`GET /orders/me` incluye `paymentStatus` para distinguir el pago pendiente, rechazado o aprobado del estado operativo del pedido.
 
 [Contratos completos y permisos](https://github.com/Aisack23/be_noodlevolt_is_2026/blob/main/docs/04-api.md)

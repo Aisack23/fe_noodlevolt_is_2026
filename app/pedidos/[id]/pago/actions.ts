@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import {
   simulatePayment,
   PaymentApiError,
@@ -104,6 +105,7 @@ export async function submitPaymentSimulation(
   // 3. Llamada al backend
   try {
     const payment = await simulatePayment(token, { orderId, cardToken });
+    revalidatePath("/pedidos");
     return { ok: true, payment };
   } catch (error) {
     if (error instanceof PaymentApiError) {
