@@ -7,9 +7,11 @@ import { BadgeEstado } from "@/components/ui/BadgeEstado";
 import { Button } from "@/components/ui/Button";
 import { EstadoVacio } from "@/components/ui/EstadoVacio";
 import {
+  canPayOrder,
   canRateOrder,
   getBranchRating,
   getMyOrders,
+  ONLINE_PAYMENT_LABELS,
   ORDER_STATUS_LABELS,
   ReviewApiError,
   type CustomerOrder,
@@ -62,6 +64,12 @@ function PedidoCard({ order, ratingState }: { order: CustomerOrder; ratingState:
           <dt className="text-text-secondary">Total</dt>
           <dd className="mt-1 font-semibold text-brown">${order.total}</dd>
         </div>
+        {order.paymentStatus && (
+          <div>
+            <dt className="text-text-secondary">Pago en línea</dt>
+            <dd className="mt-1 font-semibold text-brown">{ONLINE_PAYMENT_LABELS[order.paymentStatus]}</dd>
+          </div>
+        )}
         <div>
           <dt className="text-text-secondary">Calificación</dt>
           <dd className="mt-1 font-semibold text-brown">
@@ -84,6 +92,14 @@ function PedidoCard({ order, ratingState }: { order: CustomerOrder; ratingState:
           </dd>
         </div>
       </dl>
+      {canPayOrder(order) && (
+        <Link
+          href={`/pedidos/${encodeURIComponent(order.id)}/pago`}
+          className="inline-flex min-h-11 w-fit items-center justify-center rounded-control bg-crimson px-5 py-2 text-sm font-semibold text-white outline-none hover:bg-crimson-hover focus-visible:shadow-focus"
+        >
+          {order.paymentStatus === "REJECTED" ? "Reintentar pago" : "Pagar en línea"}
+        </Link>
+      )}
       {canRateOrder(order) && (
         <Link
           href={`/pedidos/${encodeURIComponent(order.id)}/resena`}

@@ -14,6 +14,7 @@ import {
   Building2,
   TrendingUp,
   LogOut,
+  Star,
   type LucideIcon
 } from "lucide-react";
 import { logout } from "@/app/actions/auth";
@@ -37,6 +38,7 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
     { href: "/gerente/compras", etiqueta: "Compras", Icon: ShoppingCart },
     { href: "/gerente/reportes/ventas", etiqueta: "Ventas", Icon: TrendingUp },
     { href: "/gerente/reportes/top-dishes", etiqueta: "Platillos más vendidos", Icon: Utensils },
+    { href: "/gerente/resenas", etiqueta: "Reseñas", Icon: Star },
     { href: "/admin/sucursales", etiqueta: "Sucursales", Icon: Building2 },
   ],
   GENERAL_MANAGER: [
@@ -45,6 +47,7 @@ const itemsPorRol: Record<RolPersonal, NavItem[]> = {
     { href: "/gerente/inventario", etiqueta: "Inventario", Icon: ClipboardList },
     { href: "/gerente/reportes/ventas", etiqueta: "Ventas", Icon: TrendingUp },
     { href: "/gerente/reportes/top-dishes", etiqueta: "Platillos más vendidos", Icon: Utensils },
+    { href: "/gerente/resenas", etiqueta: "Reseñas", Icon: Star },
   ],
 };
 

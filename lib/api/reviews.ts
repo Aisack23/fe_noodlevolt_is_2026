@@ -13,6 +13,14 @@ export const ORDER_STATUS_LABELS = {
 
 export type OrderStatus = keyof typeof ORDER_STATUS_LABELS;
 
+export const ONLINE_PAYMENT_LABELS = {
+  PENDING: "Pago pendiente",
+  REJECTED: "Pago rechazado",
+  PAID: "Pagado",
+} as const;
+
+type OnlinePaymentStatus = keyof typeof ONLINE_PAYMENT_LABELS;
+
 export type OrderReview = {
   id: string;
   rating: number;
@@ -23,6 +31,7 @@ export type CustomerOrder = {
   /** Puede ser null para pedidos creados sin folio comercial asignado. */
   orderNumber: string | null;
   status: OrderStatus;
+  paymentStatus?: OnlinePaymentStatus | null;
   /** Importe de presentación; se conserva como string para evitar cálculos/redondeos. */
   total: string;
   createdAt: string;
@@ -36,6 +45,11 @@ export function canRateOrder(order: Pick<CustomerOrder, "status" | "review">): b
   return order.status === "DELIVERED" && order.review === null;
 }
 
+export function canPayOrder(order: Pick<CustomerOrder, "status" | "paymentStatus">): boolean {
+  return order.status !== "CANCELED" &&
+    (order.paymentStatus === "PENDING" || order.paymentStatus === "REJECTED");
+}
+
 export type CreateReviewInput = {
   orderId: string;
   rating: number;
@@ -45,6 +59,20 @@ export type CreateReviewInput = {
 export type BranchRating = {
   average: number | null;
   count: number;
+};
+
+type BranchReview = {
+  id: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+};
+
+type BranchReviewsPage = {
+  items: BranchReview[];
+  total: number;
+  page: number;
+  limit: number;
 };
 
 export type ApiErrorMessage = string | string[] | null;
@@ -100,12 +128,46 @@ function isCustomerOrder(value: unknown): value is CustomerOrder {
     typeof value.id === "string" &&
     (typeof value.orderNumber === "string" || value.orderNumber === null) &&
     isOrderStatus(value.status) &&
+    (value.paymentStatus === undefined || value.paymentStatus === null ||
+      (typeof value.paymentStatus === "string" && Object.hasOwn(ONLINE_PAYMENT_LABELS, value.paymentStatus))) &&
     typeof value.total === "string" &&
     typeof value.createdAt === "string" &&
     typeof value.branchId === "string" &&
     typeof value.branchName === "string" &&
     (value.review === null || isOrderReview(value.review))
   );
+}
+
+function isBranchReview(value: unknown): value is BranchReview {
+  return isRecord(value) &&
+    (value.comment === null || typeof value.comment === "string") &&
+    typeof value.createdAt === "string" && Number.isFinite(Date.parse(value.createdAt)) &&
+    isOrderReview(value);
+}
+
+function isIntegerAtLeast(value: unknown, minimum: number): value is number {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= minimum;
+}
+
+export async function getBranchReviews(
+  token: string,
+  branchId: string,
+  page: number,
+): Promise<BranchReviewsPage> {
+  const url = new URL(`branches/${encodeURIComponent(branchId)}/reviews`, getApiBaseUrl());
+  url.searchParams.set("page", String(page));
+  const response = await fetch(url, {
+    headers: authorizationHeaders(token),
+    cache: "no-store",
+  });
+  await assertOk(response);
+
+  const data: unknown = await response.json();
+  if (!isRecord(data) || !Array.isArray(data.items) || !data.items.every(isBranchReview) ||
+    !isIntegerAtLeast(data.total, 0) || !isIntegerAtLeast(data.page, 1) || !isIntegerAtLeast(data.limit, 1)) {
+    throw new Error("La respuesta de reseñas no tiene el formato esperado.");
+  }
+  return { items: data.items, total: data.total, page: data.page, limit: data.limit };
 }
 
 function isBranchRating(value: unknown): value is BranchRating {

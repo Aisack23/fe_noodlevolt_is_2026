@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import { afterEach, beforeEach, test } from "node:test";
 import {
   createReview,
+  canPayOrder,
   canRateOrder,
   getBranchRating,
+  getBranchReviews,
   getMyOrders,
   ReviewApiError,
 } from "../lib/api/reviews.ts";
@@ -57,6 +59,29 @@ test("GET pedidos acepta orderNumber nulo del contrato y conserva el UUID real",
   const [order] = await getMyOrders("token-demo");
   assert.equal(order.orderNumber, null);
   assert.equal(order.id, "10000000-0000-4000-8000-000000000001");
+  assert.equal(canPayOrder(order), false);
+});
+
+test("un pedido pendiente se puede pagar o reintentar solo según su pago en línea", () => {
+  assert.equal(canPayOrder({ status: "PENDING", paymentStatus: "PENDING" }), true);
+  assert.equal(canPayOrder({ status: "PENDING", paymentStatus: "REJECTED" }), true);
+  assert.equal(canPayOrder({ status: "PENDING", paymentStatus: "PAID" }), false);
+  assert.equal(canPayOrder({ status: "PENDING", paymentStatus: null }), false);
+  assert.equal(canPayOrder({ status: "CANCELED", paymentStatus: "REJECTED" }), false);
+});
+
+test("GET reseñas solicita la sucursal y página con sesión y filtra campos adicionales", async () => {
+  let request;
+  const item = { id: "resena", rating: 4, comment: "Muy bien", createdAt: "2026-11-22T12:00:00.000Z" };
+  globalThis.fetch = async (url, init) => {
+    request = { url: new URL(url), init };
+    return jsonResponse({ items: [item], page: 2, total: 21, limit: 20, extra: "ignorar" });
+  };
+  assert.deepEqual(await getBranchReviews("token-demo", "branch-a", 2), { items: [item], page: 2, total: 21, limit: 20 });
+  assert.equal(request.url.pathname, "/api/v1/branches/branch-a/reviews");
+  assert.equal(request.url.searchParams.get("page"), "2");
+  assert.equal(request.init.headers.Authorization, "Bearer token-demo");
+  assert.equal(request.init.cache, "no-store");
 });
 
 test("POST reseña devuelve éxito 201 y envía solo los campos del contrato", async () => {

@@ -20,6 +20,8 @@ Las rutas de esta guía son relativas al dominio del frontend. Inicia sesión co
 2. Confirma el pedido en `/pedidos/llevar`. Si aún eres invitado, inicia sesión.
 3. Consulta el pedido en `/pedidos` y usa su opción de pago simulado si corresponde.
 
+Si se rechaza la tarjeta de prueba `0002`, vuelve a **Mis pedidos**, localiza el pedido con **Pago rechazado** y pulsa **Reintentar pago**. La tarjeta de prueba `4242` simula la aprobación y el pedido muestra **Pagado**.
+
 ### Reservas
 
 1. Abre `/reservas`. Si se solicita autenticación, inicia sesión como cliente para volver a la misma pantalla.
@@ -42,6 +44,7 @@ Captura de la prueba local con datos simulados.
 1. Consulta el saldo en `/perfil/puntos` y los avisos en `/notificaciones`.
 2. En `/pedidos`, abre un pedido entregado y califícalo si aún no tiene reseña.
 3. Revisa el promedio por sucursal que aparece en Mis pedidos.
+4. En gerencia, abre **Reseñas** desde la navegación. El gerente de sucursal ve su sucursal y el gerente general puede elegir cuál consultar.
 
 ### Inventario, reportes y sucursales
 
